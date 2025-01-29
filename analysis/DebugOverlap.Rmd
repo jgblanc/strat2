@@ -1,0 +1,252 @@
+---
+title: "DebugOverlap"
+output: html_document
+date: "2025-01-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(data.table)
+library(pgenlibr)
+```
+
+## Simple R Example 
+
+```{r}
+L <- 200
+M <- 1000
+
+# Random r 
+r <- runif(L)
+  
+# Random "Genotypes"
+G <- matrix(NA, nrow = M, ncol = L)
+for (l in 1:L) {
+  G[,l] <- runif(M, 0, 1)
+}
+  
+# Scale vectors
+r <- scale(r)
+G <- scale(G)
+```
+
+
+Definition of $H$
+
+$$H = \frac{\mathbb{E}_{M} \left[Cov(r, G_{i \cdot})^2 \right] } {\mathbb{E}_{M} \left[Var(G_{i \cdot}) \right]}$$ 
+
+```{r}
+# Calculate squared covariance between r and rows of G
+covs <- rep(0, M)
+for (i in 1:M) {
+  covs[i] <- cov(r, G[i,])^2
+}
+
+# Compute numerator 
+Num <- mean(covs)
+
+# Calculate variance of rows of G
+vars <- rep(0, M)
+for (i in 1:M) {
+  vars[i] <- var(G[i,])
+}
+
+# Compute numerator 
+Dom <- mean(vars)
+
+# Compute H 
+HCov <- Num / Dom
+print(HCov)
+```
+
+Direct Estimator of $H$
+
+$$\hat{H} = \frac{1}{M(L-1)^2} r^\top \mathbf{G}^\top \mathbf{G} r$$
+```{r}
+# Compute estimator directly 
+hatH <- (1/(M * (L-1)^2)) * (t(r) %*% t(G) %*% G %*% r)
+hatH
+```
+
+$F_{Gr}$ Estimator of $H$
+
+$$F_{Gr} = \frac{1}{\sqrt{(L - 1)}} Gr$$
+$$\hat{H} = \frac{1}{M (1 -L)} F_{Gr}^\top F_{Gr}$$
+```{r}
+# Compute FGr 
+FGr <- (1/sqrt(L-1)) * (G %*% r)
+
+# Check variance of FGr
+var(FGr)
+
+# Compute estimator via FGr
+HFGr <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
+HFGr
+```
+
+
+Under the null hypothesis of no overlap $E[\hat{H}] \approx 1/L$
+
+```{r}
+run_sim_random <- function(L, M) {
+  
+  # Random r 
+  r <- runif(L)
+  
+  # Make Genotypes
+  G <- matrix(NA, nrow = M, ncol = L)
+  for (l in 1:L) {
+    G[,l] <- runif(M, 0, 1)
+  }
+  
+  # Scale vectors
+  r <- scale(r)
+  G <- scale(G)
+  
+  # Compute estimator directly 
+  hatH <- (1/(M * (L-1)^2)) * t(r) %*% t(G) %*% G %*% r
+  
+  return(hatH)
+} 
+```
+
+L = 200 
+```{r}
+nums <- rep(0, 500)
+for(i in 1:500) {
+  nums[i] <- run_sim_random(200, 1000)
+}
+
+print(paste0("Expection is ", mean(nums)))
+print(paste0("Expection should be ", 1/200))
+```
+
+L = 1000 
+```{r}
+nums <- rep(0, 500)
+for(i in 1:500) {
+  nums[i] <- run_sim_random(1000, 1000)
+}
+
+print(paste0("Expection is ", mean(nums)))
+print(paste0("Expection should be ", 1/1000))
+```
+
+L = 2000 
+```{r}
+nums <- rep(0, 500)
+for(i in 1:500) {
+  nums[i] <- run_sim_random(2000, 1000)
+}
+
+print(paste0("Expection is ", mean(nums)))
+print(paste0("Expection should be ", 1/2000))
+```
+
+## Non-overlapping 4 pop model 
+
+### In R
+
+```{r}
+L <- 2000
+
+# Define the file paths
+pgen_file <- "../../Downloads/genos.pgen"
+pvar_file <- "../../Downloads/genos.pvar"
+psam_file <- "../../Downloads/genos.psam"
+
+# Load the PGEN file
+pvar <- NewPvar(pvar_file)
+pgen <- NewPgen(pgen_file)
+
+# Get L IDs
+IDs <- sapply(1:L, function(i) GetVariantId(pvar, i))
+
+# Get GWAS and test panel IDs
+testIDs <- fread("~/Downloads/ids.test")
+gwasIDs <- fread("~/Downloads/ids.gwas")
+
+# Read in psam file and get index
+psam_data <- fread(psam_file)
+sample_ids <- psam_data$IID
+
+test_indices <- match(testIDs$IID, sample_ids)
+test_indices <- test_indices[!is.na(test_indices)] 
+
+gwas_indices <- match(gwasIDs$IID, sample_ids)
+gwas_indices <- gwas_indices[!is.na(gwas_indices)] 
+
+# Read in genotype matrices
+geno_mat <- ReadList(pgen, variant_subset = 1:L, meanimpute = FALSE)
+X_mat <- geno_mat[test_indices, , drop = FALSE]
+G_mat <- geno_mat[gwas_indices, , drop = FALSE]
+
+# Get r 
+pC <- colMeans(X_mat[1:500,])
+pD <- colMeans(X_mat[501:1000,])
+r <- pC - pD
+
+# Scale 
+r <- scale(r)
+G <- scale(G_mat)
+G[is.na(G)] <- 0
+```
+
+Direct Estimator of $H$
+
+$$\hat{H} = \frac{1}{M(L-1)^2} r^\top \mathbf{G}^\top \mathbf{G} r$$
+```{r}
+# Compute estimator directly 
+hatH <- (1/(M * (L-1)^2)) * (t(r) %*% t(G) %*% G %*% r)
+hatH
+```
+
+$F_{Gr}$ Estimator of $H$
+
+$$F_{Gr} = \frac{1}{\sqrt{(L - 1)}} Gr$$
+$$\hat{H} = \frac{1}{M (1 -L)} F_{Gr}^\top F_{Gr}$$
+```{r}
+# Compute FGr
+FGr_raw <- (G %*% r)
+FGr <- (1/sqrt(L-1)) * (G %*% r)
+
+# Compute variance of FGr
+var(FGr)
+
+# Compute estimator
+HFGr <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
+HFGr
+1/L
+```
+
+### Via plink 
+
+Compute H hat via plink 
+```{r}
+# Format R file 
+dfr <- cbind(IDs,rep("T", length(r)), r)
+dfr <- as.data.frame(dfr) 
+fwrite(dfr, "~/Downloads/dfr.txt", quote = F, row.names = F, sep = "\t")
+
+# Run plink command 
+plink_cmd <- paste0("~/Downloads/plink2 --pfile ~/Downloads/genos --keep ~/Downloads/ids.gwas --score ~/Downloads/dfr.txt variance-standardize header-read cols=dosagesum,scoresums  --out ~/Downloads/FGr_plink")
+system(plink_cmd)
+
+# Read in results
+plinkFGr_raw <- fread("~/Downloads/FGr_plink.sscore")
+plinkFGr <- (1/sqrt(L-1)) * plinkFGr_raw$V3_SUM
+
+# Compare FGr estimates
+plot(sort(plinkFGr),sort(FGr))
+
+# Compute var(FGr)
+var(plinkFGr)
+
+# Compute H 
+HPlink<- (1/(M * (L-1))) * (t(plinkFGr) %*% plinkFGr)
+HPlink
+```
+
+## Subset of UKBB genotypes and random r's
+

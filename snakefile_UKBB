@@ -1,11 +1,11 @@
 # Snakefile to prep UKBB for analysis
-CHR =[]
-for i in range(1, 23):
-  CHR.append(str(i))
+CHR =["21"]
+#for i in range(1, 23):
+#  CHR.append(str(i))
 
 rule all:
     input:
-        expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam" ,chr=CHR)
+        expand("/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.psam" ,chr=CHR)
 
 
 ## UKBB Genotype data processing
@@ -37,6 +37,32 @@ rule UKBB_begen_to_plink2:
 	      --make-pgen \
 	      --set-all-var-ids @:# \
 	      --threads 16 \
+	      --memory 38000 \
+	      --out {params.prefix}
+	      """
+
+## Extract small subset
+
+rule make_test_set:
+    input:
+        psam="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
+	      pvar="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen"
+    output:
+        psam="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.psam",
+	      pvar="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pvar",
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen"
+    params:
+        prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
+        prefix_out="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
+    shell:
+        """
+        shuf -n 2000 {input.pvar} > snps.txt
+        shuf -n 1000 {input.psam} > ids.txt
+	      plink2 --pfile {params.prefix} \
+	      --extract snps.txt \
+	      --keep ids.txt \
+	      --make-pgen \
 	      --memory 38000 \
 	      --out {params.prefix}
 	      """
