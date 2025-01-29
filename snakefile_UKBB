@@ -1,0 +1,42 @@
+# Snakefile to prep UKBB for analysis
+CHR =[]
+for i in range(1, 23):
+  CHR.append(str(i))
+
+rule all:
+    input:
+        expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam" ,chr=CHR)
+
+
+## UKBB Genotype data processing
+
+rule UKBB_begen_to_plink2:
+    input:
+        bgen="/gpfs/data/xhe-lab/uk-biobank-genotypes/ukb_imp_chr{chr}_v3.bgen",
+        sample="/gpfs/data/berg-lab/data/ukbb/ukb22828_c22_b0_v3_s487192.sample"
+    output:
+        psam="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
+	      pvar="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen"
+    params:
+        prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3"
+    threads: 16
+    resources:
+        mem_mb=38000,
+        time="06:00:00"
+    shell:
+        """
+	      plink2 --bgen {input.bgen} ref-first \
+	      --sample {input.sample} \
+	      --mind 0.1 \
+        --geno 0.1 \
+        --maf 0.01 \
+	      --rm-dup exclude-all \
+	      --snps-only \
+	      --max-alleles 2 \
+	      --make-pgen \
+	      --set-all-var-ids @:# \
+	      --threads 16 \
+	      --memory 38000 \
+	      --out {params.prefix}
+	      """
