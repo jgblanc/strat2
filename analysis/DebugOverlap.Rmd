@@ -250,3 +250,133 @@ HPlink
 
 ## Subset of UKBB genotypes and random r's
 
+### Via R
+
+```{r}
+L <- 2000
+
+# Define the file paths
+pgen_file <- "../../Downloads/ukb_imp_chr21_v3.pgen"
+pvar_file <- "../../Downloads/ukb_imp_chr21_v3.pvar"
+psam_file <- "../../Downloads/ukb_imp_chr21_v3.psam"
+
+# Load the PGEN file
+pvar <- NewPvar(pvar_file)
+pgen <- NewPgen(pgen_file)
+
+# Get L IDs
+IDs <- sapply(1:L, function(i) GetVariantId(pvar, i))
+
+# Read in genotypes 
+geno_mat <- ReadList(pgen, variant_subset = 1:L, meanimpute = FALSE)
+
+# Simulate r 
+r <- runif(L)
+
+# Scale 
+r <- scale(r)
+G <- scale(geno_mat)
+G[is.na(G)] <- 0
+```
+
+```{r}
+# Compute estimator directly 
+hatH <- (1/(M * (L-1)^2)) * (t(r) %*% t(G) %*% G %*% r)
+hatH
+```
+
+```{r}
+# Compute FGr
+FGr_raw <- (G %*% r)
+FGr <- (1/sqrt(L-1)) * (G %*% r)
+
+# Compute variance of FGr
+var(FGr)
+
+# Compute estimator
+HFGr <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
+HFGr
+1/L
+```
+### Via Plink
+
+Compute H hat via plink 
+```{r}
+# Format R file 
+dfPVar <- fread(pvar_file) %>% select("ID", "ALT")
+dfr <- cbind(dfPVar, r)
+dfr <- as.data.frame(dfr) 
+fwrite(dfr, "~/Downloads/dfr.txt", quote = F, row.names = F, sep = "\t")
+
+# Run plink command 
+plink_cmd <- paste0("~/Downloads/plink2 --pfile ~/Downloads/ukb_imp_chr21_v3 --score ~/Downloads/dfr.txt variance-standardize header-read cols=dosagesum,scoresums  --out ~/Downloads/FGr_plink")
+system(plink_cmd)
+
+# Read in results
+plinkFGr_raw <- fread("~/Downloads/FGr_plink.sscore")
+plinkFGr <- (1/sqrt(L-1)) * plinkFGr_raw$V1_SUM
+
+# Compare FGr estimates
+plot(sort(plinkFGr),sort(FGr))
+
+# Compute var(FGr)
+var(plinkFGr)
+
+# Compute H 
+HPlink<- (1/(M * (L-1))) * (t(plinkFGr) %*% plinkFGr)
+HPlink
+```
+
+## Subset of UKBB genotypes and random r's done in two blocks 
+
+```{r}
+# Format R file 
+dfPVar <- fread(pvar_file) %>% select("ID", "ALT")
+dfr <- cbind(dfPVar, r)
+dfr <- as.data.frame(dfr) 
+fwrite(dfr[1:500,], "~/Downloads/dfr1.txt", quote = F, row.names = F, sep = "\t")
+fwrite(dfr[501:1000,], "~/Downloads/dfr2.txt", quote = F, row.names = F, sep = "\t")
+fwrite(dfr[1001:1500,], "~/Downloads/dfr3.txt", quote = F, row.names = F, sep = "\t")
+
+# Run plink command 
+plink_cmd <- paste0("~/Downloads/plink2 --pfile ~/Downloads/ukb_imp_chr21_v3 --score ~/Downloads/dfr1.txt variance-standardize header-read cols=dosagesum,scoresums  --out ~/Downloads/FGr_plink1")
+system(plink_cmd)
+
+# Read in results
+plinkFGr1_raw <- fread("~/Downloads/FGr_plink1.sscore")
+plinkFGr1 <- (1/sqrt(499)) * plinkFGr1_raw$V1_SUM
+var(plinkFGr1)
+
+# Run plink command 
+plink_cmd <- paste0("~/Downloads/plink2 --pfile ~/Downloads/ukb_imp_chr21_v3 --score ~/Downloads/dfr2.txt variance-standardize header-read cols=dosagesum,scoresums  --out ~/Downloads/FGr_plink2")
+system(plink_cmd)
+
+# Read in results
+plinkFGr2_raw <- fread("~/Downloads/FGr_plink2.sscore")
+plinkFGr2 <- (1/sqrt(499)) * plinkFGr2_raw$V1_SUM
+var(plinkFGr2)
+
+# Run plink command 
+plink_cmd <- paste0("~/Downloads/plink2 --pfile ~/Downloads/ukb_imp_chr21_v3 --score ~/Downloads/dfr3.txt variance-standardize header-read cols=dosagesum,scoresums  --out ~/Downloads/FGr_plink3")
+system(plink_cmd)
+
+# Read in results
+plinkFGr3_raw <- fread("~/Downloads/FGr_plink3.sscore")
+plinkFGr3 <- (1/sqrt(499)) * plinkFGr3_raw$V1_SUM
+var(plinkFGr3)
+
+
+# Combine 
+plinkFGrT1 <- (plinkFGr1+ plinkFGr2 + plinkFGr3) * (1/sqrt(3)) 
+var(plinkFGrT1)
+plot(sort(plinkFGrT1),sort(FGr))
+
+# Combine 
+plinkFGrT2 <- (plinkFGr1_raw$V1_SUM + plinkFGr2_raw$V1_SUM + plinkFGr3_raw$V1_SUM) * (1/sqrt(1500-1))
+var(plinkFGrT2)
+plot(sort(plinkFGrT2),sort(FGr))
+
+plot(sort(plinkFGrT1),sort(plinkFGrT1))
+```
+
+

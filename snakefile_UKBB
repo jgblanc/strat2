@@ -57,12 +57,15 @@ rule make_test_set:
         prefix_out="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
     shell:
         """
-        shuf -n 2000 {input.pvar} > snps.txt
-        shuf -n 1000 {input.psam} > ids.txt
+        shuf -n 10000 {input.pvar} > snps.txt
 	      plink2 --pfile {params.prefix} \
 	      --extract snps.txt \
 	      --keep ids.txt \
 	      --make-pgen \
+	      --freq \
+	      --maf 0.01 \
 	      --memory 38000 \
 	      --out {params.prefix}
 	      """
+
+## Assign SNPs to blocks
