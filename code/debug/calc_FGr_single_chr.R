@@ -30,7 +30,7 @@ system(plink_cmd)
 ## Read in plink output
 df<- fread(paste0(plink_prefix, ".sscore"))
 print(head(df))
-rawFGr <- df[,3]
+rawFGr <- as.matrix(df[,3])
 
 ## Raw variance
 print(paste0("The raw var is ", var(rawFGr)))
