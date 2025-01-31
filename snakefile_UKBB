@@ -81,3 +81,4 @@ rule calc_chr_FGr:
         """
         Rscript code/debug/calc_FGr_single_chr.R {params.prefix} {input.freq} {output.rvec} {output.FGr}
 	      """
+
