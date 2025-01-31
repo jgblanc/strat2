@@ -64,5 +64,5 @@ rule make_test_set:
 	      --keep ids.txt \
 	      --make-pgen \
 	      --memory 38000 \
-	      --out {params.prefix}
+	      --out {params.prefix_out}
 	      """
