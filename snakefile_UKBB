@@ -5,7 +5,7 @@ CHR =["21"]
 
 rule all:
     input:
-        expand("output/debug/r{chr}_standardize.rvec" ,chr=CHR)
+        expand("output/debug/r{chr}_standardize_blocks.rvec" ,chr=CHR)
 
 
 ## UKBB Genotype data processing
@@ -80,5 +80,19 @@ rule calc_chr_FGr:
     shell:
         """
         Rscript code/debug/calc_FGr_single_chr.R {params.prefix} {input.freq} {output.rvec} {output.FGr}
+	      """
+
+
+## Calculate FGr single CHR across blocks
+
+rule r_blocks_FGr:
+    input:
+        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq",
+        ldBlocks="data/LD_blocks/big_blocks.bed"
+    output:
+        rvec="output/debug/r{chr}_standardize_blocks.rvec"
+    shell:
+        """
+        Rscript code/debug/r_blocks_chr.R {input.freq} {input.ldBlocks} {output.rvec}
 	      """
 
