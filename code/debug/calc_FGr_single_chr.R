@@ -37,9 +37,9 @@ print(paste0("The raw var is ", var(rawFGr)))
 
 ## Scale by 1/sqrt(L-1)
 L <- nrow(dfFreq)
-FGr <- FGr * (1/(sqrt(L-1)))
+FGr <- rawFGr * (1/(sqrt(L-1)))
 print(paste0("The scaled var is ", var(FGr)))
 
 ## Save FGr
-dfOut <- as.data.fram(cbind(df[,1], FGr))
+dfOut <- as.data.frame(cbind(df[,1], FGr))
 fwrite(dfOut, FGr_outfile, quote = F, row.names = F, sep = "\t")
