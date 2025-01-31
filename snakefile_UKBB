@@ -5,7 +5,7 @@ CHR =["21"]
 
 rule all:
     input:
-        expand("/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.psam" ,chr=CHR)
+        expand("output/debug/r_standardize.rvec" ,chr=CHR)
 
 
 ## UKBB Genotype data processing
@@ -67,4 +67,17 @@ rule make_test_set:
 	      --out {params.prefix_out}
 	      """
 
-## Assign SNPs to blocks
+## Calculate FGr single CHR
+
+rule make_test_set:
+    input:
+        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
+    output:
+        rvec="output/debug/r_standardize.rvec",
+        FGr="output/debug/FGr.rvec"
+    params:
+        prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
+    shell:
+        """
+        Rscript calc_FGr_single_chr.R {params.prefix} {input.freq} {output.rvec} {output.FGr}
+	      """
