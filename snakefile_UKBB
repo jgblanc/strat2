@@ -57,9 +57,8 @@ rule make_test_set:
         prefix_out="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
     shell:
         """
-        shuf -n 10000 {input.pvar} > snps.txt
+        head -n 10000 {input.psam} > ids.txt
 	      plink2 --pfile {params.prefix} \
-	      --extract snps.txt \
 	      --keep ids.txt \
 	      --make-pgen \
 	      --freq \
