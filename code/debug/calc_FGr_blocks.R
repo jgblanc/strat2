@@ -11,11 +11,11 @@ suppressWarnings(suppressMessages({
 
 plink_prefix = args[1]
 out_prefix = args[2]
-r_outfile = args[3]
+r_file = args[3]
 FGr_outfile = args[4]
 
 ## Read in R File
-dfR <- fread(freq_file)
+dfR <- fread(r_file)
 
 ## Set up loop through blocks
 nBlocks <- length(unique(dfR$block))
@@ -30,9 +30,9 @@ for (i in 1:nBlocks) {
   print(blockNum)
 
   # Subset Rs and save
-  dfR_tmp <- dfR %>% filter(block == blockNum)
+  dfR_tmp <- dfR %>% filter(block == blockNum) %>% select("ID", "ALT", "r")
   tmp_r_name <- paste0(out_prefix, blockNum, ".rvec")
-  fwrite(dfR_tmp, r_outfile, quote = F, row.names = F, sep = "\t")
+  fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
 
   # Set up plink command
   tmp_outfile <- paste0(out_prefix, blockNum)

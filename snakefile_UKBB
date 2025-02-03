@@ -109,5 +109,5 @@ rule calc_chr_FGr_blocks:
         out_prefix="output/debug/FGr{chr}_"
     shell:
         """
-        Rscript code/debug/calc_FGr_blocks.R {params.prefix_plink} {params.out_prefix} {input.rvec} {output.FGr}
+        Rscript code/debug/calc_FGr_blocks.R {params.plink_prefix} {params.out_prefix} {input.rvec} {output.FGr}
 	      """
