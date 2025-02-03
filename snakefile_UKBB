@@ -5,7 +5,7 @@ for i in range(1, 23):
 
 rule all:
     input:
-        expand("output/debug/r{chr}_standardize_blocks.rvec" ,chr=CHR)
+        expand("output/debug/FGr_block.txt" ,chr=CHR)
 
 
 ## UKBB Genotype data processing
@@ -114,13 +114,13 @@ rule standardize_rvec:
 
 rule calc_chr_FGr_blocks:
     input:
-        rvec="output/debug/r{chr}_standardize_blocks.rvec"
+        rvec=expand("output/debug/r{chr}_standardize_blocks.rvec", chr = CHR)
     output:
-        FGr="output/debug/FGr{chr}_block.txt"
+        FGr="output/debug/FGr_block.txt"
     params:
-        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3",
-        out_prefix="output/debug/FGr{chr}_"
+        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr",
+        out_prefix="output/debug/"
     shell:
         """
-        Rscript code/debug/calc_FGr_blocks.R {params.plink_prefix} {params.out_prefix} {input.rvec} {output.FGr}
+        Rscript code/debug/calc_FGr_blocks.R {params.plink_prefix} {params.out_prefix} {output.FGr}
 	      """

@@ -11,49 +11,65 @@ suppressWarnings(suppressMessages({
 
 plink_prefix = args[1]
 out_prefix = args[2]
-r_file = args[3]
-FGr_outfile = args[4]
+FGr_outfile = args[3]
 
-## Read in R File
-dfR <- fread(r_file)
 
-## Set up loop through blocks
-nBlocks <- length(unique(dfR$block))
-print(paste0("There are ", nBlocks, " blocks on the Chr"))
-dfFGr_mat <- matrix(NA, nrow = 9999, ncol = nBlocks)
+## Collect data
+dfFinal <- matrix(NA, nrow = 9999, ncol = 1)
+SNPcounter <- rep(0, 22)
 
-## Loop through blocks
-for (i in 1:nBlocks) {
+## Loop through chromosomes
+for (j in 1:22) {
 
-  # Block num
-  blockNum <- unique(dfR$block)[i]
-  print(blockNum)
+  ## Read in R File
+  r_file <- paste0(out_prefix, "r", j, "_standardize_blocks.rvec")
+  dfR <- fread(r_file)
+  SNPcounter[j] <- nrow(dfR)
 
-  # Subset Rs and save
-  dfR_tmp <- dfR %>% filter(block == blockNum) %>% select("ID", "ALT", "r")
-  tmp_r_name <- paste0(out_prefix, blockNum, ".rvec")
-  fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
+  ## Number blocks in chromosome
+  nBlock_chr <- length(unique(dfR$block))
+  print(paste0("There are ", nBlocks, " blocks on the Chr"))
+  dfFGr_mat <- matrix(NA, nrow = 9999, ncol = nBlocks)
 
-  # Set up plink command
-  tmp_outfile <- paste0(out_prefix, blockNum)
-  plink_cmd <- paste0("plink2 --pfile ", plink_prefix,
-                      " --score ", tmp_r_name, " variance-standardize header-read cols=dosagesum,scoresums --out ", tmp_outfile)
-  system(plink_cmd)
+  ## Loop through blocks
+  for (i in 1:nBlock_chr) {
 
-  ## Read in plink output
-  df<- fread(paste0(tmp_outfile, ".sscore"))
-  print(head(df))
-  rawFGr <- as.matrix(df[,3])
-  dfFGr_mat[,i] <- rawFGr
+    # Block num
+    blockNum <- unique(dfR$block)[i]
+    print(blockNum)
+
+    # Subset Rs and save
+    dfR_tmp <- dfR %>% filter(block == blockNum) %>% select("ID", "ALT", "r")
+    tmp_r_name <- paste0(out_prefix, blockNum, ".rvec")
+    fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
+
+    # Set up plink command
+    tmp_outfile <- paste0(out_prefix, blockNum)
+    plink_prefix_chr <- paste0(plink_prefix, j, "_v3")
+    plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr,
+                        " --score ", tmp_r_name, " variance-standardize header-read cols=dosagesum,scoresums --out ", tmp_outfile)
+    system(plink_cmd)
+
+    ## Read in plink output
+    df<- fread(paste0(tmp_outfile, ".sscore"))
+    rawFGr <- as.matrix(df[,3])
+    dfFGr_mat[,i] <- rawFGr
+
+  }
+  dfFinal <- cbind(dfFinal, dfFGr_mat)
 }
 
+dfFinal <- dfFinal[,2:ncol(dfFinal)]
+print(paste0("The dimensions of dfFinal is ", dim(dfFinal)))
+print(SNPcounter)
 
 # Calculate FGr
-FGr_raw <- apply(dfFGr_mat, 1, sum)
+FGr_raw <- apply(dfFinal, 1, sum)
 print(paste0("The raw var is ", var(FGr_raw)))
 
 ## Scale by 1/sqrt(L-1)
-L <- nrow(dfR)
+L <- sum(SNPcounter)
+print(L)
 FGr <- FGr_raw * (1/(sqrt(L-1)))
 print(paste0("The scaled var is ", var(FGr)))
 
