@@ -2,7 +2,7 @@
 
 args=commandArgs(TRUE)
 
-if(length(args)<4){stop("Rscript calc_FGr_single_chr.R <prefix to plink files> <freq file> <r> <FGR>")}
+if(length(args)<3){stop("Rscript calc_FGr_single_chr.R <prefix to plink files> <freq file> <r> <FGR>")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
@@ -28,8 +28,8 @@ for (j in 1:22) {
 
   ## Number blocks in chromosome
   nBlock_chr <- length(unique(dfR$block))
-  print(paste0("There are ", nBlocks, " blocks on the Chr"))
-  dfFGr_mat <- matrix(NA, nrow = 9999, ncol = nBlocks)
+  print(paste0("There are ", nBlock_chr, " blocks on the Chr"))
+  dfFGr_mat <- matrix(NA, nrow = 9999, ncol = nBlock_chr)
 
   ## Loop through blocks
   for (i in 1:nBlock_chr) {
