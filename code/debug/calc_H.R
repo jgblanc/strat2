@@ -17,7 +17,7 @@ H_outfile = args[3]
 dfFGr <- fread(FGr_file)
 
 # Calculate FGr
-FGr_raw <- apply(dfFinal, 1, sum)
+FGr_raw <- apply(dfFGr, 1, sum)
 print(paste0("The raw var is ", var(FGr_raw)))
 
 # Read in SNP file
