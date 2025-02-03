@@ -12,11 +12,12 @@ suppressWarnings(suppressMessages({
 plink_prefix = args[1]
 out_prefix = args[2]
 FGr_outfile = args[3]
+SNP_outfile = args[4]
 
 
 ## Collect data
 dfFinal <- matrix(NA, nrow = 9999, ncol = 1)
-SNPcounter <- rep(0, 22)
+SNPcounter <- rep(0, 1703)
 
 ## Loop through chromosomes
 for (j in 1:22) {
@@ -40,6 +41,7 @@ for (j in 1:22) {
 
     # Subset Rs and save
     dfR_tmp <- dfR %>% filter(block == blockNum) %>% select("ID", "ALT", "r")
+    SNPcounter[blockNum] <- nrow(dfR_tmp)
     tmp_r_name <- paste0(out_prefix, blockNum, ".rvec")
     fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
 
@@ -63,22 +65,31 @@ dfFinal <- dfFinal[,2:ncol(dfFinal)]
 print(paste0("The dimensions of dfFinal is ", dim(dfFinal)))
 print(SNPcounter)
 
+
+# Save FGr of each block
+dfOut <- as.data.frame(cbind(df[,1], dfFinal))
+fwrite(dfOut, FGr_outfile, quote = F, row.names = F, sep = "\t")
+
+# Save SNP counts
+dfSNP <- as.data.frame(cbind(seq(1,1703), SNPcounter))
+fwrite(dfSNP, SNP_outfile, quote = F, row.names = F, sep = "\t")
+
 # Calculate FGr
-FGr_raw <- apply(dfFinal, 1, sum)
-print(paste0("The raw var is ", var(FGr_raw)))
+#FGr_raw <- apply(dfFinal, 1, sum)
+#print(paste0("The raw var is ", var(FGr_raw)))
 
 ## Scale by 1/sqrt(L-1)
-L <- sum(SNPcounter)
-print(L)
-FGr <- FGr_raw * (1/(sqrt(L-1)))
-print(paste0("The scaled var is ", var(FGr)))
+#L <- sum(SNPcounter)
+#print(L)
+#FGr <- FGr_raw * (1/(sqrt(L-1)))
+#print(paste0("The scaled var is ", var(FGr)))
 
 # Calculate H
-M <- nrow(df)
-H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
-print(paste0("H is ", H))
-print(paste0("1/L is ", 1/L))
+#M <- nrow(df)
+#H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
+#print(paste0("H is ", H))
+#print(paste0("1/L is ", 1/L))
 
 ## Save FGr
-dfOut <- as.data.frame(cbind(df[,1], FGr))
-fwrite(dfOut, FGr_outfile, quote = F, row.names = F, sep = "\t")
+#dfOut <- as.data.frame(cbind(df[,1], FGr))
+#fwrite(dfOut, FGr_outfile, quote = F, row.names = F, sep = "\t")
