@@ -7,6 +7,7 @@ if(length(args)<1){stop("Rscript calc_FGr_single_chr.R <prefix to plink files> <
 suppressWarnings(suppressMessages({
   library(data.table)
   library(dplyr)
+  library(tidyverse)
 }))
 
 prefix = args[1]
@@ -15,12 +16,14 @@ prefix = args[1]
 
 file_name <- paste0(prefix, 1, "_blocks.txt")
 df <- fread(file_name)
+df$CHR <- 1
 
 for (i in 2:22) {
 
   # Read in file
   file_name <- paste0(prefix, i, "_blocks.txt")
   tmp <- fread(file_name)
+  tmp$CHR <- i
   df <- rbind(df, tmp)
 
 }
@@ -32,10 +35,10 @@ print(paste0("The total number of SNPs is ", nrow(df)))
 df$r <- scale(runif(nrow(df)))
 
 ## Save each chromosome separately
-
 for (i in 1:22) {
 
-  tmp <- df %>% separate(ID, c("CHR", "POS"), remove = FALSE) %>% filter(CHR == i)
+  print(i)
+  tmp <- df  %>% filter(CHR == i)
   tmp <- tmp %>% select("ID", "ALT", "block", "r")
   file_name <- paste0(prefix,"r", i, "_standardize_blocks.rvec")
   fwrite(tmp, file_name, quote = F, row.names = F, sep = "\t")
