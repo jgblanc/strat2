@@ -5,7 +5,7 @@ CHR =["21"]
 
 rule all:
     input:
-        expand("output/debug/FGr{chr}_block.txt" ,chr=CHR)
+        expand("output/debug/{chr}_blocks.txt" ,chr=CHR)
 
 
 ## UKBB Genotype data processing
@@ -85,12 +85,12 @@ rule calc_chr_FGr:
 
 ## Calculate FGr single CHR across blocks
 
-rule r_blocks_FGr:
+rule assign_blocks:
     input:
-        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq",
+        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
         ldBlocks="data/LD_blocks/big_blocks.bed"
     output:
-        rvec="output/debug/r{chr}_standardize_blocks.rvec"
+        rvec="output/debug/{chr}_blocks.txt"
     resources:
         mem_mb=38000,
         time="03:00:00"
