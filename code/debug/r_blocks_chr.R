@@ -7,6 +7,7 @@ if(length(args)<3){stop("Rscript r_blocks_chr.R  <freq file> <ld blocks> <r>")}
 suppressWarnings(suppressMessages({
   library(data.table)
   library(dplyr)
+  library(tidyverse)
 }))
 
 freq_file = args[1]
@@ -18,6 +19,10 @@ r_outfile = args[3]
 df <- fread(freq_file)
 df <- df %>% separate(ID, c("CHR", "POS"), remove = FALSE)
 print(paste0("There are ", nrow(df), " blocks before assigning info"))
+print(head(df))
+
+# Read in LD info
+ld <- fread(ld_file)
 
 # Assign SNPs to blocks
 assign_SNP_to_block <- function(CHR, BP, block = ld) {
@@ -34,13 +39,13 @@ assign_SNP_to_block <- function(CHR, BP, block = ld) {
 
 # Add block info - takes a while
 df <- df %>%
-  mutate(block = apply(., MARGIN = 1, FUN = function(params)assign_SNP_to_block(as.numeric(params[2]), as.numeric(params[3])))) %>%
+  mutate(block = apply(., MARGIN = 1, FUN = function(params)assign_SNP_to_block(as.numeric(params[3]), as.numeric(params[4])))) %>%
   drop_na()
 print(paste0("Now df blocks has", nrow(df), " rows"))
 print(head(df))
 
 # Format R file
-dfOut %>% select("ID", "ALT", "block")
+dfOut <- df  %>% select("ID", "ALT", "block")
 dfOut$r <- scale(runif(nrow(dfOut)))
 
 ## Save R file

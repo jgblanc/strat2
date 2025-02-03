@@ -91,6 +91,9 @@ rule r_blocks_FGr:
         ldBlocks="data/LD_blocks/big_blocks.bed"
     output:
         rvec="output/debug/r{chr}_standardize_blocks.rvec"
+    resources:
+        mem_mb=38000,
+        time="03:00:00"	
     shell:
         """
         Rscript code/debug/r_blocks_chr.R {input.freq} {input.ldBlocks} {output.rvec}
