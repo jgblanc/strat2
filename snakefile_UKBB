@@ -5,7 +5,7 @@ for i in range(1, 23):
 
 rule all:
     input:
-        expand("output/debug/SNP_num.txt" ,chr=CHR)
+        expand("output/debug/H.txt" ,chr=CHR)
 
 
 ## UKBB Genotype data processing
@@ -124,4 +124,15 @@ rule calc_chr_FGr_blocks:
     shell:
         """
         Rscript code/debug/calc_FGr_blocks.R {params.plink_prefix} {params.out_prefix} {output.FGr} {output.SNP}
+	      """
+
+rule run_block_jacknife:
+    input:
+        FGr="output/debug/FGr_block.txt",
+        SNP="output/debug/SNP_num.txt"
+    output:
+        H="output/debug/H.txt"
+    shell:
+        """
+        Rscript code/debug/calc_H.R {input.FGr} {input.SNP} {output.H}
 	      """
