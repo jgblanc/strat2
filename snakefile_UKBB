@@ -1,7 +1,7 @@
 # Snakefile to prep UKBB for analysis
-CHR =["21"]
-#for i in range(1, 23):
-#  CHR.append(str(i))
+CHR =[]
+for i in range(1, 23):
+  CHR.append(str(i))
 
 rule all:
     input:
@@ -51,7 +51,8 @@ rule make_test_set:
     output:
         psam="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.psam",
 	      pvar="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pvar",
-	      pgen="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen"
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen",
+	      freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
     params:
         prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
         prefix_out="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
@@ -87,7 +88,7 @@ rule calc_chr_FGr:
 
 rule assign_blocks:
     input:
-        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
+        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq",
         ldBlocks="data/LD_blocks/big_blocks.bed"
     output:
         rvec="output/debug/{chr}_blocks.txt"

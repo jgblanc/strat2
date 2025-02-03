@@ -46,7 +46,6 @@ print(head(df))
 
 # Format R file
 dfOut <- df  %>% select("ID", "ALT", "block")
-dfOut$r <- scale(runif(nrow(dfOut)))
 
 ## Save R file
 fwrite(dfOut, r_outfile, quote = F, row.names = F, sep = "\t")
