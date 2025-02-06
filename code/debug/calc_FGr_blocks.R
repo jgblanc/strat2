@@ -20,7 +20,7 @@ dfFinal <- matrix(NA, nrow = 9999, ncol = 1)
 SNPcounter <- rep(0, 1703)
 
 ## Loop through chromosomes
-for (j in 1:22) {
+for (j in 1:1) {
 
   ## Read in R File
   r_file <- paste0(out_prefix, "r", j, "_standardize_blocks.rvec")
