@@ -24,6 +24,10 @@ print(head(df))
 # Read in LD info
 ld <- fread(ld_file)
 
+# Convert types
+df$POS <- as.numeric(df$POS)
+df$CHR <- as.numeric(df$CHR)
+
 # Assign SNPs to blocks
 assign_SNP_to_block <- function(CHR, BP, block = ld) {
 
@@ -38,7 +42,7 @@ assign_SNP_to_block <- function(CHR, BP, block = ld) {
 }
 
 # Add block info - takes a while
-df <- df %>%
+small2 <- small %>%
   mutate(block = apply(., MARGIN = 1, FUN = function(params)assign_SNP_to_block(as.numeric(params[3]), as.numeric(params[4])))) %>%
   drop_na()
 print(paste0("Now df blocks has", nrow(df), " rows"))

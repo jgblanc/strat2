@@ -25,7 +25,6 @@ for (j in 1:22) {
   ## Read in R File
   r_file <- paste0(out_prefix, "r", j, "_standardize_blocks.rvec")
   dfR <- fread(r_file)
-  SNPcounter[j] <- nrow(dfR)
 
   ## Number blocks in chromosome
   nBlock_chr <- length(unique(dfR$block))
@@ -33,7 +32,7 @@ for (j in 1:22) {
   dfFGr_mat <- matrix(NA, nrow = 9999, ncol = nBlock_chr)
 
   ## Loop through blocks
-  for (i in 1:nBlock_chr) {
+  for (i in 1:2) {
 
     # Block num
     blockNum <- unique(dfR$block)[i]

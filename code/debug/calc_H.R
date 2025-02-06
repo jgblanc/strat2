@@ -29,11 +29,11 @@ for (i in 1:ncol(dfFGr)) {
 mean(vars)
 
 # Calculate FGr
-FGr_raw <- apply(dfFGr, 1, sum)
+FGr_raw <- apply(dfFGr[,1:2], 1, sum)
 print(paste0("The raw var is ", var(FGr_raw)))
 
 # Scale by 1/sqrt(L-1)
-L <- sum(dfSNP$SNPcounter)
+L <- sum(dfSNP$SNPcounter[15:1703])
 print(L)
 FGr <- FGr_raw * (1/(sqrt(L-1)))
 print(paste0("The scaled var is ", var(FGr)))
