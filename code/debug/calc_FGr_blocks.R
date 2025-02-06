@@ -92,3 +92,17 @@ fwrite(dfSNP, SNP_outfile, quote = F, row.names = F, sep = "\t")
 ## Save FGr
 #dfOut <- as.data.frame(cbind(df[,1], FGr))
 #fwrite(dfOut, FGr_outfile, quote = F, row.names = F, sep = "\t")
+
+superblocks <- ld %>%
+  group_by(chr) %>%
+  mutate(local_group = (row_number() - 1) %/% 3) %>%  # Grouping within each chromosome
+  ungroup() %>%
+  mutate(global_group = dense_rank(chr) * 1000 + local_group) %>%  # Ensure unique labels
+  group_by(global_group) %>%
+  summarise(
+    chr = first(chr),
+    start = first(start),   # Start of the first block in the group
+    stop = last(stop),      # Stop of the last block in the group
+    .groups = "drop"
+  )
+

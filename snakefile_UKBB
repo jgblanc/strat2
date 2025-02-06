@@ -52,7 +52,6 @@ rule make_test_set:
         psam="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.psam",
 	      pvar="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pvar",
 	      pgen="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen",
-	      freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
     params:
         prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
         prefix_out="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
@@ -62,8 +61,24 @@ rule make_test_set:
 	      plink2 --pfile {params.prefix} \
 	      --keep ids.txt \
 	      --make-pgen \
-	      --freq \
 	      --maf 0.01 \
+	      --memory 38000 \
+	      --out {params.prefix_out}
+	      """
+
+rule get_freq:
+    input:
+        psam="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.psam",
+	      pvar="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pvar",
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen",
+    output:
+        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
+    params:
+        prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
+    shell:
+        """
+	      plink2 --pfile {params.prefix} \
+	      --freq \
 	      --memory 38000 \
 	      --out {params.prefix_out}
 	      """
