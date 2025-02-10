@@ -100,26 +100,26 @@ rule assign_blocks:
         Rscript code/debug/r_blocks_chr.R {input.freq} {input.ldBlocks} {output.rvec}
 	      """
 
-#rule get_dosage_file:
-#    input:
-#        gp_genos="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen"
-#    output:
-#        temp("/scratch/jgblanc/polygenic_selection_stratification/data/{gwas}/dosages/dosages_{chr}.traw")
-#    params:
-#        prefix_in="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
-#        prefix_out="/scratch/jgblanc/polygenic_selection_stratification/data/{gwas}/dosages/dosages_{chr}"
-#    resources:
-#        mem_mb=38000,
-#        time="01:00:00"
-#    shell:
-#        """
-#        plink2 --pfile {params.prefix_in} \
-#        --keep {input.gwas} \
-#        --recode A-transpose \
-#	      --threads 8 \
-#        --memory 38000 \
-#        --out {params.prefix_out}
-#        """
+rule get_dosage_file:
+    input:
+        gp_genos="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen"
+    output:
+        temp("/scratch/jgblanc/ukbb/plink2-files/small/dosages/dosages_{chr}.traw")
+    params:
+        prefix_in="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3",
+        prefix_out="/scratch/jgblanc/ukbb/plink2-files/small/dosages/dosages_{chr}"
+    resources:
+        mem_mb=38000,
+        time="01:00:00"
+    shell:
+        """
+        plink2 --pfile {params.prefix_in} \
+        --keep {input.gwas} \
+        --recode A-transpose \
+	      --threads 8 \
+        --memory 38000 \
+        --out {params.prefix_out}
+        """
 
 rule standardize_rvec:
     input:
