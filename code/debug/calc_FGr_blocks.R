@@ -32,7 +32,7 @@ for (j in 1:22) {
   dfFGr_mat <- matrix(NA, nrow = 9999, ncol = nBlock_chr)
 
   # Divide R by sd of GWAS variance
-  dfR$r <- dfR$r / dfR$Var
+  dfR$r <- dfR$r / sqrt(dfR$Var)
 
   ## Loop through blocks
   for (i in 1:nBlock_chr) {
