@@ -17,7 +17,7 @@ SNP_outfile = args[4]
 
 ## Collect data
 dfFinal <- matrix(NA, nrow = 9999, ncol = 1)
-SNPcounter <- rep(0, 1703)
+SNPcounter <- rep(0, 574)
 
 ## Loop through chromosomes
 for (j in 1:22) {

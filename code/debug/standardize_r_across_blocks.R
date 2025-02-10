@@ -17,6 +17,9 @@ prefix = args[1]
 file_name <- paste0(prefix, 1, "_blocks.txt")
 df <- fread(file_name)
 df$CHR <- 1
+varFile_name <- paste0(prefix,"variance_",1, ".txt")
+dfVar <- fread(varFile_name)
+df <- inner_join(df, dfVar)
 
 for (i in 2:22) {
 
@@ -24,6 +27,11 @@ for (i in 2:22) {
   file_name <- paste0(prefix, i, "_blocks.txt")
   tmp <- fread(file_name)
   tmp$CHR <- i
+
+  varFile_name <- paste0(prefix,"variance_",i, ".txt")
+  dfVar <- fread(varFile_name)
+  tmp <- inner_join(tmp, dfVar)
+
   df <- rbind(df, tmp)
 
 }
@@ -39,7 +47,7 @@ for (i in 1:22) {
 
   print(i)
   tmp <- df  %>% filter(CHR == i)
-  tmp <- tmp %>% select("ID", "ALT", "block", "r")
+  tmp <- tmp %>% select("ID", "ALT", "block", "r", "Var")
   file_name <- paste0(prefix,"r", i, "_standardize_blocks.rvec")
   fwrite(tmp, file_name, quote = F, row.names = F, sep = "\t")
 
