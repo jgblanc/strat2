@@ -5,7 +5,7 @@ for i in range(1, 23):
 
 rule all:
     input:
-        expand("/scratch/jgblanc/ukbb/plink2-files/small/dosages/dosages_{chr}.traw" ,chr=CHR)
+        expand("output/debug/variance_{chr}.txt" ,chr=CHR)
 
 
 ## UKBB Genotype data processing
@@ -118,6 +118,19 @@ rule get_dosage_file:
 	      --threads 8 \
         --memory 38000 \
         --out {params.prefix_out}
+        """
+
+rule calculate_GWAS_variance:
+    input:
+        "/scratch/jgblanc/ukbb/plink2-files/small/dosages/dosages_{chr}.traw"
+    output:
+        "output/debug/variance_{chr}.txt"
+    resources:
+	      time="48:00:00",
+	      mem_mb=100000,
+    shell:
+        """
+        Rscript code/debug/compute_GWAS_variance.R {input} {output}
         """
 
 rule standardize_rvec:
