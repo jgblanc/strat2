@@ -64,5 +64,6 @@ print(pval)
 
 
 ## Save FGr
-#dfOut <- as.data.frame(cbind(df[,1], FGr))
-#fwrite(dfOut, FGr_outfile, quote = F, row.names = F, sep = "\t")
+dfOut <- as.data.frame(c(H, pval, var(FGr)))
+colnames(dfOut) <- c("H", "pval", "VarFGr")
+fwrite(dfOut, H_outfile, quote = F, row.names = F, sep = "\t")

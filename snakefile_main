@@ -1,11 +1,11 @@
-# Snakefile to prep UKBB for analysis
+# Snakefile to run main pipeline
 CHR =[]
 for i in range(1, 23):
   CHR.append(str(i))
 
 rule all:
     input:
-        expand("output/debug/H_plinkVar.txt" ,chr=CHR)
+        expand("output/debug/H.txt" ,chr=CHR)
 
 
 ## UKBB Genotype data processing
@@ -83,6 +83,21 @@ rule get_freq:
 	      --out {params.prefix}
 	      """
 
+## Calculate FGr single CHR
+
+rule calc_chr_FGr:
+    input:
+        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
+    output:
+        rvec="output/debug/r{chr}_standardize.rvec",
+        FGr="output/debug/FGr{chr}.rvec"
+    params:
+        prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
+    shell:
+        """
+        Rscript code/debug/calc_FGr_single_chr.R {params.prefix} {input.freq} {output.rvec} {output.FGr}
+	      """
+
 
 ## Calculate FGr single CHR across blocks
 
@@ -99,27 +114,6 @@ rule assign_blocks:
         """
         Rscript code/debug/r_blocks_chr.R {input.freq} {input.ldBlocks} {output.rvec}
 	      """
-
-#rule get_dosage_file:
-#    input:
-#        gp_genos="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen"
-#    output:
-#        temp("/scratch/jgblanc/polygenic_selection_stratification/data/{gwas}/dosages/dosages_{chr}.traw")
-#    params:
-#        prefix_in="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
-#        prefix_out="/scratch/jgblanc/polygenic_selection_stratification/data/{gwas}/dosages/dosages_{chr}"
-#    resources:
-#        mem_mb=38000,
-#        time="01:00:00"
-#    shell:
-#        """
-#        plink2 --pfile {params.prefix_in} \
-#        --keep {input.gwas} \
-#        --recode A-transpose \
-#	      --threads 8 \
-#        --memory 38000 \
-#        --out {params.prefix_out}
-#        """
 
 rule standardize_rvec:
     input:
@@ -152,7 +146,7 @@ rule run_block_jacknife:
         FGr="output/debug/FGr_block.txt",
         SNP="output/debug/SNP_num.txt"
     output:
-        H="output/debug/H_plinkVar.txt"
+        H="output/debug/H.txt"
     shell:
         """
         Rscript code/debug/calc_H.R {input.FGr} {input.SNP} {output.H}
