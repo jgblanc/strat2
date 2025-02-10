@@ -31,6 +31,9 @@ for (j in 1:22) {
   print(paste0("There are ", nBlock_chr, " blocks on the Chr"))
   dfFGr_mat <- matrix(NA, nrow = 9999, ncol = nBlock_chr)
 
+  # Divide R by sd of GWAS variance
+  dfR$r <- dfR$r / dfR$Var
+
   ## Loop through blocks
   for (i in 1:nBlock_chr) {
 
@@ -48,7 +51,7 @@ for (j in 1:22) {
     tmp_outfile <- paste0(out_prefix, blockNum)
     plink_prefix_chr <- paste0(plink_prefix, j, "_v3")
     plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr,
-                        " --score ", tmp_r_name, " variance-standardize header-read cols=dosagesum,scoresums --out ", tmp_outfile)
+                        " --score ", tmp_r_name, " center header-read cols=dosagesum,scoresums --out ", tmp_outfile)
     system(plink_cmd)
 
     ## Read in plink output
@@ -70,7 +73,7 @@ dfOut <- as.data.frame(cbind(df[,1], dfFinal))
 fwrite(dfOut, FGr_outfile, quote = F, row.names = F, sep = "\t")
 
 # Save SNP counts
-dfSNP <- as.data.frame(cbind(seq(1,1703), SNPcounter))
+dfSNP <- as.data.frame(cbind(seq(1,574), SNPcounter))
 fwrite(dfSNP, SNP_outfile, quote = F, row.names = F, sep = "\t")
 
 # Calculate FGr
