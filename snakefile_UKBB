@@ -135,8 +135,8 @@ rule calculate_GWAS_variance:
 
 rule standardize_rvec:
     input:
-        blocks=expand("output/debug/{chr}_blocks.txt", chr = CHR)
-        gwas_var=expand("output/debug/output/debug/variance_{chr}.txt", chr = CHR)
+        blocks=expand("output/debug/{chr}_blocks.txt", chr = CHR),
+        gwas_var=expand("output/debug/variance_{chr}.txt", chr = CHR)
     output:
         rvec=expand("output/debug/r{chr}_standardize_blocks.rvec", chr = CHR)
     params:
