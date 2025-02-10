@@ -21,7 +21,7 @@ dfFGr <- as.data.frame(dfFGr[,2:ncol(dfFGr)])
 dfSNP <- fread(SNP_file)
 
 # Check variance of each block
-vars <- rep(0, 1703)
+vars <- rep(0, 574)
 for (i in 1:ncol(dfFGr)) {
   L <- dfSNP$SNPcounter[i]
   vars[i] <- var(dfFGr[,i] * (1/(sqrt(L-1))))
@@ -29,11 +29,11 @@ for (i in 1:ncol(dfFGr)) {
 mean(vars)
 
 # Calculate FGr
-FGr_raw <- apply(dfFGr[,1:2], 1, sum)
+FGr_raw <- apply(dfFGr, 1, sum)
 print(paste0("The raw var is ", var(FGr_raw)))
 
 # Scale by 1/sqrt(L-1)
-L <- sum(dfSNP$SNPcounter[15:1703])
+L <- sum(dfSNP$SNPcounter)
 print(L)
 FGr <- FGr_raw * (1/(sqrt(L-1)))
 print(paste0("The scaled var is ", var(FGr)))

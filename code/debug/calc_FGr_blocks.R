@@ -20,7 +20,7 @@ dfFinal <- matrix(NA, nrow = 9999, ncol = 1)
 SNPcounter <- rep(0, 1703)
 
 ## Loop through chromosomes
-for (j in 1:1) {
+for (j in 1:22) {
 
   ## Read in R File
   r_file <- paste0(out_prefix, "r", j, "_standardize_blocks.rvec")
@@ -32,7 +32,7 @@ for (j in 1:1) {
   dfFGr_mat <- matrix(NA, nrow = 9999, ncol = nBlock_chr)
 
   ## Loop through blocks
-  for (i in 1:2) {
+  for (i in 1:nBlock_chr) {
 
     # Block num
     blockNum <- unique(dfR$block)[i]
@@ -92,17 +92,3 @@ fwrite(dfSNP, SNP_outfile, quote = F, row.names = F, sep = "\t")
 ## Save FGr
 #dfOut <- as.data.frame(cbind(df[,1], FGr))
 #fwrite(dfOut, FGr_outfile, quote = F, row.names = F, sep = "\t")
-
-superblocks <- ld %>%
-  group_by(chr) %>%
-  mutate(local_group = (row_number() - 1) %/% 3) %>%  # Grouping within each chromosome
-  ungroup() %>%
-  mutate(global_group = dense_rank(chr) * 1000 + local_group) %>%  # Ensure unique labels
-  group_by(global_group) %>%
-  summarise(
-    chr = first(chr),
-    start = first(start),   # Start of the first block in the group
-    stop = last(stop),      # Stop of the last block in the group
-    .groups = "drop"
-  )
-

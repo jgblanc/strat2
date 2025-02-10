@@ -80,7 +80,7 @@ rule get_freq:
 	      plink2 --pfile {params.prefix} \
 	      --freq \
 	      --memory 38000 \
-	      --out {params.prefix_out}
+	      --out {params.prefix}
 	      """
 
 ## Calculate FGr single CHR
