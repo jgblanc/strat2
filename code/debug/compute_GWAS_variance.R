@@ -26,7 +26,7 @@ readLines(con, n = 1, warn = FALSE)
 
 # Read and process each line
 while(TRUE) {
- 
+  print(index)
   line <- readLines(con, n = 1, warn = FALSE)
   if (length(line) == 0) break  # Exit loop if end of file
 

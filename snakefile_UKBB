@@ -126,7 +126,7 @@ rule calculate_GWAS_variance:
     output:
         "output/debug/variance_{chr}.txt"
     resources:
-	      time="48:00:00",
+	      time="02:00:00",
 	      mem_mb=100000,
     shell:
         """
