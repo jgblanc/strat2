@@ -6,7 +6,7 @@ GWAS= ["e5", "e10", "e50", "e200"]
 
 rule all:
     input:
-        expand("data/gwas_variance/{gwas}/variance_{chr}.txt" ,chr=CHR)
+        expand("data/gwas_variance/{gwas}/variance_{chr}.txt" ,chr=CHR, gwas =GWAS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
