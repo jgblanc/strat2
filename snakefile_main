@@ -3,10 +3,13 @@ CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
 GWAS= ["e5", "e10", "e50", "e200"]
+#CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+CONTRASTS = ["eur-lat"]
+NSNP = ["L-pruneall"]
 
 rule all:
     input:
-        expand("data/gwas_variance/{gwas}/variance_{chr}.txt" ,chr=CHR, gwas =GWAS)
+        expand("data/{dataset}/r/{gwas}/{nsnp}/{contrasts}_all_standardized.rvec" ,chr=CHR, gwas =GWAS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -16,10 +19,10 @@ rule get_dosage_file:
         gwas="data/ids/gwas_ids/{gwas}.txt",
         gp_genos="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen"
     output:
-        temp("/scratch/jgblanc/polygenic_selection_stratification/data/{gwas}/dosages/dosages_{chr}.traw")
+        temp("/scratch/jgblanc/strat2/data/{gwas}/dosages/dosages_{chr}.traw")
     params:
         prefix_in="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
-        prefix_out="/scratch/jgblanc/polygenic_selection_stratification/data/{gwas}/dosages/dosages_{chr}"
+        prefix_out="/scratch/jgblanc/strat2/data/{gwas}/dosages/dosages_{chr}"
     resources:
         mem_mb=38000,
         time="01:00:00"
@@ -45,3 +48,71 @@ rule calculate_GWAS_variance:
         """
         Rscript code/calculate_FGr/compute_GWAS_variance.R {input} {output}
         """
+
+rule add_Block_info:
+    input:
+        var = "data/gwas_variance/{gwas}/variance_{chr}.txt",
+        ldBlocks="data/LD_blocks/big_blocks.bed"
+    output:
+        output="data/gwas_variance/{gwas}/variance_block_{chr}.txt"
+    resources:
+        mem_mb=38000,
+        time="03:00:00"
+    shell:
+        """
+        Rscript code/calculate_FGr/add_block_info.R {input.var} {input.ldBlocks} {output}
+        """
+
+# Downsample SNPs used to compute corrections
+
+rule prune_SNPs:
+    input:
+        gp_genos="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen",
+        IDs="data/ids/gwas_ids/{gwas}.txt",
+        snps="data/{dataset}/variants/{gwas}/{contrasts}/overlappingSNPs_chr{chr}.txt"
+    output:
+        temp("data/{dataset}/pruned_snps/{gwas}/{contrasts}/pruned_{chr}.prune.in"),
+	temp("data/{dataset}/pruned_snps/{gwas}/{contrasts}/pruned_{chr}.prune.out"),
+	temp("data/{dataset}/pruned_snps/{gwas}/{contrasts}/pruned_{chr}.log")
+    resources:
+        time="06:00:00",
+	mem_mb=100000
+    params:
+        prefix_plink = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
+        prefix_out = "data/{dataset}/pruned_snps/{gwas}/{contrasts}/pruned_{chr}"
+    shell:
+        """
+        plink2 --pfile {params.prefix_plink} \
+        --keep {input.IDs} \
+        --extract {input.snps} \
+        --indep-pairwise 100kb 0.8 \
+        --out {params.prefix_out}
+        """
+
+rule downsample_snps:
+    input:
+        snps=expand("data/{{dataset}}/pruned_snps/{{gwas}}/{{contrasts}}/pruned_{chr}.prune.in", chr = CHR),
+	overlap=expand("data/{{dataset}}/variants/{{gwas}}/{{contrasts}}/overlappingSNPs_chr{chr}.txt", chr = CHR)
+    output:
+        sample = "data/{dataset}/pruned_snps/{gwas}/{contrasts}/{nsnp}.txt"
+    shell:
+        """
+        Rscript code/calculate_FGr/sample_snps.R {output.sample} {wildcards.nsnp} {input.snps} {input.overlap}
+        """
+
+# Standardize r to have variance 1
+
+rule standardize_r:
+    input:
+        r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
+        snps="data/{dataset}/pruned_snps/{gwas}/{contrasts}/{nsnp}.txt"
+    output:
+        "data/{dataset}/r/{gwas}/{nsnp}/{contrasts}_all_standardized.rvec"
+    params:
+        r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr",
+    shell:
+        """
+        Rscript code/calculate_FGr/standardize_r.R {params.r_prefix} {output} {input.snps}
+        """
+
+
