@@ -2,7 +2,7 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-GWAS= ["e5", "e10", "e50", "e200"]
+GWAS= ["e5"]
 DATASET = ["HGDP1KG"]
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 CONTRASTS = ["eur-lat"]
@@ -10,7 +10,7 @@ NSNP = ["L-pruneall"]
 
 rule all:
     input:
-        expand("data/{dataset}/r/{gwas}/{nsnp}/{contrasts}_all_standardized.rvec" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_FGr/{dataset}/{gwas}/{nsnp}/FGr_block_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -115,5 +115,22 @@ rule standardize_r:
         """
         Rscript code/calculate_FGr/standardize_r.R {params.r_prefix} {output} {input.snps}
         """
+
+rule calc_chr_FGr_blocks:
+    input:
+        gwas_var=expand("data/gwas_variance/{gwas}/variance_block_{chr}.txt", chr = CHR)
+        rvec="data/{dataset}/r/{gwas}/{nsnp}/{contrasts}_all_standardized.rvec",
+        IDs="data/ids/gwas_ids/{gwas}.txt"
+    output:
+        FGr="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/FGr_block_{contrasts}.txt",
+        SNP="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/SNP_num_{contrasts}"
+    params:
+        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr",
+        out_prefix="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/",
+        var_prefix="data/gwas_variance/{gwas}/variance_block_"
+    shell:
+        """
+        Rscript code/calculate_FGr/calc_FGr_blocks.R {params.plink_prefix} {params.out_prefix} {output.FGr} {output.SNP} {params.var_prefix} {input.rvec} {input.IDs}
+	      """
 
 
