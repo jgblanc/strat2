@@ -1,0 +1,382 @@
+# Snakefile to do the pre-data processing for the Test Example
+CHR =[]
+for i in range(1, 23):
+  CHR.append(str(i))
+#CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+CONTRASTS = ["eurasia-long"]
+SUBDATASET = ["eurasia", "all", "nfe", "nfe_no_ceu"]
+GWAS=["e5", "e10", "e50", "e200"]
+PC = [0,40]
+NSNP = ["L-pruneall"]
+PHENOTYPE=["StandingHeight_50"]
+COVAR = ["no-FGr"]
+
+## Wildcard constraints
+wildcard_constraints:
+  constrasts="^[a-zA-Z]{3}-[a-zA-Z]{3}$",
+  subdataset="^(?!.*-).*$|^nfe_no_ceu$",
+
+
+rule all:
+    input:
+        expand("endpoints/HGDP1KG/{gwas}/{contrasts}/{nsnp}/{phenotype}/PGS/{covar}_{contrasts}.all-PC{pc}.sscore", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, nsnp=NSNP, phenotype=PHENOTYPE, covar=COVAR, pc=PC)
+
+
+## Recode SNPs to match UKBB
+
+# Get allele frequency in HGDP
+
+rule HGDP_freq:
+    input:
+        psam="/gpfs/data/berg-lab/data/HGDP1KG/plink2-files-hg19/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.psam",
+        pvar="/gpfs/data/berg-lab/data/HGDP1KG/plink2-files-hg19/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.pvar",
+        pgen="/gpfs/data/berg-lab/data/HGDP1KG/plink2-files-hg19/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.pgen"
+    output:
+        freq="data/HGDP1KG/variants-raw/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.afreq"
+    params:
+        prefix_in="/gpfs/data/berg-lab/data/HGDP1KG/plink2-files-hg19/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}",
+        prefix_out="data/HGDP1KG/variants-raw/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}"
+    shell:
+        """
+        plink2 --pfile {params.prefix_in} \
+        --freq \
+	      --threads 8 \
+        --memory 38000 \
+        --out {params.prefix_out}
+        """
+
+# Get list of SNPs to recode
+
+rule recode_list:
+    input:
+        freq_hgdp="data/HGDP1KG/variants-raw/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.afreq",
+        freq_ukbb="data/ukbb/variants/ukb_imp_chr{chr}_v3.afreq"
+    output:
+        "data/HGDP1KG/variants-fliped/flipped_snps_{chr}.txt"
+    shell:
+        """
+        Rscript code/HGDP1KG/flip_snps.R {input.freq_ukbb} {input.freq_hgdp} {output}
+        """
+
+# Recode HGDP with UKBB ref/alt alleles and save to new directory
+
+rule HGDP_recode:
+    input:
+        psam="/gpfs/data/berg-lab/data/HGDP1KG/plink2-files-hg19/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.psam",
+        pvar="/gpfs/data/berg-lab/data/HGDP1KG/plink2-files-hg19/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.pvar",
+        pgen="/gpfs/data/berg-lab/data/HGDP1KG/plink2-files-hg19/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.pgen",
+      	snp_list="data/HGDP1KG/variants-fliped/flipped_snps_{chr}.txt"
+    output:
+        psam="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.psam",
+        pvar="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.pvar",
+        pgen="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.pgen"
+    params:
+        prefix_in="/gpfs/data/berg-lab/data/HGDP1KG/plink2-files-hg19/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}",
+        prefix_out="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}"
+    shell:
+        """
+        plink2 --pfile {params.prefix_in} \
+        --extract {input.snp_list} \
+	      --ref-allele force {input.snp_list} \
+	      --make-pgen \
+        --out {params.prefix_out}
+        """
+
+
+## Get overlapping SNPs for each subdataset
+
+# Get allele freq in test panel
+
+rule get_AF_Test:
+    input:
+        test="data/HGDP1KG/ids/test_ids/{subdataset}.txt"
+    output:
+        test="data/HGDP1KG/variantFreq/{subdataset}_{chr}.afreq"
+    params:
+        prefix_in="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}",
+        prefix_out_test="data/HGDP1KG/variantFreq/{subdataset}_{chr}"
+    resources:
+        mem_mb=38000,
+        time="00:30:00"
+    shell:
+        """
+        plink2 --pfile {params.prefix_in} \
+        --freq \
+        --keep {input.test} \
+	      --threads 8 \
+        --memory 38000 \
+        --out {params.prefix_out_test}
+        """
+
+# Get overlapping SNPs
+
+rule get_overlapping_snps:
+    input:
+        freq_test="data/HGDP1KG/variantFreq/{subdataset}_{chr}.afreq",
+	      freq_gwas="data/ukbb/variantFreq/{gwas}_{chr}.afreq"
+    output:
+        "data/HGDP1KG/variants/{gwas}/{subdataset}/overlappingSNPs_chr{chr}.txt"
+    shell:
+        """
+        Rscript code/HGDP1KG/overlapping_snps.R {input.freq_gwas} {input.freq_test} {output}
+        """
+
+
+#################################
+
+## ALL Frequency constrasts ##
+
+rule get_popAF_all:
+    input:
+        test="data/HGDP1KG/ids/test_ids/all.txt",
+        snps="data/HGDP1KG/variants/{gwas}/all/overlappingSNPs_chr{chr}.txt"
+    output:
+        "data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.afr.afreq",
+        "data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.amr.afreq",
+        "data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.eas.afreq",
+        "data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.nfe.afreq",
+        "data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.sas.afreq"
+    params:
+        prefix_in="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}",
+        prefix_out="data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}"
+    resources:
+        mem_mb=38000,
+        time="00:30:00"
+    shell:
+        """
+        plink2 --pfile {params.prefix_in} \
+	      --extract {input.snps} \
+        --keep {input.test} \
+	      --freq \
+        --within {input.test} POP \
+	      --loop-cats POP \
+	      --threads 8 \
+        --memory 38000 \
+        --out {params.prefix_out}
+        """
+
+rule compute_r_all:
+    input:
+        eas="data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.eas.afreq",
+        nfe="data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.nfe.afreq",
+        sas="data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.sas.afreq",
+        afr="data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.afr.afreq",
+        amr="data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.amr.afreq"
+    output:
+        p1 = "data/HGDP1KG/r/{gwas}/eas-nfe_chr{chr}.rvec",
+        p2 = "data/HGDP1KG/r/{gwas}/eas-sas_chr{chr}.rvec",
+        p3 = "data/HGDP1KG/r/{gwas}/eas-afr_chr{chr}.rvec",
+        p4 = "data/HGDP1KG/r/{gwas}/eas-amr_chr{chr}.rvec",
+        p5 = "data/HGDP1KG/r/{gwas}/nfe-sas_chr{chr}.rvec",
+        p6 = "data/HGDP1KG/r/{gwas}/nfe-afr_chr{chr}.rvec",
+        p7 = "data/HGDP1KG/r/{gwas}/nfe-amr_chr{chr}.rvec",
+        p8 = "data/HGDP1KG/r/{gwas}/sas-afr_chr{chr}.rvec",
+        p9 = "data/HGDP1KG/r/{gwas}/sas-amr_chr{chr}.rvec",
+        p10 = "data/HGDP1KG/r/{gwas}/afr-amr_chr{chr}.rvec"
+    shell:
+        """
+        Rscript code/HGDP1KG/compute_pairwase_contrasts.R {input.eas} {input.nfe} {input.sas} {input.afr} {input.amr} {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10}
+        """
+
+rule rename_overlap_snps_all:
+    input:
+        "data/HGDP1KG/variants/{gwas}/all/overlappingSNPs_chr{chr}.txt"
+    output:
+        p1="data/HGDP1KG/variants/{gwas}/eas-nfe/overlappingSNPs_chr{chr}.txt",
+        p2="data/HGDP1KG/variants/{gwas}/eas-sas/overlappingSNPs_chr{chr}.txt",
+        p3="data/HGDP1KG/variants/{gwas}/eas-afr/overlappingSNPs_chr{chr}.txt",
+        p4="data/HGDP1KG/variants/{gwas}/eas-amr/overlappingSNPs_chr{chr}.txt",
+        p5="data/HGDP1KG/variants/{gwas}/nfe-sas/overlappingSNPs_chr{chr}.txt",
+        p6="data/HGDP1KG/variants/{gwas}/nfe-afr/overlappingSNPs_chr{chr}.txt",
+        p7="data/HGDP1KG/variants/{gwas}/nfe-amr/overlappingSNPs_chr{chr}.txt",
+        p8="data/HGDP1KG/variants/{gwas}/sas-afr/overlappingSNPs_chr{chr}.txt",
+        p9="data/HGDP1KG/variants/{gwas}/sas-amr/overlappingSNPs_chr{chr}.txt",
+        p10="data/HGDP1KG/variants/{gwas}/afr-amr/overlappingSNPs_chr{chr}.txt",
+    shell:
+        """
+        cp {input} {output.p1}
+        cp {input} {output.p2}
+        cp {input} {output.p3}
+        cp {input} {output.p4}
+        cp {input} {output.p5}
+        cp {input} {output.p6}
+        cp {input} {output.p7}
+        cp {input} {output.p8}
+        cp {input} {output.p9}
+        cp {input} {output.p10}
+        """
+
+## Sardinia Frequency contrasts ##
+
+rule get_popAF_sdi:
+    input:
+        test="data/HGDP1KG/ids/test_ids/nfe.txt",
+        snps="data/HGDP1KG/variants/{gwas}/nfe/overlappingSNPs_chr{chr}.txt"
+    output:
+        "data/HGDP1KG/popAF/{gwas}/nfe/popAF_{chr}.sdi.afreq",
+        "data/HGDP1KG/popAF/{gwas}/nfe/popAF_{chr}.eur.afreq"
+    params:
+        prefix_in="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}",
+        prefix_out="data/HGDP1KG/popAF/{gwas}/nfe/popAF_{chr}"
+    resources:
+        mem_mb=38000,
+        time="00:30:00"
+    shell:
+        """
+        plink2 --pfile {params.prefix_in} \
+	      --extract {input.snps} \
+        --keep {input.test} \
+	      --freq \
+        --within {input.test} SDI \
+	      --loop-cats SDI \
+	      --threads 8 \
+        --memory 38000 \
+        --out {params.prefix_out}
+        """
+
+rule compute_r_sdi:
+    input:
+        sdi="data/HGDP1KG/popAF/{gwas}/nfe/popAF_{chr}.sdi.afreq",
+        eur="data/HGDP1KG/popAF/{gwas}/nfe/popAF_{chr}.eur.afreq"
+    output:
+        "data/HGDP1KG/r/{gwas}/sdi-eur_chr{chr}.rvec"
+    shell:
+        """
+        Rscript code/HGDP1KG/compute_sdi_contrasts.R {input.sdi} {input.eur} {output}
+        """
+
+rule rename_overlap_snps_sdi:
+    input:
+        "data/HGDP1KG/variants/{gwas}/nfe/overlappingSNPs_chr{chr}.txt"
+    output:
+        "data/HGDP1KG/variants/{gwas}/sdi-eur/overlappingSNPs_chr{chr}.txt"
+    shell:
+        """
+        cp {input} {output}
+        """
+
+## Lat Long Eurasia ##
+
+rule get_TestVector_Eurasia:
+    input:
+        testids="data/HGDP1KG/ids/test_ids/eurasia.txt"
+    output:
+        Lat="data/HGDP1KG/TestVecs/eurasia-lat.txt",
+        Long="data/HGDP1KG/TestVecs/eurasia-long.txt"
+    shell:
+        """
+        Rscript code/HGDP1KG/get_LatLong_Tvec.R {input.testids} {output.Lat} {output.Long}
+        """
+
+rule compute_r_eurasia:
+    input:
+        TvecLat="data/HGDP1KG/TestVecs/eurasia-lat.txt",
+        TvecLong="data/HGDP1KG/TestVecs/eurasia-long.txt",
+        tp_genos="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.psam",
+        snps="data/HGDP1KG/variants/{gwas}/eurasia/overlappingSNPs_chr{chr}.txt"
+    output:
+        Lat="data/HGDP1KG/r/{gwas}/eurasia-lat_chr{chr}.rvec",
+        Long="data/HGDP1KG/r/{gwas}/eurasia-long_chr{chr}.rvec"
+    params:
+        prefix_tp = "data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}",
+        prefix_out = "data/HGDP1KG/r/{gwas}/{chr}"
+    shell:
+        """
+        Rscript code/HGDP1KG/compute_cord_r.R {params.prefix_tp} {input.TvecLat} {input.TvecLong} {params.prefix_out} {input.snps} {output.Lat} {output.Long}
+        rm {params.prefix_out}xt_temp.*
+        """
+
+rule rename_overlap_snps_eurasia:
+    input:
+        "data/HGDP1KG/variants/{gwas}/eurasia/overlappingSNPs_chr{chr}.txt"
+    output:
+        p1 = "data/HGDP1KG/variants/{gwas}/eurasia-lat/overlappingSNPs_chr{chr}.txt",
+        p2 = "data/HGDP1KG/variants/{gwas}/eurasia-long/overlappingSNPs_chr{chr}.txt"
+    shell:
+        """
+        cp {input} {output.p1}
+        cp {input} {output.p2}
+        """
+
+## Lat Long Europe ##
+
+rule get_TestVector_Eur:
+    input:
+        testids="data/HGDP1KG/ids/test_ids/nfe_no_ceu.txt"
+    output:
+        Lat="data/HGDP1KG/TestVecs/eur-lat.txt",
+        Long="data/HGDP1KG/TestVecs/eur-long.txt"
+    shell:
+        """
+        Rscript code/HGDP1KG/get_LatLong_Tvec.R {input.testids} {output.Lat} {output.Long}
+        """
+
+rule compute_r_eur:
+    input:
+        TvecLat="data/HGDP1KG/TestVecs/eur-lat.txt",
+        TvecLong="data/HGDP1KG/TestVecs/eur-long.txt",
+        tp_genos="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.psam",
+        snps="data/HGDP1KG/variants/{gwas}/nfe_no_ceu/overlappingSNPs_chr{chr}.txt"
+    output:
+        Lat="data/HGDP1KG/r/{gwas}/eur-lat_chr{chr}.rvec",
+        Long="data/HGDP1KG/r/{gwas}/eur-long_chr{chr}.rvec"
+    params:
+        prefix_tp = "data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}",
+        prefix_out = "data/HGDP1KG/r/{gwas}/{chr}"
+    shell:
+        """
+        Rscript code/HGDP1KG/compute_cord_r.R {params.prefix_tp} {input.TvecLat} {input.TvecLong} {params.prefix_out} {input.snps} {output.Lat} {output.Long}
+        rm {params.prefix_out}xt_temp.*
+        """
+
+rule rename_overlap_snps_eur:
+    input:
+        "data/HGDP1KG/variants/{gwas}/nfe_no_ceu/overlappingSNPs_chr{chr}.txt"
+    output:
+        p1 = "data/HGDP1KG/variants/{gwas}/eur-lat/overlappingSNPs_chr{chr}.txt",
+        p2 = "data/HGDP1KG/variants/{gwas}/eur-long/overlappingSNPs_chr{chr}.txt"
+    shell:
+        """
+        cp {input} {output.p1}
+        cp {input} {output.p2}
+        """
+
+#########
+
+# Make PGS SDI
+
+rule pgs_nfe:
+    input:
+        SNPs = "output/pga_test/HGDP1KG/{gwas}/{contrasts}/{nsnp}/{phenotype}/formated_ss_LR/{covar}_{contrasts}.all-PC{pc}.betas",
+        gp_genos="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.psam",
+        IDs="data/HGDP1KG/ids/test_ids/eurasia.txt"
+    output:
+        "output/prs/HGDP1KG/{gwas}/{contrasts}/{nsnp}/{phenotype}/PGS/{covar}_{contrasts}.{chr}-PC{pc}.sscore"
+    params:
+        plink_prefix = "output/prs/HGDP1KG/{gwas}/{contrasts}/{nsnp}/{phenotype}/PGS/{covar}_{contrasts}.{chr}-PC{pc}",
+	plink_in = "data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}"
+    shell:
+        """
+        cut -f2,5,7 {input} > {params.plink_prefix}.tmp
+        plink2 --pfile {params.plink_in} \
+        --keep {input.IDs} \
+        --score {params.plink_prefix}.tmp center cols=dosagesum,scoresums  \
+        --out {params.plink_prefix}
+        """
+
+rule combine_pgs:
+    input:
+        expand("output/prs/HGDP1KG/{{gwas}}/{{contrasts}}/{{nsnp}}/{{phenotype}}/PGS/{{covar}}_{{contrasts}}.{chr}-PC{{pc}}.sscore", chr=CHR)
+    output:
+        "endpoints/HGDP1KG/{gwas}/{contrasts}/{nsnp}/{phenotype}/PGS/{covar}_{contrasts}.all-PC{pc}.sscore"
+    params:
+        all_chrs = CHR,
+        num_chr = len(CHR),
+        prefix_one = "output/prs/HGDP1KG/{gwas}/{contrasts}/{nsnp}/{phenotype}/PGS/{covar}_{contrasts}",
+        prefix_two = "-PC{pc}.sscore"
+    shell:
+        """
+        Rscript code/prs/combine_chr.R {params.num_chr} {params.prefix_one} {params.prefix_two} {output} {params.all_chrs}
+	      rm {input}
+        """
+

@@ -1,153 +1,47 @@
 # Snakefile to run main pipeline
-CHR =[]
+CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
+GWAS= ["e5", "e10", "e50", "e200"]
 
 rule all:
     input:
-        expand("output/debug/H.txt" ,chr=CHR)
+        expand("data/gwas_variance/{gwas}/variance_{chr}.txt" ,chr=CHR)
 
 
-## UKBB Genotype data processing
+# Get sample variance of GWAS panel genotypes for all GWAS panels
 
-rule UKBB_begen_to_plink2:
+rule get_dosage_file:
     input:
-        bgen="/gpfs/data/xhe-lab/uk-biobank-genotypes/ukb_imp_chr{chr}_v3.bgen",
-        sample="/gpfs/data/berg-lab/data/ukbb/ukb22828_c22_b0_v3_s487192.sample"
+        gwas="data/ids/gwas_ids/{gwas}.txt",
+        gp_genos="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen"
     output:
-        psam="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
-	      pvar="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
-	      pgen="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen"
+        temp("/scratch/jgblanc/polygenic_selection_stratification/data/{gwas}/dosages/dosages_{chr}.traw")
     params:
-        prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3"
-    threads: 16
+        prefix_in="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
+        prefix_out="/scratch/jgblanc/polygenic_selection_stratification/data/{gwas}/dosages/dosages_{chr}"
     resources:
         mem_mb=38000,
-        time="06:00:00"
+        time="01:00:00"
     shell:
         """
-	      plink2 --bgen {input.bgen} ref-first \
-	      --sample {input.sample} \
-	      --mind 0.1 \
-        --geno 0.1 \
-        --maf 0.01 \
-	      --rm-dup exclude-all \
-	      --snps-only \
-	      --max-alleles 2 \
-	      --make-pgen \
-	      --set-all-var-ids @:# \
-	      --threads 16 \
-	      --memory 38000 \
-	      --out {params.prefix}
-	      """
-
-## Extract small subset
-
-rule make_test_set:
-    input:
-        psam="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
-	      pvar="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
-	      pgen="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen"
-    output:
-        psam="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.psam",
-	      pvar="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pvar",
-	      pgen="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen",
-    params:
-        prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
-        prefix_out="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
-    shell:
+        plink2 --pfile {params.prefix_in} \
+        --keep {input.gwas} \
+        --recode A-transpose \
+	      --threads 8 \
+        --memory 38000 \
+        --out {params.prefix_out}
         """
-        head -n 10000 {input.psam} > ids.txt
-	      plink2 --pfile {params.prefix} \
-	      --keep ids.txt \
-	      --make-pgen \
-	      --maf 0.01 \
-	      --memory 38000 \
-	      --out {params.prefix_out}
-	      """
 
-rule get_freq:
+rule calculate_GWAS_variance:
     input:
-        psam="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.psam",
-	      pvar="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pvar",
-	      pgen="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen",
+        "/scratch/jgblanc/polygenic_selection_stratification/data/{gwas}/dosages/dosages_{chr}.traw"
     output:
-        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
-    params:
-        prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
-    shell:
-        """
-	      plink2 --pfile {params.prefix} \
-	      --freq \
-	      --memory 38000 \
-	      --out {params.prefix}
-	      """
-
-## Calculate FGr single CHR
-
-rule calc_chr_FGr:
-    input:
-        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
-    output:
-        rvec="output/debug/r{chr}_standardize.rvec",
-        FGr="output/debug/FGr{chr}.rvec"
-    params:
-        prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
-    shell:
-        """
-        Rscript code/debug/calc_FGr_single_chr.R {params.prefix} {input.freq} {output.rvec} {output.FGr}
-	      """
-
-
-## Calculate FGr single CHR across blocks
-
-rule assign_blocks:
-    input:
-        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq",
-        ldBlocks="data/LD_blocks/big_blocks.bed"
-    output:
-        rvec="output/debug/{chr}_blocks.txt"
+        "data/gwas_variance/{gwas}/variance_{chr}.txt"
     resources:
-        mem_mb=38000,
-        time="03:00:00"
+	      time="48:00:00",
+	      mem_mb=100000,
     shell:
         """
-        Rscript code/debug/r_blocks_chr.R {input.freq} {input.ldBlocks} {output.rvec}
-	      """
-
-rule standardize_rvec:
-    input:
-        blocks=expand("output/debug/{chr}_blocks.txt", chr = CHR)
-    output:
-        rvec=expand("output/debug/r{chr}_standardize_blocks.rvec", chr = CHR)
-    params:
-        prefix="output/debug/"
-    shell:
+        Rscript code/calculate_FGr/compute_GWAS_variance.R {input} {output}
         """
-        Rscript code/debug/standardize_r_across_blocks.R {params.prefix}
-	      """
-
-rule calc_chr_FGr_blocks:
-    input:
-        rvec=expand("output/debug/r{chr}_standardize_blocks.rvec", chr = CHR)
-    output:
-        FGr="output/debug/FGr_block.txt",
-        SNP="output/debug/SNP_num.txt"
-    params:
-        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr",
-        out_prefix="output/debug/"
-    shell:
-        """
-        Rscript code/debug/calc_FGr_blocks.R {params.plink_prefix} {params.out_prefix} {output.FGr} {output.SNP}
-	      """
-
-rule run_block_jacknife:
-    input:
-        FGr="output/debug/FGr_block.txt",
-        SNP="output/debug/SNP_num.txt"
-    output:
-        H="output/debug/H.txt"
-    shell:
-        """
-        Rscript code/debug/calc_H.R {input.FGr} {input.SNP} {output.H}
-	      """
