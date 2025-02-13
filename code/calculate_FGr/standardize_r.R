@@ -35,7 +35,7 @@ print(tail(r))
 
 
 # Join dataframes and standrdize everything
-df <- inner_join(r, pnsnps)
+df <- inner_join(r, psnps)
 df$r[is.na(df$r)] <- 0
 df$r <- scale(df$r)
 
