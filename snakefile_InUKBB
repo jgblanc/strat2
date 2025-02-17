@@ -3,14 +3,14 @@ CHR =[]
 for i in range(1, 23):
   CHR.append(str(i))
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
-GWAS=["e5", "e10", "e50", "e200"]
+GWAS=["ALL", "WBS"]
 #GWAS=["q1"]
 
 
 
 rule all:
     input:
-        expand("data/InUKBB/variants/{gwas}/England-NorthernIreland/overlappingSNPs_chr{chr}.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS)
+        expand("data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec, chr=CHR, gwas=GWAS, contrasts=CONTRASTS)
 
 
 ## Get overlapping SNPs for each subdataset
