@@ -118,16 +118,20 @@ rule standardize_r:
 
 rule calc_chr_FGr_blocks:
     input:
-        gwas_var=expand("data/gwas_variance/{gwas}/variance_block_{chr}.txt", chr = CHR)
+        gwas_var=expand("data/gwas_variance/{{gwas}}/variance_block_{chr}.txt", chr = CHR),
         rvec="data/{dataset}/r/{gwas}/{nsnp}/{contrasts}_all_standardized.rvec",
         IDs="data/ids/gwas_ids/{gwas}.txt"
     output:
         FGr="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/FGr_block_{contrasts}.txt",
         SNP="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/SNP_num_{contrasts}"
     params:
-        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr",
+        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr",
         out_prefix="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/",
         var_prefix="data/gwas_variance/{gwas}/variance_block_"
+    threads: 8
+    resources:
+        mem_mb=38000,
+        time="24:00:00"
     shell:
         """
         Rscript code/calculate_FGr/calc_FGr_blocks.R {params.plink_prefix} {params.out_prefix} {output.FGr} {output.SNP} {params.var_prefix} {input.rvec} {input.IDs}

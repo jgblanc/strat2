@@ -26,6 +26,7 @@ dfIDs <- fread(id_file)
 
 # Set data collectors
 M <- nrow(dfIDs)
+print(M)
 dfFinal <- matrix(NA, nrow = M, ncol = 1)
 SNPcounter <- rep(0, 581)
 
@@ -71,20 +72,20 @@ for (j in 1:22) {
     # Set up plink command
     tmp_outfile <- paste0(out_prefix, blockNum)
     plink_prefix_chr <- paste0(plink_prefix, j, "_v3")
-    plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr, "--keep ", id_file,
+    plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr, " --keep ", id_file, " --threads 8 ",
                         " --score ", tmp_r_name, " center header-read cols=dosagesum,scoresums --out ", tmp_outfile)
     system(plink_cmd)
+
 
     ## Read in plink output
     df<- fread(paste0(tmp_outfile, ".sscore"))
     rawFGr <- as.matrix(df[,3])
+    print(dim(rawFGr))
     dfFGr_mat[,i] <- rawFGr
 
     ## Remove tmp files
-    rm_cmd <- paste0("rm ", tmp_outfile, ".sscore")
-    system(rmd_cmd)
-    rm_cmd <- paste0("rm ", tmp_outfile, ".log")
-    system(rmd_cmd)
+    rm_cmd <- paste0("rm ", tmp_outfile, ".*")
+    system(rm_cmd)
 
   }
   dfFinal <- cbind(dfFinal, dfFGr_mat)
