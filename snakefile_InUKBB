@@ -10,7 +10,7 @@ GWAS=["ALL", "WBS"]
 
 rule all:
     input:
-        expand("data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec, chr=CHR, gwas=GWAS, contrasts=CONTRASTS)
+        expand("data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS)
 
 
 ## Get overlapping SNPs for each subdataset
@@ -132,4 +132,5 @@ rule rename_overlap_snps_all:
         cp {input} {output.p8}
         cp {input} {output.p9}
         cp {input} {output.p10}
+	rm {input}
         """
