@@ -1,0 +1,135 @@
+# Snakefile to do the pre-data processing for the Test Example
+CHR =[]
+for i in range(1, 23):
+  CHR.append(str(i))
+CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
+GWAS=["e5", "e10", "e50", "e200"]
+#GWAS=["q1"]
+
+
+
+rule all:
+    input:
+        expand("data/InUKBB/variants/{gwas}/England-NorthernIreland/overlappingSNPs_chr{chr}.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS)
+
+
+## Get overlapping SNPs for each subdataset
+
+# Get allele freq in test panel
+
+rule get_AF_Test:
+    input:
+        test="data/InUKBB/ids/test_ids/CountryOfBirthUK.txt"
+    output:
+        test="data/InUKBB/variantFreq/CountryOfBirthUK_{chr}.afreq"
+    params:
+        prefix_in="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
+        prefix_out_test="data/InUKBB/variantFreq/CountryOfBirthUK_{chr}"
+    resources:
+        mem_mb=38000,
+        time="00:30:00"
+    shell:
+        """
+        plink2 --pfile {params.prefix_in} \
+        --freq \
+	--maf 0.01 \
+        --keep {input.test} \
+	      --threads 8 \
+        --memory 38000 \
+        --out {params.prefix_out_test}
+        """
+
+# Get overlapping SNPs
+
+rule get_overlapping_snps:
+    input:
+        freq_test="data/InUKBB/variantFreq/CountryOfBirthUK_{chr}.afreq",
+	      freq_gwas="data/ukbb/variantFreq/{gwas}_{chr}.afreq"
+    output:
+        "data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt"
+    shell:
+        """
+        Rscript code/InUKBB/overlapping_snps.R {input.freq_gwas} {input.freq_test} {output}
+        """
+
+# Get pop AF
+
+rule get_popAF_all:
+    input:
+        test="data/InUKBB/ids/test_ids/CountryOfBirthUK.txt",
+        snps="data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt"
+    output:
+        "data/InUKBB/popAF/{gwas}/popAF_{chr}.England.afreq",
+        "data/InUKBB/popAF/{gwas}/popAF_{chr}.NorthernIreland.afreq",
+        "data/InUKBB/popAF/{gwas}/popAF_{chr}.RepublicOfIrelend.afreq",
+        "data/InUKBB/popAF/{gwas}/popAF_{chr}.Scotland.afreq",
+        "data/InUKBB/popAF/{gwas}/popAF_{chr}.Wales.afreq"
+    params:
+        prefix_in="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
+        prefix_out="data/InUKBB/popAF/{gwas}/popAF_{chr}"
+    resources:
+        mem_mb=38000,
+        time="00:30:00"
+    shell:
+        """
+        plink2 --pfile {params.prefix_in} \
+	      --extract {input.snps} \
+        --keep {input.test} \
+	      --freq \
+        --within {input.test} POP \
+	      --loop-cats POP \
+	      --threads 8 \
+        --memory 38000 \
+        --out {params.prefix_out}
+        """
+
+rule compute_r_all:
+    input:
+        E="data/InUKBB/popAF/{gwas}/popAF_{chr}.England.afreq",
+        NI="data/InUKBB/popAF/{gwas}/popAF_{chr}.NorthernIreland.afreq",
+        RoI="data/InUKBB/popAF/{gwas}/popAF_{chr}.RepublicOfIrelend.afreq",
+        S="data/InUKBB/popAF/{gwas}/popAF_{chr}.Scotland.afreq",
+        W="data/InUKBB/popAF/{gwas}/popAF_{chr}.Wales.afreq"
+    output:
+        p1 = "data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec",
+        p2 = "data/InUKBB/r/{gwas}/England-RepublicOfIrelend_chr{chr}.rvec",
+        p3 = "data/InUKBB/r/{gwas}/England-Scotland_chr{chr}.rvec",
+        p4 = "data/InUKBB/r/{gwas}/England-Wales_chr{chr}.rvec",
+        p5 = "data/InUKBB/r/{gwas}/NorthernIreland-RepublicOfIrelend_chr{chr}.rvec",
+        p6 = "data/InUKBB/r/{gwas}/NorthernIreland-Scotland_chr{chr}.rvec",
+        p7 = "data/InUKBB/r/{gwas}/NorthernIreland-Wales_chr{chr}.rvec",
+        p8 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Scotland_chr{chr}.rvec",
+        p9 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Wales_chr{chr}.rvec",
+        p10 = "data/InUKBB/r/{gwas}/Scotland-Wales_chr{chr}.rvec"
+    shell:
+        """
+        Rscript code/InUKBB/compute_pairwase_contrasts.R {input.E} {input.NI} {input.RoI} {input.S} {input.W} {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10}
+        """
+
+rule rename_overlap_snps_all:
+    input:
+        "data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt"
+    output:
+        p1="data/InUKBB/variants/{gwas}/England-NorthernIreland/overlappingSNPs_chr{chr}.txt",
+        p2="data/InUKBB/variants/{gwas}/England-RepublicOfIrelend/overlappingSNPs_chr{chr}.txt",
+        p3="data/InUKBB/variants/{gwas}/England-Scotland/overlappingSNPs_chr{chr}.txt",
+        p4="data/InUKBB/variants/{gwas}/England-Wales/overlappingSNPs_chr{chr}.txt",
+        p5="data/InUKBB/variants/{gwas}/NorthernIreland-RepublicOfIrelend/overlappingSNPs_chr{chr}.txt",
+        p6="data/InUKBB/variants/{gwas}/NorthernIreland-Scotland/overlappingSNPs_chr{chr}.txt",
+        p7="data/InUKBB/variants/{gwas}/NorthernIreland-Wales/overlappingSNPs_chr{chr}.txt",
+        p8="data/InUKBB/variants/{gwas}/RepublicOfIrelend-Scotland/overlappingSNPs_chr{chr}.txt",
+        p9="data/InUKBB/variants/{gwas}/RepublicOfIrelend-Wales/overlappingSNPs_chr{chr}.txt",
+        p10="data/InUKBB/variants/{gwas}/Scotland-Wales/overlappingSNPs_chr{chr}.txt",
+    shell:
+        """
+        cp {input} {output.p1}
+        cp {input} {output.p2}
+        cp {input} {output.p3}
+        cp {input} {output.p4}
+        cp {input} {output.p5}
+        cp {input} {output.p6}
+        cp {input} {output.p7}
+        cp {input} {output.p8}
+        cp {input} {output.p9}
+        cp {input} {output.p10}
+        """
