@@ -10,7 +10,7 @@ NSNP = ["L-pruneall"]
 
 rule all:
     input:
-        expand("output/calculate_FGr/{dataset}/{gwas}/{nsnp}/FGr_block_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_FGr/{dataset}/{gwas}/{nsnp}/H.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -135,6 +135,17 @@ rule calc_chr_FGr_blocks:
     shell:
         """
         Rscript code/calculate_FGr/calc_FGr_blocks.R {params.plink_prefix} {params.out_prefix} {output.FGr} {output.SNP} {params.var_prefix} {input.rvec} {input.IDs}
+	      """
+
+rule run_block_jacknife:
+    input:
+        FGr="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/FGr_block_{contrasts}.txt",
+        SNP="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/SNP_num_{contrasts}"
+    output:
+        H="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/H.txt"
+    shell:
+        """
+        Rscript code/calculate_FGr/calc_H.R {input.FGr} {input.SNP} {output.H}
 	      """
 
 
