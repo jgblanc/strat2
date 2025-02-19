@@ -5,12 +5,12 @@ for i in range(1, 23):
 GWAS= ["e5"]
 DATASET = ["HGDP1KG"]
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
-CONTRASTS = ["eur-lat"]
+CONTRASTS = ["eurasia-long"]
 NSNP = ["L-pruneall"]
 
 rule all:
     input:
-        expand("output/calculate_FGr/{dataset}/{gwas}/{nsnp}/H.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_FGr/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -58,7 +58,7 @@ rule add_Block_info:
         output="data/gwas_variance/{gwas}/variance_block_{chr}.txt"
     resources:
         mem_mb=38000,
-        time="03:00:00"
+        time="10:00:00"
     shell:
         """
         Rscript code/calculate_FGr/add_block_info.R {input.var} {input.ldBlocks} {output}
@@ -120,13 +120,13 @@ rule calc_chr_FGr_blocks:
     input:
         gwas_var=expand("data/gwas_variance/{{gwas}}/variance_block_{chr}.txt", chr = CHR),
         rvec="data/{dataset}/r/{gwas}/{nsnp}/{contrasts}_all_standardized.rvec",
-        IDs="data/ids/gwas_ids/{gwas}.txt"
+        IDs="ids1000.txt"
     output:
         FGr="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/FGr_block_{contrasts}.txt",
         SNP="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/SNP_num_{contrasts}"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr",
-        out_prefix="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/",
+        out_prefix="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/{contrasts}",
         var_prefix="data/gwas_variance/{gwas}/variance_block_"
     threads: 8
     resources:
@@ -142,7 +142,7 @@ rule run_block_jacknife:
         FGr="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/FGr_block_{contrasts}.txt",
         SNP="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/SNP_num_{contrasts}"
     output:
-        H="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/H.txt"
+        H="output/calculate_FGr/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt"
     shell:
         """
         Rscript code/calculate_FGr/calc_H.R {input.FGr} {input.SNP} {output.H}

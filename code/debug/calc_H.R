@@ -52,7 +52,7 @@ for (i in 1:nblocks) {
 
   mi <- as.numeric(dfSNP[i, 2])
   FGri <- dfFGr[,i] * (1/sqrt(mi-1))
-  Hi <- (sum(FGri^2)) * (1/M) * (1 / (mi -1))
+  Hi <- (sum(FGri^2)) * (1/M) * (1 / (L -1))
   allHs[i] <- (mi / (L - mi)) * (H - Hi)^2
 
 }
