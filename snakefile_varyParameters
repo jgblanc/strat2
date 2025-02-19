@@ -1,0 +1,62 @@
+# Snakefile to prep UKBB for analysis
+CHR =[]
+for i in range(1, 23):
+  CHR.append(str(i))
+SIZE = ["small", "medium", "large"]
+NSNP = ["100", "1000", "10000", "100000", "1000000"]
+
+rule all:
+    input:
+        expand("/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.afreq" ,chr=CHR)
+
+
+## Extract small subset
+
+rule make_small_set:
+    input:
+        psam="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
+	      pvar="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen",
+	      IDS="data/ids/gwas_ids/{size}.txt",
+	      SNPs="data/HGDP1KG/pruned_snps/e5/eas-afr/L-pruneall.txt"
+    output:
+        psam="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.psam",
+	      pvar="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.pvar",
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3.pgen",
+    params:
+        prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
+        prefix_out="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3"
+    threads: 8
+    resources:
+        mem_mb=38000,
+        time="03:00:00"
+    shell:
+        """
+	      plink2 --pfile {params.prefix} \
+	      --keep {input.IDS} \
+	      --extract {input.SNPs} \
+	      --make-pgen \
+	      --maf 0.01 \
+	      --memory 38000 \
+	      --threads 8 \
+	      --out {params.prefix_out}
+	      """
+
+rule get_freq:
+    input:
+        psam="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.psam",
+	      pvar="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.pvar",
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.pgen",
+    output:
+        freq="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.afreq"
+    params:
+        prefix="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3"
+    shell:
+        """
+	      plink2 --pfile {params.prefix} \
+	      --freq \
+	      --memory 38000 \
+	      --out {params.prefix}
+	      """
+
+
