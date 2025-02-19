@@ -19,19 +19,22 @@ r_file = args[4]
 dfR <- fread(r_file)
 
 ## Combine with SNPs in GWAS panel
-dfFreq <- fread(paste0(plink_prefix), ".afreq")
+dfFreq <- fread(paste0(plink_prefix, ".afreq"))
 dfR <- inner_join(dfR, dfFreq)
 
 ## Filter to SNPs with nonzero r values
-dfR <- dfR %>% filter(!is.na(r) & r != 0)
+dfR <- dfR %>% filter(!is.na(r) & r != 0) %>% sample_n(100)
+#dfR <- dfR %>% mutate(r = sample(r))
+#dfR$r <- rnorm(nrow(dfR))
 dfR$r <- scale(dfR$r)
+
 
 ## Print out L
 L <- nrow(dfR)
 print(paste0("L is ", L))
 
 # Subset Rs and save
-dfR_tmp <- dfR %>% filter(block == blockNum) %>% select("ID", "ALT", "r")
+dfR_tmp <- dfR  %>% select("ID", "ALT", "r")
 tmp_r_name <- paste0(out_prefix, ".rvec")
 fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
 
@@ -41,13 +44,20 @@ plink_cmd <- paste0("plink2 --pfile ", plink_prefix,
     system(plink_cmd)
 
 # Read in plink output
-df<- fread(paste0(tmp_outfile, ".sscore"))
+df<- fread(paste0(out_prefix, ".sscore"))
 rawFGr <- as.matrix(df[,3])
+FGr <- rawFGr * (1/sqrt(L-1))
 M <- nrow(df)
 
 # Print stats
 paste0("The raw variance is ", var(rawFGr))
-paste0("The scales variance is ", var(rawFGr * (1/sqrt(L-1))))
+paste0("The scales variance is ", var(FGr))
+
+H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
+print(paste0("H is ", H))
+print(paste0("1/L is ", 1/L))
+print(paste0("1/M is ", 1/M))
+print(paste0("1/N is ", 1/15716))
 
 # Save FGr of each block
 dfOut <- as.data.frame(cbind(df[,1], rawFGr * (1/sqrt(L-1))))

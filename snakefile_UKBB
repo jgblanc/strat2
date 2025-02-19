@@ -1,11 +1,11 @@
 # Snakefile to prep UKBB for analysis
-CHR =["22"]
+CHR =["1"]
 #for i in range(1, 23):
 #  CHR.append(str(i))
 
 rule all:
     input:
-        expand("output/debug/FGr_eas-afr_chr{chr}.txt" ,chr=CHR)
+        expand("output/debug/mediumFGr_NorthernIreland-Scotland_chr{chr}.txt" ,chr=CHR)
 
 
 ## UKBB Genotype data processing
@@ -48,14 +48,14 @@ rule make_test_set:
         psam="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
 	      pvar="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
 	      pgen="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen",
-	      IDS="ids1000.txt"
+	      IDS="ids10000.txt"
     output:
-        psam="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.psam",
-	      pvar="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pvar",
-	      pgen="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen",
+        psam="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3.psam",
+	      pvar="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3.pvar",
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3.pgen",
     params:
         prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
-        prefix_out="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
+        prefix_out="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3"
     shell:
         """
 	      plink2 --pfile {params.prefix} \
@@ -68,13 +68,13 @@ rule make_test_set:
 
 rule get_freq:
     input:
-        psam="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.psam",
-	      pvar="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pvar",
-	      pgen="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.pgen",
+        psam="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3.psam",
+	      pvar="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3.pvar",
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3.pgen",
     output:
-        freq="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
+        freq="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3.afreq"
     params:
-        prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3"
+        prefix="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3"
     shell:
         """
 	      plink2 --pfile {params.prefix} \
@@ -85,20 +85,34 @@ rule get_freq:
 
 ## Calc FGr on one Chromosome
 
-rule calc_chr_FGr_blocks:
+rule calc_chr_FGr:
     input:
-        rvec = "data/HGDP1KG/r/e5/eas-afr_chr{chr}.rvec",
+        rvec = "data/InUKBB/r/e5/NorthernIreland-Scotland_chr{chr}.rvec",
         freq = "/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3.afreq"
     output:
-        FGr="output/debug/FGr_eas-afr_chr{chr}.txt",
+        FGr="output/debug/smallFGr_NorthernIreland-Scotland{chr}.txt",
     params:
-        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}",
-        out_prefix="output/debug//FGr_eas-afr_chr{chr}"
+        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/small/ukb_imp_chr{chr}_v3",
+        out_prefix="output/debug/smallFGr_eas-afr_chr{chr}"
     shell:
         """
         Rscript code/debug/calc_FGr_data.R {params.plink_prefix} {params.out_prefix} {output.FGr} {input.rvec}
 	      """
 
+
+rule calc_chr_FGr_medium:
+    input:
+        rvec = "data/InUKBB/r/e5/NorthernIreland-Scotland_chr{chr}.rvec",
+        freq = "/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3.afreq"
+    output:
+        FGr="output/debug/mediumFGr_NorthernIreland-Scotland_chr{chr}.txt",
+    params:
+        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3",
+        out_prefix="output/debug/mediumFGr_eas-afr_chr{chr}"
+    shell:
+        """
+        Rscript code/debug/calc_FGr_data.R {params.plink_prefix} {params.out_prefix} {output.FGr} {input.rvec}
+              """
 
 
 ## Calculate FGr single CHR across blocks
