@@ -80,7 +80,8 @@ for (j in 1:22) {
     ## Read in plink output
     df<- fread(paste0(tmp_outfile, ".sscore"))
     rawFGr <- as.matrix(df[,3])
-    print(dim(rawFGr))
+    print(var(rawFGr * (1/sqrt(nrow(dfR_tmp)))))
+    print(var(rawFGr * sqrt(100000/1286958) * (1/sqrt(nrow(dfR_tmp)))))
     dfFGr_mat[,i] <- rawFGr
 
     ## Remove tmp files
