@@ -52,15 +52,9 @@ allHs <- rep(NA, nblocks)
 for (i in 1:nblocks) {
 
   mi <- as.numeric(dfSNP[i, 2])
-<<<<<<< HEAD
   FGri <- dfFGr[,i] * (1/sqrt(mi-1)) # * sqrt(M/L)
   Hi <- (sum(FGri^2)) * (1/M) * (1 / (L -1))
   allHs[i] <- (mi / (L - mi)) * (H - Hi)^2
-=======
-  FGri <- dfFGr[,i] * (1/sqrt(mi-1))
-  Hi <- (sum(FGri^2)) * (1/M) * (1 / (L -1))
-  allHs[i] <- (mi / (L - mi)) * ((H - Hi)^2)
->>>>>>> 0b60adb3c304c5082dedbdfbba98afe4da966ea2
 
 }
 varH <- mean(allHs)
