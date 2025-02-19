@@ -59,7 +59,7 @@ rule make_test_set:
     shell:
         """
 	      plink2 --pfile {params.prefix} \
-	      --keep ids.txt \
+	      --keep {input.IDS} \
 	      --make-pgen \
 	      --maf 0.01 \
 	      --memory 38000 \
