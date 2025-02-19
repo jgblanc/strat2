@@ -14,8 +14,8 @@ library(pgenlibr)
 ## Simple R Example 
 
 ```{r}
-L <- 200
-M <- 1000
+L <- 5000
+M <- 100
 
 # Random r 
 r <- runif(L)

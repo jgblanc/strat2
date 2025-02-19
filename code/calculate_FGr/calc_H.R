@@ -24,13 +24,13 @@ dfSNP <- fread(SNP_file)
 nBlocks <- nrow(dfSNP)
 vars <- rep(0, nBlocks)
 for (i in 1:ncol(dfFGr)) {
-  L <- dfSNP$SNPcounter[i]
-  vars[i] <- var(dfFGr[,i] * (1/(sqrt(L-1))))
+  mi <- dfSNP$SNPcounter[i]
+  vars[i] <- var(dfFGr[,i] * (1/(sqrt(mi-1))))
 }
 mean(vars)
 
 # Calculate FGr
-FGr_raw <- apply(dfFGr, 1, sum)
+FGr_raw <- apply(dfFGr, 1, sum) # * sqrt(M/L)
 print(paste0("The raw var is ", var(FGr_raw)))
 
 # Scale by 1/sqrt(L-1)
@@ -52,8 +52,8 @@ allHs <- rep(NA, nblocks)
 for (i in 1:nblocks) {
 
   mi <- as.numeric(dfSNP[i, 2])
-  FGri <- dfFGr[,i] * (1/sqrt(mi-1))
-  Hi <- (sum(FGri^2)) * (1/M) * (1 / (mi -1))
+  FGri <- dfFGr[,i] * (1/sqrt(mi-1)) # * sqrt(M/L)
+  Hi <- (sum(FGri^2)) * (1/M) * (1 / (L -1))
   allHs[i] <- (mi / (L - mi)) * (H - Hi)^2
 
 }
