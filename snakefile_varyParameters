@@ -7,7 +7,7 @@ NSNP = ["100", "1000", "10000", "100000", "1000000"]
 
 rule all:
     input:
-        expand("/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.afreq" ,chr=CHR)
+        expand("/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.afreq" ,chr=CHR, size = SIZE)
 
 
 ## Extract small subset
@@ -22,7 +22,7 @@ rule make_small_set:
     output:
         psam="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.psam",
 	      pvar="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.pvar",
-	      pgen="/scratch/jgblanc/ukbb/plink2-files/medium/ukb_imp_chr{chr}_v3.pgen",
+	      pgen="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3.pgen",
     params:
         prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
         prefix_out="/scratch/jgblanc/ukbb/plink2-files/{size}/ukb_imp_chr{chr}_v3"
