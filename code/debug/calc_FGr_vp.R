@@ -20,14 +20,22 @@ dfSAM <- fread(paste0(plink_prefix, "1_v3.psam"))
 M <- nrow(dfSAM)
 dfFinal <- matrix(NA, nrow = M, ncol = 22)
 
-
 ## Read in R File
 dfR <- fread(paste0(r_prefix, "1.rvec"))
 for (i in 2:22) {
   tmp <- fread(paste0(r_prefix,i,".rvec"))
   dfR <- rbind(dfR, tmp)
 }
-print("There are ", nrow(dfR), " rows in the whole R file")
+print(paste0("There are ", nrow(dfR), " rows in the whole R file"))
+
+## Combine with genotypes
+dfFreq <- fread(paste0(plink_prefix, "1_v3.afreq"))
+for (i in 2:22) {
+  tmp <- fread(paste0(plink_prefix,i,"_v3.afreq"))
+  dfFreq <- rbind(dfFreq, tmp)
+}
+dfR <- inner_join(dfR, dfFreq)
+print(paste0("There are ", nrow(dfR), " rows in the whole R file"))
 colnames(dfR)[1] <- "CHR"
 
 ## Filter to SNPs with nonzero r values
@@ -48,6 +56,11 @@ for (j in 1:22) {
   tmp_r_name <- paste0(out_prefix, j, ".rvec")
   fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
 
+  if (nrow(dfR_tmp)== 0) {
+     dfFinal[,j] <- as.matrix(rep(0, M))
+     next
+  }
+
   # Set up plink command
   plink_prefix_chr <- paste0(plink_prefix, j, "_v3")
   tmp_outfile <- paste0(out_prefix, j)
@@ -56,12 +69,17 @@ for (j in 1:22) {
   system(plink_cmd)
 
   # Read in plink output
-  df<- fread(paste0(out_prefix, ".sscore"))
+  df<- fread(paste0(tmp_outfile, ".sscore"))
   rawFGr <- as.matrix(df[,3])
-  dfFinal[,i] <- rawFGr
+  dfFinal[,j] <- rawFGr
+
+  # Remove tmp files
+  rm_cmd <- paste0("rm ", tmp_outfile, ".*")
+  system(rm_cmd)
 
 }
 
+print(head(dfFinal))
 
 # Read in plink output
 FGr_sum <- apply(dfFinal, 1, sum)
