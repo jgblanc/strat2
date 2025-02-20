@@ -2,7 +2,7 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-GWAS= ["e5"]
+GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
 DATASET = ["HGDP1KG"]
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 CONTRASTS = ["eurasia-long"]
@@ -10,7 +10,7 @@ NSNP = ["L-pruneall"]
 
 rule all:
     input:
-        expand("output/calculate_FGr/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("data/gwas_variance/{gwas}/variance_regBlock_{chr}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -47,10 +47,10 @@ rule calculate_GWAS_variance:
 	      mem_mb=100000,
     shell:
         """
-        Rscript code/calculate_FGr/compute_GWAS_variance.R {input} {output}
+        Rscript code/blocks/compute_GWAS_variance.R {input} {output}
         """
 
-rule add_Block_info:
+rule add_bigBlock_info:
     input:
         var = "data/gwas_variance/{gwas}/variance_{chr}.txt",
         ldBlocks="data/LD_blocks/big_blocks.bed"
@@ -61,7 +61,21 @@ rule add_Block_info:
         time="10:00:00"
     shell:
         """
-        Rscript code/calculate_FGr/add_block_info.R {input.var} {input.ldBlocks} {output}
+        Rscript code/blocks/add_block_info.R {input.var} {input.ldBlocks} {output}
+        """
+
+rule add_regularBlock_info:
+    input:
+        var = "data/gwas_variance/{gwas}/variance_{chr}.txt",
+        ldBlocks="data/LD_blocks/regular_blocks.bed"
+    output:
+        output="data/gwas_variance/{gwas}/variance_regBlock_{chr}.txt"
+    resources:
+        mem_mb=38000,
+        time="10:00:00"
+    shell:
+        """
+        Rscript code/blocks/add_block_info.R {input.var} {input.ldBlocks} {output}
         """
 
 # Downsample SNPs used to compute corrections

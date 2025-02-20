@@ -367,4 +367,44 @@ HPlink<- (1/(M * (L-1))) * (t(plinkFGrT2) %*% plinkFGrT2)
 HPlink
 ```
 
+```{r}
+dfSmall <- fread("~/Downloads/small.txt")
+colnames(dfSmall) <- c("varRaw","varScale",	"H",	"1/L",	"1/M",	"1/N",	"L")
+
+ggplot(dfSmall, aes(x = `1/L`, y = H)) + geom_point() + scale_x_log10() + scale_y_log10() + geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red")+geom_hline(yintercept = 0.001, color = "purple")+geom_hline(yintercept = 0.000547, color = "green")
+
+ggplot(dfSmall, aes(x = L, y = varScale)) + geom_point() + scale_x_log10() + geom_hline(yintercept = 1, color = "red")
+```
+
+```{r}
+dfMedium <- fread("~/Downloads/medium.txt")
+colnames(dfMedium) <- c("varRaw","varScale",	"H",	"1/L",	"1/M",	"1/N",	"L")
+
+ggplot(dfMedium, aes(x = `1/L`, y = H)) + geom_point() + scale_x_log10() + scale_y_log10() + geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red")+geom_hline(yintercept = 1e-04, color = "purple")+geom_hline(yintercept = 0.000547, color = "green")
+
+ggplot(dfMedium, aes(x = L, y = varScale)) + geom_point() + scale_x_log10() + geom_hline(yintercept = 1, color = "red")
+```
+
+```{r}
+dfLarge <- fread("~/Downloads/large.txt")
+colnames(dfLarge) <- c("varRaw","varScale",	"H",	"1/L",	"1/M",	"1/N",	"L")
+
+ggplot(dfLarge, aes(x = `1/L`, y = H)) + geom_point() + scale_x_log10() + scale_y_log10() + geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red")+geom_hline(yintercept = 1e-05, color = "purple")+geom_hline(yintercept = 0.000547, color = "green")
+
+ggplot(dfLarge, aes(x = L, y = varScale)) + geom_point() + scale_x_log10() + geom_hline(yintercept = 1, color = "red")
+```
+
+```{r}
+dfSmall$M <- 1/dfSmall$`1/M`
+dfMedium$M <- 1/dfMedium$`1/M`
+dfLarge$M <- 1/dfLarge$`1/M`
+dfAll <- rbind(dfSmall, dfMedium, dfLarge)
+
+dfAll$M <- as.character(dfAll$M)
+ggplot(dfAll, aes(x = L, y = varScale, color = M)) + geom_point() + scale_x_log10() + geom_hline(yintercept = 1, color = "red") + ylab("Variance of FGr (should be 1)")
+```
+```{r}
+ggplot(dfAll, aes(x = `1/L`, y = H, color = M)) + geom_point() + scale_x_log10() + scale_y_log10() + geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +geom_hline(yintercept = 1e-4, color = "#00BA38") + geom_hline(yintercept = 1e-3, color = "#F8766D") + geom_hline(yintercept = 1e-5, color = "#619CFF")
+```
+
 
