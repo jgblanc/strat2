@@ -117,14 +117,14 @@ rule downsample_snps:
 
 # Calculate overlap statistics
 
-rule calc_chr_FGr_blocks:
+rule calc_FGr_overlap:
     input:
         gwas_var=expand("data/gwas_variance/{{gwas}}/variance_block_{chr}.txt", chr = CHR),
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         IDs="data/ids/gwas_ids/{gwas}.txt",
         snps="data/{dataset}/pruned_snps/{gwas}/{contrasts}/{nsnp}.txt"
     output:
-        "output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt"
+        "output/calculate_H/{dataset}/{gwas}/{nsnp}/FGr_{contrasts}.txt"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr",
         out_prefix="output/calculate_H/{dataset}/{gwas}/{nsnp}/{contrasts}",

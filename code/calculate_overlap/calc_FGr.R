@@ -130,39 +130,42 @@ for (j in 1:22) {
 dfFinal <- dfFinal[,2:ncol(dfFinal)]
 print(paste0("The dimensions of dfFinal is ", dim(dfFinal)))
 
+dfOut <- as.data.frame(dfFinal)
+fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
+
 # Calculate FGr
-FGr_raw <- apply(dfFinal, 1, sum)
-print(paste0("The raw var is ", var(FGr_raw)))
+#FGr_raw <- apply(dfFinal, 1, sum)
+#print(paste0("The raw var is ", var(FGr_raw)))
 
 # Scale by 1/sqrt(L-1)
-L <- nrow(dfALL)
-print(paste0("The total number of SNPs is ", L))
-FGr <- FGr_raw * (1/(sqrt(L-1)))
-print(paste0("The scaled var is ", var(FGr)))
+#L <- nrow(dfALL)
+#print(paste0("The total number of SNPs is ", L))
+#FGr <- FGr_raw * (1/(sqrt(L-1)))
+#print(paste0("The scaled var is ", var(FGr)))
 
 # Calculate H
-H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
-print(paste0("H is ", H))
-print(paste0("1/L is ", 1/L))
+#H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
+#print(paste0("H is ", H))
+#print(paste0("1/L is ", 1/L))
 
 # Compute SE for H
-nblocks <- ncol(dfFinal)
-allHs <- rep(NA, nblocks)
-for (i in 1:nblocks) {
+#nblocks <- ncol(dfFinal)
+#allHs <- rep(NA, nblocks)
+#for (i in 1:nblocks) {
 
-  FGri <- dfFinal[,i]
-  Hi <- (sum(FGri^2)) * (1/M) * (1 / (L -1))
-  allHs[i] <- (1 / (L - 1)) * (H - Hi)^2
+#  FGri <- dfFinal[,i]
+#  Hi <- (sum(FGri^2)) * (1/M) * (1 / (L -1))
+#  allHs[i] <- (1 / (L - 1)) * (H - Hi)^2
 
-}
-varH <- mean(allHs)
-se <- sqrt(varH)
+#}
+#varH <- mean(allHs)
+#se <- sqrt(varH)
 
-pval <- pnorm(H ,mean =(1/L), sd = se, lower.tail = FALSE)
-print(pval)
+#pval <- pnorm(H ,mean =(1/L), sd = se, lower.tail = FALSE)
+#print(pval)
 
 
 ## Save FGr
-dfOut <- as.data.frame(cbind(H[1,], pval, var(FGr), varH))
-colnames(dfOut) <- c("H", "pval", "VarFGr", "varH")
-fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
+#dfOut <- as.data.frame(cbind(H[1,], pval, var(FGr), varH))
+#colnames(dfOut) <- c("H", "pval", "VarFGr", "varH")
+#fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
