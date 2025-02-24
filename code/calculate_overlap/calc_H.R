@@ -33,7 +33,7 @@ r_file_name <- paste0(r_prefix, 1, ".rvec")
 var_file_name <- paste0(var_prefix,1, ".txt")
 df <- fread(r_file_name)
 df$CHR <- 1
-dfVar <- fread(varFile_name)
+dfVar <- fread(var_file_name)
 df <- inner_join(df, dfVar)
 
 ## All other Chrs
@@ -45,7 +45,7 @@ for (i in 2:22) {
   tmp$CHR <- i
 
   # Read in Var file
-  var_file_name <- paste0(prefix,i, ".txt")
+  var_file_name <- paste0(var_prefix,i, ".txt")
   dfVar <- fread(var_file_name)
   tmp <- inner_join(tmp, dfVar)
 
@@ -53,22 +53,26 @@ for (i in 2:22) {
   df <- rbind(df, tmp)
 }
 print(paste0("There are ", nrow(df), " SNPs in all the R files"))
+print(head(df))
 
 # Read in SNP file
-dfSNP <- fread(SNP_file)
+dfSNP <- fread(snp_file)
+colnames(dfSNP) <- "ID"
+print(head(dfSNP))
 
 # Combine SNP and R files
 df <- inner_join(dfSNP, df)
 print(paste0("There are ", nrow(df), " SNPs in all the R files combined with the pruned SNPs"))
 
 # Select 1 SNP per 1703 blocks
-dfALL <- df %>% group_by(block) %>% sample_n(1)
+dfALL <- df %>% group_by(block) %>% sample_n(1) %>% ungroup()
+print(tail(dfALL))
 
 # Standardize r values
 dfALL$r <- scale(dfALL$r)
 
 # Check dimensions of dfALL
-print(paste0("The dimensions of dfAll are ", dim(dfAll)))
+print(paste0("The dimensions of dfAll are ", dim(dfALL)))
 
 # Individually score each of the 1703 SNPs
 for (j in 1:22) {
@@ -93,13 +97,19 @@ for (j in 1:22) {
 
     # Subset Rs and save
     dfR_tmp <- dfR %>% filter(block == blockNum) %>% select("ID", "ALT", "r")
+    print(head(dfR_tmp))
     tmp_r_name <- paste0(out_prefix, blockNum, ".rvec")
     fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
+
+    # Subset single SNP ID
+    dfSNP_tmp <- dfR_tmp %>% select("ID")
+    tmp_snp_name <- paste0(out_prefix, blockNum, ".snp")
+    fwrite(dfSNP_tmp, tmp_snp_name, quote = F, row.names = F, sep = "\t")
 
     # Set up plink command
     tmp_outfile <- paste0(out_prefix, blockNum)
     plink_prefix_chr <- paste0(plink_prefix, j, "_v3")
-    plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr, " --keep ", id_file, " --threads 8 ",
+    plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr, " --keep ", id_file, " --extract ", tmp_snp_name ," --threads 8 ",
                         " --score ", tmp_r_name, " center header-read cols=dosagesum,scoresums --out ", tmp_outfile)
     system(plink_cmd)
 
@@ -131,17 +141,16 @@ FGr <- FGr_raw * (1/(sqrt(L-1)))
 print(paste0("The scaled var is ", var(FGr)))
 
 # Calculate H
-M <- nrow(dfFGr)
 H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
 print(paste0("H is ", H))
 print(paste0("1/L is ", 1/L))
 
 # Compute SE for H
-nblocks <- ncol(dfFGr)
+nblocks <- ncol(dfFinal)
 allHs <- rep(NA, nblocks)
 for (i in 1:nblocks) {
 
-  FGri <- dfFGr[,i]
+  FGri <- dfFinal[,i]
   Hi <- (sum(FGri^2)) * (1/M) * (1 / (L -1))
   allHs[i] <- (1 / (L - 1)) * (H - Hi)^2
 
