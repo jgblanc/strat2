@@ -2,15 +2,15 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-GWAS= ["e200"]
-DATASET = ["HGDP1KG"]
-#CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
-CONTRASTS = ["eurasia-long"]
+GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
+DATASET = ["InUKBB"]
+CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
+#CONTRASTS = ["eurasia-long"]
 NSNP = ["L-pruneall"]
 
 rule all:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/FGr_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -136,7 +136,7 @@ rule calc_FGr_overlap:
         time="01:00:00"
     shell:
         """
-        Rscript code/calculate_overlap/calc_H.R {params.plink_prefix} {params.r_prefix} {params.var_prefix} {params.out_prefix} {input.snps} {input.IDs} {output}
+        Rscript code/calculate_overlap/calc_FGr.R {params.plink_prefix} {params.r_prefix} {params.var_prefix} {params.out_prefix} {input.snps} {input.IDs} {output}
 	      """
 
 
