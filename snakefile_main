@@ -3,14 +3,14 @@ CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
 GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
-DATASET = ["InUKBB", HGDP1KG]
-CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
+DATASET = ["HGDP1KG"]
+CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 #CONTRASTS = ["eurasia-long"]
 NSNP = ["L-pruneall"]
 
 rule all:
     input:
-        expand("plots/H.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("plots/H_{dataset}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -154,9 +154,9 @@ rule calc_H:
 
 rule concat_H:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt", dataset=DATASET, gwas=GWAS, contrasts=CONTRASTS, nsnp=NSNP)
+        expand("output/calculate_H/{{dataset}}/{gwas}/{nsnp}/H_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS, nsnp=NSNP)
     output:
-        "plots/H.txt"
+        "plots/H_{dataset}.txt"
     shell:
         """
         Rscript code/summarize/concat_OverlapStats.R {output} {input}
