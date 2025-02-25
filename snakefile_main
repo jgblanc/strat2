@@ -10,7 +10,7 @@ NSNP = ["L-pruneall"]
 
 rule all:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/plots/H.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -152,3 +152,12 @@ rule calc_H:
         Rscript code/calculate_overlap/calc_H.R {input} {output}
 	      """
 
+rule concat_H:
+    input:
+        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt", dataset=DATASET, gwas=GWAS, contrasts=CONTRASTS, nsnp=SNP)
+    output:
+        "output/plots/H.txt"
+    shell:
+        """
+        Rscript code/summarize/concat_OverlapStats.R {output} {input}
+	      """
