@@ -3,7 +3,7 @@ CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
 GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
-DATASET = ["InUKBB"]
+DATASET = ["InUKBB", HGDP1KG]
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 #CONTRASTS = ["eurasia-long"]
 NSNP = ["L-pruneall"]
