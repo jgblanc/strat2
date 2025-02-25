@@ -26,7 +26,7 @@ for (i in 2:length(args)) {
   dataset <- strsplit(filename, "/")[[1]][3]
 
   # Extract which GWAS
-  gwas <- strsplit(filename, "/")[[1]][5]
+  gwas <- strsplit(filename, "/")[[1]][4]
 
   # Extract NSNP
   tmp <- strsplit(filename, "/")[[1]][5]
