@@ -154,7 +154,7 @@ rule calc_H:
 
 rule concat_H:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt", dataset=DATASET, gwas=GWAS, contrasts=CONTRASTS, nsnp=SNP)
+        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt", dataset=DATASET, gwas=GWAS, contrasts=CONTRASTS, nsnp=NSNP)
     output:
         "output/plots/H.txt"
     shell:
