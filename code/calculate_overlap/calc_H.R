@@ -2,7 +2,7 @@
 
 args=commandArgs(TRUE)
 
-if(length(args)<7){stop("Rscript calc_H.R <FGr file> <out File>")}
+if(length(args)<2){stop("Rscript calc_H.R <FGr file> <out File>")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
@@ -14,6 +14,7 @@ outFile = args[2]
 
 # Read in FGr
 dfFinal <- fread(inFile)
+dfFinal <- as.matrix(dfFinal)
 M <- nrow(dfFinal)
 
 # Calculate FGr
@@ -35,13 +36,13 @@ nblocks <- ncol(dfFinal)
 allHs <- rep(NA, nblocks)
 for (i in 1:nblocks) {
 
-  FGri <- apply(dfFinal[,-i], 1, sum)
-  FGri <- FGri * (1/sqrt(L-2))
-  Hi <- (sum(FGri^2)) * (1/M) * (1/(L-1))
+  print(i)
+  FGri <- (FGr_raw - dfFinal[,i]) * (1/sqrt(L-2))
+  Hi <- sum(FGri^2) * (1/M) * (1/(L-2))
+  print(Hi)
   allHs[i] <- (nblocks - 1) * (H - Hi)^2
 
 }
-print(allHs)
 
 varH <- mean(allHs)
 se <- sqrt(varH)
@@ -54,4 +55,4 @@ print(pval)
 dfOut <- as.data.frame(cbind(H[1,], pval, var(FGr), varH))
 colnames(dfOut) <- c("H", "pval", "VarFGr", "varH")
 print(dfOut)
-fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
+fwrite(dfOut, outFile, quote = F, row.names = F, sep = "\t")

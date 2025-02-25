@@ -2,10 +2,10 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-GWAS= ["e5"]
-DATASET = ["HGDP1KG"]
-#CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
-CONTRASTS = ["eurasia-long"]
+GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
+DATASET = ["InUKBB"]
+CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
+#CONTRASTS = ["eurasia-long"]
 NSNP = ["L-pruneall"]
 
 rule all:
@@ -144,6 +144,9 @@ rule calc_H:
         "output/calculate_H/{dataset}/{gwas}/{nsnp}/FGr_{contrasts}.txt"
     output:
         "output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt"
+    resources:
+        time="01:00:00",
+	mem_mb=38000
     shell:
         """
         Rscript code/calculate_overlap/calc_H.R {input} {output}
