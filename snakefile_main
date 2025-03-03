@@ -2,9 +2,11 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
+#GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
+GWAS ["e5"]
 DATASET = ["SDS"]
-CONTRASTS = ["Han", "UK10K"]
+#CONTRASTS = ["Han", "UK10K"]
+CONTRASTS = ["UK10K"]
 NSNP = ["L-pruneall"]
 
 rule all:
@@ -123,7 +125,8 @@ rule calc_FGr_overlap:
         IDs="data/ids/gwas_ids/{gwas}.txt",
         snps="data/ukbb/ukbb_pc_snps.txt"
     output:
-        "output/calculate_H/{dataset}/{gwas}/{nsnp}/FGr_{contrasts}.txt"
+        FGr = "output/calculate_H/{dataset}/{gwas}/{nsnp}/FGr_{contrasts}.txt",
+        L = "output/calculate_H/{dataset}/{gwas}/{nsnp}/L_{contrasts}.txt"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr",
         out_prefix="output/calculate_H/{dataset}/{gwas}/{nsnp}/{contrasts}",
@@ -135,12 +138,13 @@ rule calc_FGr_overlap:
         time="01:00:00"
     shell:
         """
-        Rscript code/calculate_overlap/calc_FGr.R {params.plink_prefix} {params.r_prefix} {params.var_prefix} {params.out_prefix} {input.snps} {input.IDs} {output}
+        Rscript code/calculate_overlap/calc_FGr.R {params.plink_prefix} {params.r_prefix} {params.var_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.FGr} {output.L}
 	      """
 
 rule calc_H:
     input:
-        "output/calculate_H/{dataset}/{gwas}/{nsnp}/FGr_{contrasts}.txt"
+        FGr = "output/calculate_H/{dataset}/{gwas}/{nsnp}/FGr_{contrasts}.txt",
+        L = "output/calculate_H/{dataset}/{gwas}/{nsnp}/L_{contrasts}.txt"
     output:
         "output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt"
     resources:
@@ -148,7 +152,7 @@ rule calc_H:
 	mem_mb=38000
     shell:
         """
-        Rscript code/calculate_overlap/calc_H.R {input} {output}
+        Rscript code/calculate_overlap/calc_H.R {input.FGr} {input.L} {output}
 	      """
 
 rule concat_H:

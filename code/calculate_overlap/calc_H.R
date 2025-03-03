@@ -10,7 +10,8 @@ suppressWarnings(suppressMessages({
 }))
 
 inFile = args[1]
-outFile = args[2]
+LFile = args[2]
+outFile = args[3]
 
 # Read in FGr
 dfFinal <- fread(inFile)
@@ -22,7 +23,9 @@ FGr_raw <- apply(dfFinal, 1, sum)
 print(paste0("The raw var is ", var(FGr_raw)))
 
 # Scale by 1/sqrt(L-1)
-L <- 1703
+dfL <- fread(LFile)
+L <- dfL[1,1]
+print(paste0("L is ", L))
 FGr <- FGr_raw * (1/(sqrt(L-1)))
 print(paste0("The scaled var is ", var(FGr)))
 
