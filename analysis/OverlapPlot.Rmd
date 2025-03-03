@@ -43,8 +43,19 @@ pl <- df %>% ggplot(aes(x = gwas, y = H, color = gwas)) + geom_point(size = 2) +
 pl
 ggsave("~/Desktop/tmp3.png", pl, height = 2.2, width = 12)
 
-pl <- df %>% filter(contrasts %in% c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur")) %>% ggplot(aes(x = gwas, y = H, color = gwas)) + geom_point(size = 2) + xlab("") + ylab("") + theme_bw(base_size = 14)  + guides(fill="none") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = 8, angle = 45, hjust = 1), strip.background=element_rect(colour="black",fill="white"), legend.position = "none")+facet_wrap(~contrasts, nrow = 1)+ scale_y_log10() + geom_hline(yintercept = 1/1703, color = "red", linetype = "dashed") + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen", "orchid1", "seagreen1")) + geom_errorbar(aes(ymin = lc, ymax = uc), width = 0.8)
+```
+
+
+```{r}
+df <- fread("../plots/H_SDS.txt")
+dfNum <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200") )%>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+dfNNum <- df %>% filter(gwas %in% c("WBS", "ALL"))
+df <- rbind(dfNum, dfNNum)
+df$gwas <- factor(df$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")) 
+df <- df %>% mutate(uc = H + (1.96*(sqrt(varH))), lc = H - (1.96*(sqrt(varH))))
+
+pl <- df %>% ggplot(aes(x = gwas, y = H, color = gwas)) + geom_point(size = 2) + xlab("") + ylab("") + theme_bw(base_size = 14)  + guides(fill="none") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = 8, angle = 45, hjust = 1), strip.background=element_rect(colour="black",fill="white"), legend.position = "none")+facet_wrap(~contrasts, nrow = 1)+ scale_y_log10() + geom_hline(yintercept = 1/1703, color = "red", linetype = "dashed") + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen", "orchid1", "seagreen1")) + geom_errorbar(aes(ymin = lc, ymax = uc), width = 0.8)
 pl
-ggsave("~/Desktop/tmp2.png", pl, height = 2.2, width = 12)
+ggsave("~/Desktop/tmp3.png", pl, height = 2.2, width = 12)
 
 ```

@@ -57,16 +57,13 @@ print(head(df))
 
 # Read in SNP file
 dfSNP <- fread(snp_file)
+dfSNP <- dfSNP[,1]
 colnames(dfSNP) <- "ID"
 print(head(dfSNP))
 
 # Combine SNP and R files
 df <- inner_join(dfSNP, df)
 print(paste0("There are ", nrow(df), " SNPs in all the R files combined with the pruned SNPs"))
-
-# Select 1 SNP per 1703 blocks
-dfALL <- df %>% group_by(block) %>% sample_n(1) %>% ungroup()
-print(tail(dfALL))
 
 # Standardize r values
 dfALL$r <- scale(dfALL$r)
