@@ -62,7 +62,7 @@ colnames(dfSNP) <- "ID"
 print(head(dfSNP))
 
 # Combine SNP and R files
-df <- inner_join(dfSNP, df)
+dfALL <- inner_join(dfSNP, df)
 print(paste0("There are ", nrow(df), " SNPs in all the R files combined with the pruned SNPs"))
 
 # Standardize r values
