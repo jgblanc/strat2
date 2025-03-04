@@ -14,7 +14,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("data/{dataset}/pruned_snps/{gwas}/{contrasts}/block_{nsnp}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -131,15 +131,14 @@ rule block_snps:
 
 # Calculate overlap statistics
 
-rule calc_FGr_overlap:
+rule calc_H:
     input:
-        gwas_var=expand("data/gwas_variance/{{gwas}}/variance_block_{chr}.txt", chr = CHR),
+        gwas_var=expand("data/gwas_variance/{{gwas}}/variance_{chr}.txt", chr = CHR),
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         IDs="data/ids/gwas_ids/{gwas}.txt",
-        snps="data/ukbb/ukbb_pc_snps.txt"
+        snps="data/{dataset}/pruned_snps/{gwas}/{contrasts}/block_{nsnp}.txt"
     output:
-        FGr = "output/calculate_H/{dataset}/{gwas}/{nsnp}/FGr_{contrasts}.txt",
-        L = "output/calculate_H/{dataset}/{gwas}/{nsnp}/L_{contrasts}.txt"
+        H = "output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr",
         out_prefix="output/calculate_H/{dataset}/{gwas}/{nsnp}/{contrasts}",
@@ -151,22 +150,9 @@ rule calc_FGr_overlap:
         time="01:00:00"
     shell:
         """
-        Rscript code/calculate_overlap/calc_FGr.R {params.plink_prefix} {params.r_prefix} {params.var_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.FGr} {output.L}
+        Rscript code/calculate_overlap/calc_H_seq.R {params.plink_prefix} {params.r_prefix} {params.var_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H}
 	      """
 
-rule calc_H:
-    input:
-        FGr = "output/calculate_H/{dataset}/{gwas}/{nsnp}/FGr_{contrasts}.txt",
-        L = "output/calculate_H/{dataset}/{gwas}/{nsnp}/L_{contrasts}.txt"
-    output:
-        "output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt"
-    resources:
-        time="01:00:00",
-	mem_mb=38000
-    shell:
-        """
-        Rscript code/calculate_overlap/calc_H.R {input.FGr} {input.L} {output}
-	      """
 
 rule concat_H:
     input:
