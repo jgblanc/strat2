@@ -142,7 +142,7 @@ rule calc_H:
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr",
         out_prefix="output/calculate_H/{dataset}/{gwas}/{nsnp}/{contrasts}",
-        var_prefix="data/gwas_variance/{gwas}/variance_regBlock_",
+        var_prefix="data/gwas_variance/{gwas}/variance_",
         r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
     threads: 8
     resources:

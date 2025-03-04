@@ -57,14 +57,14 @@ print(head(df))
 dfSNP <- fread(snp_file)
 
 # Combine SNP and R files
-dfALL <- inner_join(dfSNP, df) %>% drop_na()
-print(paste0("There are ", nrow(df), " SNPs in all the R files combined with the pruned SNPs"))
+dfALL <- inner_join(dfSNP, df, by = "ID") %>% drop_na()
+print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
 
 # Standardize r values
 dfALL$r <- scale(dfALL$r)
 
-
+print(head(dfALL))
 # Calculate FGr
 dfFGr_mat <- matrix(NA, nrow = M, ncol = 22)
 for (j in 1:22) {
@@ -86,7 +86,7 @@ for (j in 1:22) {
   fwrite(dfSNP_tmp, tmp_snp_name, quote = F, row.names = F, sep = "\t")
 
   # Set up plink command
-  tmp_outfile <- paste0(out_prefix, blockNum)
+  tmp_outfile <- out_prefix
   plink_prefix_chr <- paste0(plink_prefix, j, "_v3")
   plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr, " --keep ", id_file, " --extract ", tmp_snp_name ," --threads 8 ",
                       " --score ", tmp_r_name, " center header-read cols=dosagesum,scoresums --out ", tmp_outfile)

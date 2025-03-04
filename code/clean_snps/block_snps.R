@@ -21,7 +21,7 @@ block_size <- ceiling(nrow(df) / num_blocks)
 df <- df %>% mutate(block = rep(1:num_blocks, each = block_size, length.out = n()))
 
 # Save file
-fwrite(df, outFile ,row.names=F,quote=F,sep="\t", col.names = F)
+fwrite(df, outFile ,row.names=F,quote=F,sep="\t", col.names = T)
 
 
 
