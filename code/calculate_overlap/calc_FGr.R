@@ -6,7 +6,7 @@ if(length(args)<7){stop("Rscript calc_H.R <prefix to plink files> <r prefix> <va
 
 suppressWarnings(suppressMessages({
   library(data.table)
-  library(dplyr)
+  library(tidyverse)
 }))
 
 plink_prefix = args[1]
@@ -63,7 +63,7 @@ colnames(dfSNP) <- "ID"
 print(head(dfSNP))
 
 # Combine SNP and R files
-dfALL <- inner_join(dfSNP, df)
+dfALL <- inner_join(dfSNP, df) %>% drop_na()
 print(paste0("There are ", nrow(df), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
 
