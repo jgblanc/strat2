@@ -9,9 +9,12 @@ DATASET = ["HGDP1KG"]
 CONTRASTS = ["eurasia-long"]
 NSNP = ["L-pruneall"]
 
+wildcard_constraints:
+    nsnp="L-pruneall"
+
 rule all:
     input:
-        expand("data/{dataset}/pruned_snps/{gwas}/{contrasts}/{nsnp}_block.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("data/{dataset}/pruned_snps/{gwas}/{contrasts}/block_{nsnp}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -120,7 +123,7 @@ rule block_snps:
     input:
         "data/{dataset}/pruned_snps/{gwas}/{contrasts}/{nsnp}.txt"
     output:
-        "data/{dataset}/pruned_snps/{gwas}/{contrasts}/{nsnp}_block.txt"
+        "data/{dataset}/pruned_snps/{gwas}/{contrasts}/block_{nsnp}.txt"
     shell:
         """
         Rscript code/clean_snps/block_snps.R {input} {output}
