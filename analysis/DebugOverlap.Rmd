@@ -408,3 +408,16 @@ ggplot(dfAll, aes(x = `1/L`, y = H, color = M)) + geom_point() + scale_x_log10()
 ```
 
 
+
+```{r}
+df <- fread("~/Downloads/block_L-pruneall.txt")
+df$r <- runif(nrow(df))
+df$ID <- runif(nrow(df)) *100
+
+dfSum <- df %>% group_by(block) %>% summarise(nSNP = n())
+
+rep = 1
+dfNew <- df %>%mutate(r = c(tail(r, rep * 1000), head(r, -rep *1000)))
+```
+
+

@@ -16,7 +16,8 @@ out_prefix = args[4]
 snp_file = args[5]
 id_file = args[6]
 out_file = args[7]
-
+repNum = as.numeric(args[8])
+print(paste0("The rep number is ", repNum))
 
 # Read in IDs
 dfIDs <- fread(id_file)
@@ -64,7 +65,9 @@ L <- nrow(dfALL)
 # Standardize r values
 dfALL$r <- scale(dfALL$r)
 
-print(head(dfALL))
+# Shuffle blocks
+dfALL <- dfALL %>%mutate(r = c(tail(r, rep * 1000), head(r, -rep *1000)))
+
 # Calculate FGr
 dfFGr_mat <- matrix(NA, nrow = M, ncol = 22)
 for (j in 1:22) {
@@ -112,8 +115,26 @@ print(paste0("The scaled var is ", var(FGr)))
 H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
 print(paste0("H is ", H))
 
-dfOut <- as.data.frame(c(H, "real", L))
+
+dfOut <- as.data.frame(c(H, rep, L))
 colnames(dfOut) <- c("H", "type", "L")
 fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

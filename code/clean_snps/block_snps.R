@@ -18,6 +18,8 @@ print(head(df))
 # Separate in to 1000 blocks
 num_blocks <- 1000
 block_size <- ceiling(nrow(df) / num_blocks)
+total_size <- block_size * num_blocks
+df <- df %>% sample_n(total_size)
 df <- df %>% mutate(block = rep(1:num_blocks, each = block_size, length.out = n()))
 
 # Save file
