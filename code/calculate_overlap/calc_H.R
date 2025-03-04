@@ -24,7 +24,7 @@ print(paste0("The raw var is ", var(FGr_raw)))
 
 # Scale by 1/sqrt(L-1)
 dfL <- fread(LFile)
-L <- as.numeric(dfL[1,1])
+L <- sum(dfL$nSNP)
 print(paste0("L is ", L))
 FGr <- FGr_raw * (1/(sqrt(L-1)))
 print(paste0("The scaled var is ", var(FGr)))
@@ -39,9 +39,9 @@ nblocks <- ncol(dfFinal)
 allHs <- rep(NA, nblocks)
 for (i in 1:nblocks) {
 
-  print(i)
-  FGri <- (FGr_raw - dfFinal[,i]) * (1/sqrt(L-2))
-  Hi <- sum(FGri^2) * (1/M) * (1/(L-2))
+  mi <- dfL[i,2]
+  FGri <- (FGr_raw - dfFinal[,i]) * (1/sqrt(L-mi))
+  Hi <- sum(FGri^2) * (1/M) * (1/(L-mi))
   allHs[i] <- (nblocks - 1) * (H - Hi)^2
 
 }
@@ -54,7 +54,7 @@ print(pval)
 
 
 ## Save FGr
-dfOut <- as.data.frame(cbind(H[1,], pval, var(FGr), varH))
-colnames(dfOut) <- c("H", "pval", "VarFGr", "varH")
+dfOut <- as.data.frame(cbind(H[1,], pval, var(FGr), varH, L))
+colnames(dfOut) <- c("H", "pval", "VarFGr", "varH", "L")
 print(dfOut)
 fwrite(dfOut, outFile, quote = F, row.names = F, sep = "\t")

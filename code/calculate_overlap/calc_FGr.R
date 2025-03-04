@@ -73,6 +73,11 @@ dfALL$r <- scale(dfALL$r)
 # Check dimensions of dfALL
 print(paste0("The dimensions of dfAll are ", dim(dfALL)))
 
+# Set up data frame to collect SNP numbers
+numBlocks <- length(unique(dfALL$block))
+dfSNPs <- as.data.frame(matrix(NA, ncol = 2, nrow = numBlocks))
+colnames(dfSNPs) <- c("Block", "nSNP")
+
 # Individually score each of the 1703 SNPs
 for (j in 1:22) {
 
@@ -84,11 +89,13 @@ for (j in 1:22) {
   print(paste0("There are ", nBlock_chr, " blocks on the Chr"))
   dfFGr_mat <- matrix(NA, nrow = M, ncol = nBlock_chr)
 
+
   # Divide R by sd of GWAS variance
   dfR$r <- dfR$r / sqrt(dfR$Var)
 
   ## Loop through blocks
   for (i in 1:nBlock_chr) {
+
 
     # Block num
     blockNum <- unique(dfR$block)[i]
@@ -100,7 +107,12 @@ for (j in 1:22) {
     tmp_r_name <- paste0(out_prefix, blockNum, ".rvec")
     fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
 
-    # Subset single SNP ID
+    # Save number of SNPs
+    nsnp_in_block <- nrow(dfR_tmp)
+    dfSNPs[i,1] <- block_num
+    dfSNPs[i,2] <- nsnp_in_block
+
+    # Subset SNP IDs
     dfSNP_tmp <- dfR_tmp %>% select("ID")
     tmp_snp_name <- paste0(out_prefix, blockNum, ".snp")
     fwrite(dfSNP_tmp, tmp_snp_name, quote = F, row.names = F, sep = "\t")
@@ -132,6 +144,5 @@ print(paste0("The dimensions of dfFinal is ", dim(dfFinal)))
 dfOut <- as.data.frame(dfFinal)
 fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
-dfL <- as.data.frame(L)
-fwrite(dfL, out_file_L, quote = F, row.names = F, sep = "\t")
+fwrite(dfSNPs, out_file_L, quote = F, row.names = F, sep = "\t")
 
