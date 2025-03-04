@@ -77,6 +77,8 @@ print(paste0("The dimensions of dfAll are ", dim(dfALL)))
 numBlocks <- length(unique(dfALL$block))
 dfSNPs <- as.data.frame(matrix(NA, ncol = 2, nrow = numBlocks))
 colnames(dfSNPs) <- c("Block", "nSNP")
+print(paste0("The total number of blocks is ", numBlocks)) 
+
 
 # Individually score each of the 1703 SNPs
 for (j in 1:22) {
@@ -103,14 +105,15 @@ for (j in 1:22) {
 
     # Subset Rs and save
     dfR_tmp <- dfR %>% filter(block == blockNum) %>% select("ID", "ALT", "r")
-    print(head(dfR_tmp))
+    print(nrow(dfR_tmp))
     tmp_r_name <- paste0(out_prefix, blockNum, ".rvec")
     fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
 
     # Save number of SNPs
     nsnp_in_block <- nrow(dfR_tmp)
-    dfSNPs[i,1] <- block_num
-    dfSNPs[i,2] <- nsnp_in_block
+    dfSNPs[blockNum,1] <- blockNum
+    dfSNPs[blockNum,2] <- nrow(dfR_tmp)
+    print(head(dfSNPs))
 
     # Subset SNP IDs
     dfSNP_tmp <- dfR_tmp %>% select("ID")

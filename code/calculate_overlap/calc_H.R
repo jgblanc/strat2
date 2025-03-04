@@ -6,7 +6,7 @@ if(length(args)<2){stop("Rscript calc_H.R <FGr file> <out File>")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
-  library(dplyr)
+  library(tidyverse)
 }))
 
 inFile = args[1]
@@ -24,6 +24,8 @@ print(paste0("The raw var is ", var(FGr_raw)))
 
 # Scale by 1/sqrt(L-1)
 dfL <- fread(LFile)
+dfL <- dfL %>% drop_na()
+dfL$nSNP <- as.numeric(dfL$nSNP)
 L <- sum(dfL$nSNP)
 print(paste0("L is ", L))
 FGr <- FGr_raw * (1/(sqrt(L-1)))
@@ -37,15 +39,18 @@ print(paste0("1/L is ", 1/L))
 # Compute SE for H
 nblocks <- ncol(dfFinal)
 allHs <- rep(NA, nblocks)
+print(paste0("The number of blocks is ", nblocks))
 for (i in 1:nblocks) {
 
-  mi <- dfL[i,2]
-  FGri <- (FGr_raw - dfFinal[,i]) * (1/sqrt(L-mi))
-  Hi <- sum(FGri^2) * (1/M) * (1/(L-mi))
-  allHs[i] <- (nblocks - 1) * (H - Hi)^2
+  mi <- as.numeric(dfL[i,2])
+  FGri <- (FGr_raw - dfFinal[,i]) * (1/sqrt(L-mi-1))
+  Hi <- sum(FGri^2) * (1/M) * (1/(L-mi-1))
+  allHs[i] <- ((L - mi)/mi) * (H - Hi)^2
 
 }
 
+
+print(allHs)
 varH <- mean(allHs)
 se <- sqrt(varH)
 

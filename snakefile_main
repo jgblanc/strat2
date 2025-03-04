@@ -2,16 +2,16 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-#GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
-GWAS = ["e5"]
+GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
+#GWAS = ["e5"]
 DATASET = ["HGDP1KG"]
-#CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
-CONTRASTS = ["eurasia-long"]
+CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+#CONTRASTS = ["eurasia-long"]
 NSNP = ["L-pruneall"]
 
 rule all:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("plots/H_{dataset}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels

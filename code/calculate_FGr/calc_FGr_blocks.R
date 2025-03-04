@@ -39,14 +39,16 @@ for (j in 2:22) {
 print(paste0("There are ", nrow(dfVar), " variants in the GWAS var file"))
 
 # Combine R and Var file
-dfR_ALl <- inner_join(dfR_ALl, dfVar)
-print(head(dfR_ALl))
+dfR_ALL <- inner_join(dfR_ALL, dfVar)
+print(head(dfR_ALL))
+
+total_blocks <- unique(dfR_ALL$block)
 
 ## Loop through chromosomes
 for (j in 1:22) {
 
   ## Read in R File
-  dfR <- dfR_ALl %>% filter(CHR == j)
+  dfR <- dfR_ALL %>% filter(CHR == j)
 
   ## Number blocks in chromosome
   nBlock_chr <- length(unique(dfR$block))
