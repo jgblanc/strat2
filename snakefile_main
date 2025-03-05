@@ -21,7 +21,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/Rep{rep}_H_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS, rep=REP)
+        expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_pcSNPs_v3.pgen" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS, rep=REP)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -107,6 +107,38 @@ rule block_snps:
         """
         Rscript code/clean_snps/block_snps.R {input} {output}
         """
+
+# Concat chromosomes and extract PCA SNPs
+
+rule concat_chr:
+    input:
+        pgen=expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen", chr=CHR),
+        pvar=expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar", chr=CHR),
+        psam=expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam", chr=CHR),
+        snps="data/ukbb/ukbb_pc_snps.txt"
+    output:
+        "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_pcSNPs_v3.pgen",
+        "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_pcSNPs_v3.pvar",
+        "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_pcSNPs_v3.psam",
+    params:
+        prefix_out="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3",
+        merge_prefix=expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3", chr=CHR, newline="\n")
+    threads: 16
+    resources:
+        mem_mb=60000,
+        time="12:00:00"
+    shell:
+        """
+        echo {params.merge_prefix} > tmp_chr_list.txt
+        plink2 --pmerge-list tmp_chr_list.txt \
+        --extract {input.snps} \
+	      --threads 16 \
+        --memory 60000 \
+        --make-pgen \
+        --freq \
+        --out {params.prefix_out}
+        """
+
 
 # Calculate overlap statistics
 
