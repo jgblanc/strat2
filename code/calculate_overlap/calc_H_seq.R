@@ -54,26 +54,26 @@ print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 print(head(df))
 
 # Read in SNP file
-dfSNP <- fread(snp_file)
+dfSNP <- fread(snp_file) %>% select("ID")
 
 # Combine SNP and R files
 dfALL <- inner_join(dfSNP, df, by = "ID") %>% drop_na()
 print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
 
-# Standardize r values
+# Divide SNPs into 1000 equal blocks
+block_size <- floor(nrow(dfALL) / num_blocks)
+print(block_size)
+
+# Standardize r values and divide by GWAS variance
 dfALL$r <- scale(dfALL$r)
+dfALL$r <- dfR$r / sqrt(dfR$Var)
 
-print(head(dfALL))
-# Calculate FGr
-dfFGr_mat <- matrix(NA, nrow = M, ncol = 22)
-for (j in 1:22) {
+# Make a collector for all values of H
+allH <- rep(NA, 21)
+dfR <- dfALL
 
-  # Read in R File
-  dfR <- dfALL %>% filter(CHR == j)
-
-  # Divide R by sd of GWAS variance
-  dfR$r <- dfR$r / sqrt(dfR$Var)
+for (i in 1:length(allH)) {
 
   # Subset Rs and save
   dfR_tmp <- dfR %>% select("ID", "ALT", "r")
@@ -87,7 +87,7 @@ for (j in 1:22) {
 
   # Set up plink command
   tmp_outfile <- out_prefix
-  plink_prefix_chr <- paste0(plink_prefix, j, "_v3")
+  plink_prefix_chr <- paste0(plink_prefix)
   plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr, " --keep ", id_file, " --extract ", tmp_snp_name ," --threads 8 ",
                       " --score ", tmp_r_name, " center header-read cols=dosagesum,scoresums --out ", tmp_outfile)
   system(plink_cmd)
@@ -95,25 +95,32 @@ for (j in 1:22) {
   # Read in plink output
   df<- fread(paste0(tmp_outfile, ".sscore"))
   rawFGr <- as.matrix(df[,3])
-  dfFGr_mat[,j] <- rawFGr
 
-  # Remove tmp files
-  rm_cmd <- paste0("rm ", tmp_outfile, ".*")
-  system(rm_cmd)
+  # Calculate FGr
+  print(paste0("The raw var is ", var(rawFGr)))
+  FGr <- FGr_raw * (1/(sqrt(L-1)))
+  print(paste0("The scaled var is ", var(FGr)))
+
+  # Calculate H
+  H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
+  print(paste0("H is ", H))
+  allH[i] <- H
+
+  # Shift the dfR dataframe
+  dfR <- dfR %>% mutate(r = c(tail(r, i * blockSize), head(r, -i * blockSize)))
+
 }
 
-# Calculate FGr
-FGr_raw <- apply(dfFGr_mat, 1, sum)
-print(paste0("The raw var is ", var(FGr_raw)))
-FGr <- FGr_raw * (1/(sqrt(L-1)))
-print(paste0("The scaled var is ", var(FGr)))
+# Calculate p-value
+realH <- allH[1]
+varH <- var(allH[2:length(allH)])
+se = sqrt(varH)
+meanH <- var(allH[2:length(allH)])
+pvalNorm <- pnorm(H ,mean =meanH, sd = se, lower.tail = FALSE)
+pvalSim <- sum(realH >= allH[2:length(allH)]) / (length(allH) - 1)
 
-# Calculate H
-H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
-print(paste0("H is ", H))
-
-dfOut <- as.data.frame(c(H, "real", L))
-colnames(dfOut) <- c("H", "type", "L")
+dfOut <- as.data.frame(c(realH, L, meanH, varH, pvalNorm, pvalSim))
+colnames(dfOut) <- c("H", "L", "meanH", "varH", "pvalNorm", "pvalSim")
 fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
 

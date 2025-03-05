@@ -21,7 +21,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3.pgen" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS, rep=REP)
+        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS, rep=REP)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -140,7 +140,6 @@ rule concat_chr:
         --out {params.prefix_out}
         """
 
-
 # Calculate overlap statistics
 
 rule calc_H:
@@ -148,11 +147,11 @@ rule calc_H:
         gwas_var=expand("data/gwas_variance/{{gwas}}/variance_{chr}.txt", chr = CHR),
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         IDs="data/ids/gwas_ids/{gwas}.txt",
-        snps="data/{dataset}/pruned_snps/{gwas}/{contrasts}/block_{nsnp}.txt"
+        snps="data/ukbb/ukbb_pc_snps.txt"
     output:
         H = "output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}.txt"
     params:
-        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr",
+        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_pcSNPs_v3",
         out_prefix="output/calculate_H/{dataset}/{gwas}/{nsnp}/{contrasts}",
         var_prefix="data/gwas_variance/{gwas}/variance_",
         r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
