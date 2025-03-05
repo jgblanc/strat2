@@ -66,7 +66,11 @@ L <- nrow(dfALL)
 dfALL$r <- scale(dfALL$r)
 
 # Shuffle blocks
-dfALL <- dfALL %>%mutate(r = c(tail(r, rep * 1000), head(r, -rep *1000)))
+tmp <- dfALL %>% group_by(block) %>% summarize(total = n())
+print(tmp)
+blockSize <- tmp$total[1]
+print(blockSize)
+dfALL <- dfALL %>%mutate(r = c(tail(r, repNum * blockSize), head(r, -repNum * blockSize)))
 
 # Calculate FGr
 dfFGr_mat <- matrix(NA, nrow = M, ncol = 22)

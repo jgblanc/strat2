@@ -12,17 +12,16 @@ DATASET = ["HGDP1KG"]
 CONTRASTS = ["eurasia-long"]
 NSNP = ["L-pruneall"]
 
-def get_chr_num(x):
+def get_rep_num(x):
   out = int(x)
   return out
 
 wildcard_constraints:
     nsnp="L-pruneall"
-    rep="^(?:[1-9]|[1-9][0-9]|1000)$"
 
 rule all:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}_{rep}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/Rep{rep}_H_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS, rep=REP)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -140,7 +139,7 @@ rule calc_H_rep:
         IDs="data/ids/gwas_ids/{gwas}.txt",
         snps="data/{dataset}/pruned_snps/{gwas}/{contrasts}/block_{nsnp}.txt"
     output:
-        H = "output/calculate_H/{dataset}/{gwas}/{nsnp}/H_{contrasts}_{rep}.txt"
+        H = "output/calculate_H/{dataset}/{gwas}/{nsnp}/Rep{rep}_H_{contrasts}.txt"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr",
         out_prefix="output/calculate_H/{dataset}/{gwas}/{nsnp}/{rep}_{contrasts}",
