@@ -21,7 +21,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_pcSNPs_v3.pgen" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS, rep=REP)
+        expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3.pgen" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS, rep=REP)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
@@ -129,7 +129,8 @@ rule concat_chr:
         time="12:00:00"
     shell:
         """
-        echo {params.merge_prefix} > tmp_chr_list.txt
+        echo {params.merge_prefix} > tmp.txt
+	tr ' ' '\n' < "tmp.txt" > "tmp_chr_list.txt"
         plink2 --pmerge-list tmp_chr_list.txt \
         --extract {input.snps} \
 	      --threads 16 \
