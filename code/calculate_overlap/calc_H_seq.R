@@ -70,7 +70,7 @@ dfALL$r <- scale(dfALL$r)
 dfALL$r <- dfALL$r / sqrt(dfALL$Var)
 
 # Make a collector for all values of H
-allH <- rep(NA, 1001)
+allH <- rep(NA, 3)
 dfR <- dfALL
 
 # Subset SNP IDs
@@ -94,7 +94,7 @@ plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --ex
 for (i in 1:length(allH)) {
 
   print(paste0("This is rep ", i))
- 
+
   # Subset Rs and save
   dfR_tmp <- dfR %>% select("ID", "ALT", "r")
   fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
@@ -121,16 +121,18 @@ for (i in 1:length(allH)) {
 
 }
 
-# Calculate p-value
-realH <- allH[1]
-varH <- var(allH[2:length(allH)])
-se <- sqrt(varH)
-meanH <- mean(allH[2:length(allH)])
-pvalNorm <- pnorm(realH ,mean =meanH, sd = se, lower.tail = FALSE)
-pvalSim <- sum(realH >= allH[2:length(allH)]) / (length(allH) - 1)
 
-dfOut <- data.frame(H = realH, L = L, meanH = meanH, varH = varH, 
-                    pvalNorm = pvalNorm, pvalSim = pvalSim)
+dfOut <- as.data.frame(cbind(allH, rep(L, length(allH))))
+
+# Calculate p-value
+#realH <- allH[1]
+#varH <- var(allH[2:length(allH)])
+#se <- sqrt(varH)
+#meanH <- mean(allH[2:length(allH)])
+#pvalNorm <- pnorm(realH ,mean =meanH, sd = se, lower.tail = FALSE)
+#pvalSim <- sum(realH >= allH[2:length(allH)]) / (length(allH) - 1)
+#dfOut <- data.frame(H = realH, L = L, meanH = meanH, varH = varH,
+#                    pvalNorm = pvalNorm, pvalSim = pvalSim)
 fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
 
