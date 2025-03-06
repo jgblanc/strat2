@@ -62,43 +62,53 @@ print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with 
 L <- nrow(dfALL)
 
 # Divide SNPs into 1000 equal blocks
-block_size <- floor(nrow(dfALL) / num_blocks)
+block_size <- floor(nrow(dfALL) / 1000)
 print(block_size)
 
 # Standardize r values and divide by GWAS variance
 dfALL$r <- scale(dfALL$r)
-dfALL$r <- dfR$r / sqrt(dfR$Var)
+dfALL$r <- dfALL$r / sqrt(dfALL$Var)
 
 # Make a collector for all values of H
-allH <- rep(NA, 21)
+allH <- rep(NA, 1001)
 dfR <- dfALL
+
+# Subset SNP IDs
+dfSNP_tmp <- dfR %>% select("ID")
+snp_name <- paste0(out_prefix, ".snp")
+fwrite(dfSNP_tmp, snp_name, quote = F, row.names = F, sep = "\t")
+
+# Get freq file
+plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 ",
+                      " --freq --out ", out_prefix)
+system(plink_cmd)
+
+# Set up plink command
+freq_file <- paste0(out_prefix, ".afreq")
+tmp_r_name <- paste0(out_prefix, ".rvec")
+plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 --read-freq ", freq_file,
+                      " --score ", tmp_r_name, " center header-read cols=dosagesum,scoresums --out ", out_prefix)
+
+
 
 for (i in 1:length(allH)) {
 
+  print(paste0("This is rep ", i))
+ 
   # Subset Rs and save
   dfR_tmp <- dfR %>% select("ID", "ALT", "r")
-  tmp_r_name <- paste0(out_prefix, ".rvec")
   fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
 
-  # Subset SNP IDs
-  dfSNP_tmp <- dfR_tmp %>% select("ID")
-  tmp_snp_name <- paste0(out_prefix, ".snp")
-  fwrite(dfSNP_tmp, tmp_snp_name, quote = F, row.names = F, sep = "\t")
-
   # Set up plink command
-  tmp_outfile <- out_prefix
-  plink_prefix_chr <- paste0(plink_prefix)
-  plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr, " --keep ", id_file, " --extract ", tmp_snp_name ," --threads 8 ",
-                      " --score ", tmp_r_name, " center header-read cols=dosagesum,scoresums --out ", tmp_outfile)
   system(plink_cmd)
 
   # Read in plink output
-  df<- fread(paste0(tmp_outfile, ".sscore"))
+  df<- fread(paste0(out_prefix, ".sscore"))
   rawFGr <- as.matrix(df[,3])
 
   # Calculate FGr
   print(paste0("The raw var is ", var(rawFGr)))
-  FGr <- FGr_raw * (1/(sqrt(L-1)))
+  FGr <- rawFGr * (1/(sqrt(L-1)))
   print(paste0("The scaled var is ", var(FGr)))
 
   # Calculate H
@@ -107,20 +117,20 @@ for (i in 1:length(allH)) {
   allH[i] <- H
 
   # Shift the dfR dataframe
-  dfR <- dfR %>% mutate(r = c(tail(r, i * blockSize), head(r, -i * blockSize)))
+  dfR <- dfR %>% mutate(r = c(tail(r, i * block_size), head(r, -i * block_size)))
 
 }
 
 # Calculate p-value
 realH <- allH[1]
 varH <- var(allH[2:length(allH)])
-se = sqrt(varH)
-meanH <- var(allH[2:length(allH)])
-pvalNorm <- pnorm(H ,mean =meanH, sd = se, lower.tail = FALSE)
+se <- sqrt(varH)
+meanH <- mean(allH[2:length(allH)])
+pvalNorm <- pnorm(realH ,mean =meanH, sd = se, lower.tail = FALSE)
 pvalSim <- sum(realH >= allH[2:length(allH)]) / (length(allH) - 1)
 
-dfOut <- as.data.frame(c(realH, L, meanH, varH, pvalNorm, pvalSim))
-colnames(dfOut) <- c("H", "L", "meanH", "varH", "pvalNorm", "pvalSim")
+dfOut <- data.frame(H = realH, L = L, meanH = meanH, varH = varH, 
+                    pvalNorm = pvalNorm, pvalSim = pvalSim)
 fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
 
