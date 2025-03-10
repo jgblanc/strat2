@@ -2,8 +2,8 @@
 CHR =[]
 for i in range(1, 23):
   CHR.append(str(i))
-SIZE = ["small", "medium", "large"]
-NSNP = ["100", "1000", "10000", "100000", "1000000"]
+SIZE = ["large"]
+NSNP = ["10000","75000", "50000", "25000"]
 
 
 def get_snp_num(x):
@@ -68,7 +68,8 @@ rule get_freq:
 
 rule calc_FGr:
     input:
-        rvec = expand("data/HGDP1KG/r/e5/eas-afr_chr{chr}.rvec", chr = CHR)
+        rvec = expand("data/HGDP1KG/r/e5/eas-afr_chr{chr}.rvec", chr = CHR),
+        pc_snps = "data/ukbb/ukbb_pc_snps.txt"
     output:
         FGr="output/debug/{size}/stats_eas-afr_{nsnp}.txt",
     params:
@@ -78,7 +79,7 @@ rule calc_FGr:
         snpNum=lambda wildcards: get_snp_num(wildcards.nsnp)
     shell:
         """
-        Rscript code/debug/calc_FGr_vp.R {params.plink_prefix} {params.out_prefix} {output.FGr} {params.r_prefix} {params.snpNum}
+        Rscript code/debug/calc_FGr_vp.R {params.plink_prefix} {params.out_prefix} {output.FGr} {params.r_prefix} {params.snpNum} {input.pc_snps}
 	      """
 
 

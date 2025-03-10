@@ -14,6 +14,7 @@ out_prefix = args[2]
 FGr_outfile = args[3]
 r_prefix = args[4]
 nsnp = as.numeric(args[5])
+pc_snps = args[6]
 
 # Read in IDs
 dfSAM <- fread(paste0(plink_prefix, "1_v3.psam"))
@@ -37,6 +38,11 @@ for (i in 2:22) {
 dfR <- inner_join(dfR, dfFreq)
 print(paste0("There are ", nrow(dfR), " rows in the whole R file"))
 colnames(dfR)[1] <- "CHR"
+
+## Combine with PC snps
+dfSNPs <- fread(pc_snps)
+dfR <- inner_join(dfR, dfSNPs)
+print(paste0("There are ", nrow(dfR), " rows in the r combined with pc snp file"))
 
 ## Filter to SNPs with nonzero r values
 dfR <- dfR %>% filter(!is.na(r) & r != 0) %>% sample_n(nsnp)
