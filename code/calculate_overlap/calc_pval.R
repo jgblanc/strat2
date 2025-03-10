@@ -2,7 +2,7 @@
 
 args=commandArgs(TRUE)
 
-if(length(args)<7){stop("Rscript calc_pval.R <reps> <outfile>")}
+if(length(args)<2){stop("Rscript calc_pval.R <reps> <outfile>")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
