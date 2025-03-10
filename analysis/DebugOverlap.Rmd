@@ -416,7 +416,7 @@ df$ID <- runif(nrow(df)) *100
 
 dfSum <- df %>% group_by(block) %>% summarise(nSNP = n())
 
-rep = 1
+rep = 2
 dfNew <- df %>%mutate(r = c(tail(r, rep * 1000), head(r, -rep *1000)))
 ```
 
