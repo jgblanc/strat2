@@ -70,7 +70,7 @@ dfALL$r <- scale(dfALL$r)
 dfALL$r <- dfALL$r / sqrt(dfALL$Var)
 
 # Make a collector for all values of H
-allH <- rep(NA, 3)
+allH <- rep(NA, 1001)
 dfR <- dfALL
 
 # Subset SNP IDs
@@ -117,10 +117,13 @@ for (i in 1:length(allH)) {
   allH[i] <- H
 
   # Shift the dfR dataframe
-  dfR <- dfR %>% mutate(r = c(tail(r, i * block_size), head(r, -i * block_size)))
+  dfR <- dfALL %>% mutate(r = c(tail(r, i * block_size), head(r, -i * block_size)))
 
 }
 
+# Remove tmp files
+rm_cmd <- paste0("rm ", out_prefix, ".*")
+system(rm_cmd)
 
 dfOut <- as.data.frame(cbind(allH, rep(L, length(allH))))
 
