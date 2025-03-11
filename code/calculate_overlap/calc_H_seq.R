@@ -51,7 +51,6 @@ for (i in 2:22) {
   df <- rbind(df, tmp)
 }
 print(paste0("There are ", nrow(df), " SNPs in all the R files"))
-print(head(df))
 
 # Read in SNP file
 dfSNP <- fread(snp_file) %>% select("ID")
@@ -70,7 +69,7 @@ dfALL$r <- scale(dfALL$r)
 dfALL$r <- dfALL$r / sqrt(dfALL$Var)
 
 # Make a collector for all values of H
-allH <- rep(NA, 1001)
+allH <- rep(NA, 3)
 dfR <- dfALL
 
 # Subset SNP IDs
@@ -97,6 +96,7 @@ for (i in 1:length(allH)) {
 
   # Subset Rs and save
   dfR_tmp <- dfR %>% select("ID", "ALT", "r")
+  print(head(dfR_tmp))
   fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
 
   # Set up plink command
@@ -117,7 +117,8 @@ for (i in 1:length(allH)) {
   allH[i] <- H
 
   # Shift the dfR dataframe
-  dfR <- dfALL %>% mutate(r = c(tail(r, i * block_size), head(r, -i * block_size)))
+  #dfR <- dfALL %>% mutate(r = c(tail(r, i * block_size), head(r, -i * block_size)))
+  dfR <- dfALL %>% mutate(r = sample(r))
 
 }
 

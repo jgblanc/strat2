@@ -15,9 +15,10 @@ FGr_outfile = args[3]
 r_prefix = args[4]
 nsnp = as.numeric(args[5])
 pc_snps = args[6]
+gwas_ids = args[7]
 
 # Read in IDs
-dfSAM <- fread(paste0(plink_prefix, "1_v3.psam"))
+dfSAM <- fread(gwas_ids)
 M <- nrow(dfSAM)
 dfFinal <- matrix(NA, nrow = M, ncol = 22)
 
@@ -30,13 +31,13 @@ for (i in 2:22) {
 print(paste0("There are ", nrow(dfR), " rows in the whole R file"))
 
 ## Combine with genotypes
-dfFreq <- fread(paste0(plink_prefix, "1_v3.afreq"))
-for (i in 2:22) {
-  tmp <- fread(paste0(plink_prefix,i,"_v3.afreq"))
-  dfFreq <- rbind(dfFreq, tmp)
-}
-dfR <- inner_join(dfR, dfFreq)
-print(paste0("There are ", nrow(dfR), " rows in the whole R file"))
+#dfFreq <- fread(paste0(plink_prefix, "1_v3.afreq"))
+#for (i in 2:22) {
+#  tmp <- fread(paste0(plink_prefix,i,"_v3.afreq"))
+#  dfFreq <- rbind(dfFreq, tmp)
+#}
+#dfR <- inner_join(dfR, dfFreq)
+#print(paste0("There are ", nrow(dfR), " rows in the whole R file"))
 colnames(dfR)[1] <- "CHR"
 
 ## Combine with PC snps
@@ -70,7 +71,7 @@ for (j in 1:22) {
   # Set up plink command
   plink_prefix_chr <- paste0(plink_prefix, j, "_v3")
   tmp_outfile <- paste0(out_prefix, j)
-  plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr,
+  plink_cmd <- paste0("plink2 --pfile ", plink_prefix_chr, " --keep ", gwas_ids, 
                       " --score ", tmp_r_name, " variance-standardize header-read cols=dosagesum,scoresums --out ", tmp_outfile)
   system(plink_cmd)
 
