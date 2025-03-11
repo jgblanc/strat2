@@ -130,7 +130,7 @@ pl
 
 
 ```{r}
-df <- fread("../plots/H_SDS.txt")
+df <- fread("../plots/H_SDS_pcaSNPs_blckjck.txt")
 dfNum <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200") )%>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
 dfNNum <- df %>% filter(gwas %in% c("WBS", "ALL"))
 df <- rbind(dfNum, dfNNum)

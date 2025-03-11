@@ -3,7 +3,7 @@ CHR =[]
 for i in range(1, 23):
   CHR.append(str(i))
 SIZE = ["e5"]
-NSNP = ["75000","70000","60000","55000", "50000","45000","40000","35000","30000", "25000", "20000", "15000", "10000", "8000", "6000", "4000", "2000"]
+NSNP = ["50000","45000","40000","35000","30000", "25000", "20000", "15000", "10000", "8000", "6000", "4000", "2000"]
 
 
 def get_snp_num(x):
@@ -12,8 +12,7 @@ def get_snp_num(x):
 
 rule all:
     input:
-        expand("output/debug/WBS/stats_eas-afr_{nsnp}.txt" ,chr=CHR, size = SIZE, nsnp=NSNP),
-	expand("output/debug/e10/stats_eas-afr_{nsnp}.txt" ,chr=CHR, size = SIZE, nsnp=NSNP)
+        expand("output/debug/WBS/stats_Han_{nsnp}.txt" ,chr=CHR, size = SIZE, nsnp=NSNP)
 
 ## Extract small subset
 
@@ -68,15 +67,15 @@ rule get_freq:
 
 rule calc_FGr:
     input:
-        rvec = expand("data/HGDP1KG/r/WBS/eas-afr_chr{chr}.rvec", chr = CHR),
+        rvec = expand("data/SDS/r/WBS/Han_chr{chr}.rvec", chr = CHR),
         pc_snps = "data/ukbb/ukbb_pc_snps.txt",
 	ids = "data/ids/gwas_ids/WBS.txt"
     output:
-        FGr="output/debug/WBS/stats_eas-afr_{nsnp}.txt",
+        FGr="output/debug/WBS/stats_Han_{nsnp}.txt",
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr",
-        out_prefix="output/debug/WBS/eas-afr_{nsnp}",
-        r_prefix="data/HGDP1KG/r/WBS/eas-afr_chr",
+        out_prefix="output/debug/WBS/Han_{nsnp}",
+        r_prefix="data/SDS/r/WBS/Han_chr",
         snpNum=lambda wildcards: get_snp_num(wildcards.nsnp)
     resources:
         mem_mb=38000,
@@ -89,7 +88,7 @@ rule calc_FGr:
 
 rule calc_FGr_e10:
     input:
-        rvec = expand("data/HGDP1KG/r/e10/eas-afr_chr{chr}.rvec", chr = CHR),
+        rvec = expand("data/SDS/r/e10/eas-afr_chr{chr}.rvec", chr = CHR),
         pc_snps = "data/ukbb/ukbb_pc_snps.txt",
         ids = "data/ids/gwas_ids/e10.txt"
     output:
