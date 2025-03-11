@@ -65,7 +65,8 @@ block_size <- floor(nrow(dfALL) / 1000)
 print(block_size)
 
 # Standardize r values and divide by GWAS variance
-dfALL$r <- scale(dfALL$r)
+dfALL$r <- dfALL$r / sd(dfALL$r)
+print(paste0("The variance of r is ", var(dfALL$r)))
 dfALL$r <- dfALL$r / sqrt(dfALL$Var)
 
 # Make a collector for all values of H
