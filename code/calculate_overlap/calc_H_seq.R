@@ -71,7 +71,7 @@ print(paste0("The mean of r is ", mean(dfALL$r)))
 dfALL$r <- dfALL$r / sqrt(dfALL$Var)
 
 # Make a collector for all values of H
-allH <- rep(NA, 3)
+allH <- rep(NA, 1)
 dfR <- dfALL
 
 # Subset SNP IDs

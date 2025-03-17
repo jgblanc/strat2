@@ -14,11 +14,12 @@ library(pgenlibr)
 ## Simple R Example 
 
 ```{r}
+set.seed(12)
 L <- 5000
 M <- 100
 
 # Random r 
-r <- runif(L)
+tmpr <- runif(L)
   
 # Random "Genotypes"
 G <- matrix(NA, nrow = M, ncol = L)
@@ -26,9 +27,22 @@ for (l in 1:L) {
   G[,l] <- rnorm(M, 0, 1)
 }
   
-# Scale vectors
-r <- scale(r)
-G <- scale(G)
+# Scale r - not mean centered but var(r) = 1
+r <- tmpr / sd(tmpr)
+rs <- scale(tmpr)
+
+# Mean center excluding self 
+col_sums <- colSums(G)
+G_scaled <- matrix(NA, nrow = M, ncol = L)
+for (i in 1:M) {
+  
+    # Compute column mean excluding the current row
+    mean_excl_self <- (col_sums - G[i, ]) / (M - 1)
+    
+    # Subtract the computed mean from each element
+    G_scaled[i, ] <- G[i, ] - mean_excl_self
+}
+G <- scale(G_scaled, center = FALSE, scale = TRUE)
 ```
 
 
@@ -60,12 +74,52 @@ HCov <- Num / Dom
 print(HCov)
 ```
 
+Calculate average squared $f_4$
+
+$$f_4^2 = \frac{1}{M} \sum_{m =1}^M \big(\frac{1}{L} \sum_{1}^L r_{\ell} g_{m, \ell} \big)^2 $$
+
+```{r}
+M_vec <- rep(NA, M)
+for (m in 1:M) {
+  L_vec <- rep(NA, L)
+  for (l in 1:L) {
+    L_vec[l] <- (r[l] * Gs[m,l])
+  }
+  M_vec[m] <- mean(L_vec)^2
+}
+
+f4 <- mean(M_vec)
+f4 
+```
+
+Calculate average $f_4$ estimate of $H$
+
+$$\hat{H}_{f_4} = \frac{f_4^2}{\frac{1}{M} \sum_{m =1}^M \big(\frac{1}{L} \sum_{\ell = 1}^L g_{m, \ell}^2 \big)^2 }  $$
+
+```{r}
+M_vec <- rep(NA, M)
+for (m in 1:M) {
+  L_vec <- rep(NA, L)
+  for (l in 1:L) {
+    L_vec[l] <- (G[m,l] * G[m,l])
+  }
+  M_vec[m] <- mean(L_vec)^2
+}
+
+dom <- mean(M_vec)
+
+H_f4 <- f4 / dom
+H_f4
+```
+
+
+
 Direct Estimator of $H$
 
 $$\hat{H} = \frac{1}{M(L-1)^2} r^\top \mathbf{G}^\top \mathbf{G} r$$
 ```{r}
 # Compute estimator directly 
-hatH <- (1/(M * (L-1)^2)) * (t(r) %*% t(G) %*% G %*% r)
+hatH <- (1/(M * (L-1)^2)) * (t(r) %*% t(Gs) %*% Gs %*% r)
 hatH
 ```
 
@@ -75,7 +129,7 @@ $$F_{Gr} = \frac{1}{\sqrt{(L - 1)}} Gr$$
 $$\hat{H} = \frac{1}{M (1 -L)} F_{Gr}^\top F_{Gr}$$
 ```{r}
 # Compute FGr 
-FGr <- (1/sqrt(L-1)) * (G %*% r)
+FGr <- (1/sqrt(L-1)) * (G_scaled %*% r)
 
 # Check variance of FGr
 var(FGr)
