@@ -78,9 +78,15 @@ dfSNP_tmp <- dfR %>% select("ID")
 snp_name <- paste0(out_prefix, ".snp")
 fwrite(dfSNP_tmp, snp_name, quote = F, row.names = F, sep = "\t")
 
-# Set up plink command
-tmp_r_name <- paste0(out_prefix, ".rvec")
+# Get freq file
 plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 ",
+                      " --freq --out ", out_prefix)
+system(plink_cmd)
+
+# Set up plink command
+freq_file <- paste0(out_prefix, ".afreq")
+tmp_r_name <- paste0(out_prefix, ".rvec")
+plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 --read-freq ", freq_file,
                       " --score ", tmp_r_name, " header-read variance-standardize cols=dosagesum,scoresums --out ", out_prefix)
 
 
@@ -90,8 +96,6 @@ for (i in 1:length(allH)) {
 
   # Subset Rs and save
   dfR_tmp <- dfR %>% select("ID", "ALT", "r")
-  print(paste0("The variance of r is ", var(dfR_tmp$r)))
-  print(paste0("The mean of r is ", mean(dfR_tmp$r)))
   fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
 
   # Set up plink command
