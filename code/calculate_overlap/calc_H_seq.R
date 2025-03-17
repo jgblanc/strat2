@@ -68,28 +68,20 @@ print(block_size)
 dfALL$r <- dfALL$r / sd(dfALL$r)
 print(paste0("The variance of r is ", var(dfALL$r)))
 print(paste0("The mean of r is ", mean(dfALL$r)))
-#dfALL$r <- dfALL$r / sqrt(dfALL$Var)
 
 # Make a collector for all values of H
-allH <- rep(NA, 2)
+allH <- rep(NA, 3)
 dfR <- dfALL
-dfR$r <- dfR$r / sqrt(dfR$Var)
 
 # Subset SNP IDs
 dfSNP_tmp <- dfR %>% select("ID")
 snp_name <- paste0(out_prefix, ".snp")
 fwrite(dfSNP_tmp, snp_name, quote = F, row.names = F, sep = "\t")
 
-# Get freq file
-plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 ",
-                      " --freq --out ", out_prefix)
-system(plink_cmd)
-
 # Set up plink command
-freq_file <- paste0(out_prefix, ".afreq")
 tmp_r_name <- paste0(out_prefix, ".rvec")
-plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 --read-freq ", freq_file,
-                      " --score ", tmp_r_name, " header-read center cols=dosagesum,scoresums --out ", out_prefix)
+plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 ",
+                      " --score ", tmp_r_name, " header-read variance-standardize cols=dosagesum,scoresums --out ", out_prefix)
 
 
 for (i in 1:length(allH)) {
@@ -122,25 +114,14 @@ for (i in 1:length(allH)) {
 
   # Shift the dfR dataframe
   dfR <- dfALL %>% mutate(r = c(tail(r, i * block_size), head(r, -i * block_size)))
-  dfR$r <- dfR$r / sqrt(dfR$Var)
 
 }
 
 # Remove tmp files
-#rm_cmd <- paste0("rm ", out_prefix, ".*")
-#system(rm_cmd)
+rm_cmd <- paste0("rm ", out_prefix, ".*")
+system(rm_cmd)
 
-#dfOut <- as.data.frame(cbind(allH, rep(L, length(allH))))
-
-# Calculate p-value
-#realH <- allH[1]
-#varH <- var(allH[2:length(allH)])
-#se <- sqrt(varH)
-#meanH <- mean(allH[2:length(allH)])
-#pvalNorm <- pnorm(realH ,mean =meanH, sd = se, lower.tail = FALSE)
-#pvalSim <- sum(realH >= allH[2:length(allH)]) / (length(allH) - 1)
-#dfOut <- data.frame(H = realH, L = L, meanH = meanH, varH = varH,
-#                    pvalNorm = pvalNorm, pvalSim = pvalSim)
+dfOut <- as.data.frame(cbind(allH, rep(L, length(allH))))
 fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
 
