@@ -67,6 +67,7 @@ print(block_size)
 # Standardize r values and divide by GWAS variance
 dfALL$r <- dfALL$r / sd(dfALL$r)
 print(paste0("The variance of r is ", var(dfALL$r)))
+print(paste0("The mean of r is ", mean(dfALL$r)))
 dfALL$r <- dfALL$r / sqrt(dfALL$Var)
 
 # Make a collector for all values of H
@@ -87,7 +88,7 @@ system(plink_cmd)
 freq_file <- paste0(out_prefix, ".afreq")
 tmp_r_name <- paste0(out_prefix, ".rvec")
 plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 --read-freq ", freq_file,
-                      " --score ", tmp_r_name, " center header-read cols=dosagesum,scoresums --out ", out_prefix)
+                      " --score ", tmp_r_name, " header-read cols=dosagesum,scoresums --out ", out_prefix)
 
 
 
@@ -118,8 +119,8 @@ for (i in 1:length(allH)) {
   allH[i] <- H
 
   # Shift the dfR dataframe
-  #dfR <- dfALL %>% mutate(r = c(tail(r, i * block_size), head(r, -i * block_size)))
-  dfR <- dfALL %>% mutate(r = sample(r))
+  dfR <- dfALL %>% mutate(r = c(tail(r, i * block_size), head(r, -i * block_size)))
+  #dfR <- dfALL %>% mutate(r = sample(r))
 
 }
 
