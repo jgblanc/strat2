@@ -2,10 +2,10 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-#GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
-GWAS = ["WBS"]
+GWAS= ["e5", "e10", "e50", "e200", "ALL", "WBS"]
+#GWAS = ["WBS"]
 DATASET = ["SDS"]
-CONTRASTS = ["Han"]
+CONTRASTS = ["Han", "UK10K"]
 #CONTRASTS = ["eurasia-long"]
 NSNP = ["L-pruneall"]
 
@@ -18,7 +18,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/Reps_{contrasts}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+        expand("plots/H_{dataset}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
 
 
 # Get sample variance of GWAS panel genotypes for all GWAS panels
