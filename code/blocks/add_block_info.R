@@ -36,7 +36,7 @@ assign_SNP_to_block <- function(CHR, BP, block = ld) {
 # Add block info - takes a while
 df <- df %>%
   mutate(block = apply(., MARGIN = 1, FUN = function(params)assign_SNP_to_block(as.numeric(params[2]), as.numeric(params[3])))) %>%
-  drop_na() %>% select("ID", "REF", "block_number")
+  drop_na() %>% select("ID", "REF", "block")
 print(paste0("Now df blocks has", nrow(df), " rows"))
 print(head(df))
 
