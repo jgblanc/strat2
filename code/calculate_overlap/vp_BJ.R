@@ -48,7 +48,13 @@ print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 dfSNP <- fread(snp_file) %>% select("ID", "block")
 
 # Combine SNP and R files
-dfALL <- inner_join(dfSNP, df, by = "ID") %>% drop_na() %>% sample_n(nsnp)
+numBlocks <- length(unique(dfSNP$block))
+nsnp_per_block <- floor(nsnp / numBlocks)
+dftmp1 <- inner_join(dfSNP, df, by = "ID") %>% drop_na()
+dftmp2 <- dftmp %>% group_by(block) %>% sample_n(n = nsnp_per_block) %>% ungroup()
+makeup <- nsnp - nrow(dftmp2)
+dftmp3 <- dftmp1 %>% filter(!ID %in% dftmp2$ID) %>% sample_n(n = makeup)
+dfALL <- rbind(dftmp2, dftmp3)
 print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
 
