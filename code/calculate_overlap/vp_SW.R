@@ -15,6 +15,7 @@ out_prefix = args[3]
 snp_file = args[4]
 id_file = args[5]
 out_file = args[6]
+nsnp = as.numeric(args[7])
 
 
 # Read in IDs
@@ -47,7 +48,7 @@ print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 dfSNP <- fread(snp_file) %>% select("ID")
 
 # Combine SNP and R files
-dfALL <- inner_join(dfSNP, df, by = "ID") %>% drop_na()
+dfALL <- inner_join(dfSNP, df, by = "ID") %>% drop_na() %>% sample_n(nsnp)
 print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
 
@@ -119,12 +120,12 @@ trueH <- allH[1]
 
 # Get variance of reps
 reps <- allH[2:length(allH)]
-varH <- var(reps$allH)
-meanH <- mean(reps$allH)
+varH <- var(reps)
+meanH <- mean(reps)
 
 # P-value from sims
-pvalSim <- sum(reps$allH > trueH) / length(reps$allH)
-pvalNorm <- pnorm(trueH, mean = mean(reps$allH), sd=sqrt(varH), lower.tail = F)
+pvalSim <- sum(reps > trueH) / length(reps)
+pvalNorm <- pnorm(trueH, mean = mean(reps), sd=sqrt(varH), lower.tail = F)
 
 # Construct output
 dfOut <- data.frame(H = trueH, L = L, meanH = meanH, varH = varH, pvalNorm = pvalNorm, pvalSim = pvalSim)
