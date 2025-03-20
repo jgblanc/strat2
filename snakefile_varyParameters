@@ -15,7 +15,7 @@ def get_snp_num(x):
 
 rule all:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_SW_{contrasts}.txt" ,chr=CHR, size = SIZE, nsnp=NSNP)
+        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_SW_{contrasts}.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS)
 
 
 ## Calculate H via sliding window
