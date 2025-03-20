@@ -28,8 +28,7 @@ for (l in 1:L) {
 }
   
 # Scale r - not mean centered but var(r) = 1
-r <- tmpr / sd(tmpr)
-rs <- scale(tmpr)
+r <- tmpr 
 
 # Mean center excluding self 
 col_sums <- colSums(G)
@@ -42,7 +41,7 @@ for (i in 1:M) {
     # Subtract the computed mean from each element
     G_scaled[i, ] <- G[i, ] - mean_excl_self
 }
-G <- scale(G_scaled, center = FALSE, scale = TRUE)
+G <- scale(G_scaled, center = FALSE, scale = FALSE)
 ```
 
 
@@ -94,7 +93,7 @@ f4
 
 Calculate average $f_4$ estimate of $H$
 
-$$\hat{H}_{f_4} = \frac{f_4^2}{\frac{1}{M} \sum_{m =1}^M \big(\frac{1}{L} \sum_{\ell = 1}^L g_{m, \ell}^2 \big)^2 }  $$
+$$\hat{H}_{f_4} = \frac{f_4^2}{\frac{1}{M} \sum_{m =1}^M \big(\frac{1}{L} \sum_{\ell = 1}^L g_{m, \ell}^2 \big) }  $$
 
 ```{r}
 M_vec <- rep(NA, M)
@@ -103,7 +102,7 @@ for (m in 1:M) {
   for (l in 1:L) {
     L_vec[l] <- (G[m,l] * G[m,l])
   }
-  M_vec[m] <- mean(L_vec)^2
+  M_vec[m] <- mean(L_vec)
 }
 
 dom <- mean(M_vec)
