@@ -62,7 +62,7 @@ print(paste0("The variance of r is ", var(dfALL$r)))
 print(paste0("The mean of r is ", mean(dfALL$r)))
 
 # Make a collector for all values of H
-allH <- rep(NA, 3)
+allH <- rep(NA,1001)
 dfR <- dfALL
 
 # Subset SNP IDs
