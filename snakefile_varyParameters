@@ -15,7 +15,7 @@ def get_snp_num(x):
 
 rule all:
     input:
-        expand("data/ukbb/ukbb_pc_snps_block.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS)
+        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_BJ_{contrasts}.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS)
 
 
 ## Calculate H via sliding window
@@ -29,7 +29,7 @@ rule calc_H_Window:
         H = "output/calculate_H/{dataset}/{gwas}/{nsnp}/H_SW_{contrasts}.txt"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3",
-        out_prefix="output/calculate_H/{dataset}/{gwas}/{nsnp}/{contrasts}",
+        out_prefix="output/calculate_H/{dataset}/{gwas}/{nsnp}/SW_{contrasts}",
         r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr",
         num = lambda wildcards: get_snp_num(wildcards.nsnp)
     threads: 8
@@ -61,12 +61,12 @@ rule calc_H_Jacknife:
     input:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         IDs="data/ids/gwas_ids/{gwas}.txt",
-        snps="data/ukbb/ukbb_pc_snps.txt"
+        snps="data/ukbb/ukbb_pc_snps_block.txt"
     output:
-        H = "output/calculate_H/{dataset}/{gwas}/{nsnp}/H_SW_{contrasts}.txt"
+        H = "output/calculate_H/{dataset}/{gwas}/{nsnp}/H_BJ_{contrasts}.txt"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3",
-        out_prefix="output/calculate_H/{dataset}/{gwas}/{nsnp}/{contrasts}",
+        out_prefix="output/calculate_H/{dataset}/{gwas}/{nsnp}/BJ_{contrasts}",
         r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr",
         num = lambda wildcards: get_snp_num(wildcards.nsnp)
     threads: 8
@@ -75,6 +75,6 @@ rule calc_H_Jacknife:
         time="12:00:00"
     shell:
         """
-        Rscript code/calculate_overlap/vp_SW.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H} {params.num}
+        Rscript code/calculate_overlap/vp_BJ.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H} {params.num}
 	      """
 
