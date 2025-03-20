@@ -2,10 +2,10 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-GWAS= ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+GWAS= ["e5", "e10", "e50", "e200", "WBS", "ALL"]
 #GWAS = ["WBS"]
 DATASET = ["HGDP1KG"]
-CONTRASTS = ["Han", "UK10K"]
+CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 #CONTRASTS = ["eurasia-long"]
 NSNP = ["L-pruneall"]
 
