@@ -11,6 +11,38 @@ library(tidyverse)
 library(latex2exp)
 ```
 
+## Compare parameters and methods
+
+Block jackknife
+
+```{r}
+# Read in data 
+dfBJ <- fread("../plots/overlap_stats/H_vp_BJ.txt")
+
+# Compute CI 
+ci <- qnorm(1 -0.05)
+dfBJ$lc <- dfBJ$H - (ci * sqrt(dfBJ$varH)) 
+dfBJ$uc <- dfBJ$H + (ci * sqrt(dfBJ$varH)) 
+
+# Convert GWAS to a factor
+tmp1 <- dfBJ %>% filter(gwas %in% c("e5", "e10", "e50", "e200"))%>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp2 <- dfBJ %>% filter(gwas %in% c("WBS", "ALL"))
+dfBJ  <- rbind(tmp1, tmp2)
+dfBJ$gwas <- factor(dfBJ$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")) 
+```
+
+```{r}
+dfBJ %>% ggplot(aes(x = L, y = H, color = gwas)) + geom_point() + geom_function(fun = function(x) 1/x, color = "red", linetype = "dashed")+ scale_x_log10() + scale_y_log10()  + geom_errorbar(aes(x = L, ymin = lc, ymax = uc), width = 0.05) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1")) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white"))
+```
+
+
+
+
+
+
+
+
+
 ## Overlap main figures 
 
 ```{r}
