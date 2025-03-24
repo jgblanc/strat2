@@ -13,7 +13,7 @@ suppressWarnings(suppressMessages({
 
 outfile = args[1]
 
-dfOut <- matrix(NA, nrow = 1, ncol = 10)
+dfOut <- matrix(NA, nrow = 1, ncol = 11)
 
 for (i in 2:length(args)) {
 
@@ -35,7 +35,7 @@ for (i in 2:length(args)) {
   tmp <- strsplit(filename, "/")[[1]][6]
   tmp2 <- strsplit(tmp, "_")[[1]][3]
   constrasts <- strsplit(tmp2, ".txt")[[1]][1]
-  method <- tmp2[[1]][2]
+  method <- strsplit(tmp, "_")[[1]][2]
 
   # Read in results
   df <- fread(filename)

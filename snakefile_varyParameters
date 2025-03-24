@@ -82,7 +82,7 @@ rule calc_H_Jacknife:
 
 rule concat_H_BJ:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_BJ_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS, nsnp=NSNP)
+        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_BJ_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS, nsnp=NSNP, dataset=DATASET)
     output:
         "plots/overlap_stats/H_vp_BJ.txt"
     shell:
