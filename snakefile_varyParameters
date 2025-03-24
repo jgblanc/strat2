@@ -15,8 +15,8 @@ def get_snp_num(x):
 
 rule all:
     input:
-        expand("plots/overlap_stats/H_vp_BJ.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS),
-#	expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_SW_{contrasts}.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS)
+#        expand("plots/overlap_stats/H_vp_BJ.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS),
+	expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_SW_{contrasts}.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS)
 
 ## Calculate H via sliding window
 
