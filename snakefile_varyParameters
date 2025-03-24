@@ -6,7 +6,7 @@ GWAS = ["e5", "e10", "e50", "e200", "WBS", "ALL"]
 #GWAS = ["ALL"]
 DATASET = ["HGDP1KG"]
 CONTRASTS = [ "eas-sas"]
-NSNP = ["100000", "63096", "39811",  "25119", "15849",  "10000", "6310", "3981", "2512", "1585", "1000"]
+NSNP = [ "39811",  "25119", "15849",  "10000", "6310", "3981", "2512", "1585", "1000"]
 #NSNP = ["25119"]
 
 def get_snp_num(x):
@@ -15,8 +15,8 @@ def get_snp_num(x):
 
 rule all:
     input:
-#        expand("plots/overlap_stats/H_vp_SW.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS),
-	expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_SW_{contrasts}.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS)
+        expand("plots/overlap_stats/H_vp_SW.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS)
+#	expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_SW_{contrasts}.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS)
 
 ## Calculate H via sliding window
 
