@@ -83,7 +83,7 @@ plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --ex
 
 
 for (i in 1:length(allH)) {
-
+  print(i)  
   # Subset Rs and save
   dfR_tmp <- dfR %>% select("ID", "ALT", "r")
   fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")

@@ -2,12 +2,12 @@
 CHR =[]
 for i in range(1, 23):
   CHR.append(str(i))
-#GWAS = ["e5", "e10", "e50", "e200", "WBS", "ALL"]
-GWAS = ["e5"]
+GWAS = ["e5", "e10", "e50", "e200", "WBS", "ALL"]
+#GWAS = ["ALL"]
 DATASET = ["HGDP1KG"]
 CONTRASTS = [ "eas-sas"]
-#NSNP = ["100000", "63096",  "39811",  "25119", "15849",  "10000", "6310", "3981", "2512", "1585", "1000"]
-NSNP = ["1000"]
+NSNP = ["100000", "63096", "39811",  "25119", "15849",  "10000", "6310", "3981", "2512", "1585", "1000"]
+#NSNP = ["25119"]
 
 def get_snp_num(x):
   out = int(x)
@@ -15,8 +15,8 @@ def get_snp_num(x):
 
 rule all:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_BJ_{contrasts}.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS)
-
+        expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_BJ_{contrasts}.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS),
+#	expand("output/calculate_H/{dataset}/{gwas}/{nsnp}/H_SW_{contrasts}.txt" ,chr=CHR, gwas=GWAS, nsnp=NSNP, dataset=DATASET, contrasts=CONTRASTS)
 
 ## Calculate H via sliding window
 
@@ -35,7 +35,7 @@ rule calc_H_Window:
     threads: 8
     resources:
         mem_mb=38000,
-        time="12:00:00"
+        time="48:00:00"
     shell:
         """
         Rscript code/calculate_overlap/vp_SW.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H} {params.num}
@@ -72,7 +72,7 @@ rule calc_H_Jacknife:
     threads: 8
     resources:
         mem_mb=38000,
-        time="12:00:00"
+        time="06:00:00"
     shell:
         """
         Rscript code/calculate_overlap/vp_BJ.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H} {params.num}

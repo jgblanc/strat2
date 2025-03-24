@@ -51,12 +51,18 @@ dfSNP <- fread(snp_file) %>% select("ID", "block")
 numBlocks <- length(unique(dfSNP$block))
 nsnp_per_block <- floor(nsnp / numBlocks)
 dftmp1 <- inner_join(dfSNP, df, by = "ID") %>% drop_na()
-dftmp2 <- dftmp %>% group_by(block) %>% sample_n(n = nsnp_per_block) %>% ungroup()
+dftmp2 <- dftmp1 %>%
+  group_by(block) %>%
+  mutate(n_snp_block = n()) %>%
+  sample_n(min(nsnp_per_block, n_snp_block)) %>%
+  ungroup() %>% select(-n_snp_block)
 makeup <- nsnp - nrow(dftmp2)
-dftmp3 <- dftmp1 %>% filter(!ID %in% dftmp2$ID) %>% sample_n(n = makeup)
+print(makeup)
+dftmp3 <- dftmp1 %>% filter(!ID %in% dftmp2$ID) %>% sample_n(makeup)
 dfALL <- rbind(dftmp2, dftmp3)
 print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
+print(L)
 
 # Standardize r values and divide by GWAS variance
 dfALL$r <- dfALL$r / sd(dfALL$r)
@@ -67,6 +73,7 @@ print(paste0("The mean of r is ", mean(dfALL$r)))
 numBlocks <- length(unique(dfALL$block))
 dfSNPs <- as.data.frame(matrix(NA, ncol = 2, nrow = numBlocks))
 colnames(dfSNPs) <- c("Block", "nSNP")
+print(dim(dfSNPs))
 print(paste0("The total number of blocks is ", numBlocks))
 dfFGr_mat <- matrix(NA, nrow = M, ncol = numBlocks)
 
@@ -75,16 +82,23 @@ dfSNP_tmp <- dfALL %>% select("ID")
 snp_name <- paste0(out_prefix, ".snp")
 fwrite(dfSNP_tmp, snp_name, quote = F, row.names = F, sep = "\t")
 
-# Set up plink command
-tmp_r_name <- paste0(out_prefix, ".rvec")
+
+# Get freq file
 plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 ",
-                    " --score ", tmp_r_name, " center header-read cols=dosagesum,scoresums --out ", out_prefix)
+                      " --freq --out ", out_prefix)
+system(plink_cmd)
+
+# Set up plink command
+freq_file <- paste0(out_prefix, ".afreq")
+tmp_r_name <- paste0(out_prefix, ".rvec")
+plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 --read-freq ", freq_file,
+                      " --score ", tmp_r_name, " header-read variance-standardize cols=dosagesum,scoresums --out ", out_prefix)
 
 # Individually score each of the 581 blocks
-for (i in 1:3) {
+for (i in 1:numBlocks) {
 
   # Block num
-  blockNum <- unique(dfR$block)[i]
+  blockNum <- unique(dfALL$block)[i]
   print(blockNum)
 
   # Subset Rs and save
@@ -93,8 +107,8 @@ for (i in 1:3) {
 
   # Save number of SNPs
   nsnp_in_block <- nrow(dfR_tmp)
-  dfSNPs[blockNum,1] <- blockNum
-  dfSNPs[blockNum,2] <- nrow(dfR_tmp)
+  dfSNPs[i,1] <- blockNum
+  dfSNPs[i,2] <- nrow(dfR_tmp)
 
   # Run plink
   system(plink_cmd)
@@ -125,16 +139,19 @@ print(paste0("1/L is ", 1/L))
 
 # Compute SE for H
 allHs <- rep(NA, numBlocks)
+allHi <- rep(NA, numBlocks)
 for (i in 1:numBlocks) {
 
+  print(paste0("This is rep number ",i)) 
   mi <- as.numeric(dfSNPs[i,2])
   FGri <- (FGr_raw - dfFGr_mat[,i]) * (1/sqrt(L-mi-1))
   Hi <- sum(FGri^2) * (1/M) * (1/(L-mi-1))
   allHs[i] <- ((L - mi)/mi) * (H - Hi)^2
+  allHi[i] <- Hi 
 
 }
 varH <- mean(allHs)
-meanH <- mean(allHs)
+meanH <- mean(allHi)
 
 # P-value from sims
 pvalSim <- pnorm(H ,mean = meanH, sd = sqrt(varH), lower.tail = FALSE)
