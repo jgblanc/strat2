@@ -29,16 +29,59 @@ tmp1 <- dfBJ %>% filter(gwas %in% c("e5", "e10", "e50", "e200"))%>% separate(gwa
 tmp2 <- dfBJ %>% filter(gwas %in% c("WBS", "ALL"))
 dfBJ  <- rbind(tmp1, tmp2)
 dfBJ$gwas <- factor(dfBJ$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")) 
+
+# Mark all significant tests 
+dfBJ <- dfBJ %>% mutate(Sig = case_when(pvalNorm <= 0.05 ~ TRUE, pvalNorm > 0.05 ~ FALSE))
 ```
 
 ```{r}
 dfBJ %>% ggplot(aes(x = L, y = H, color = gwas)) + geom_point() + geom_function(fun = function(x) 1/x, color = "red", linetype = "dashed")+ scale_x_log10() + scale_y_log10()  + geom_errorbar(aes(x = L, ymin = lc, ymax = uc), width = 0.05) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1")) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white"))
 ```
 
+```{r}
+dfBJ %>% ggplot(aes(x = gwas, y = H, color = gwas, shape = Sig)) + geom_point() + scale_y_log10()+ scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1")) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white")) + facet_wrap(~L)  + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.9) + geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red")
+```
 
 
+Sliding Window
 
+```{r}
+# Read in data 
+dfSW <- fread("../plots/overlap_stats/H_vp_SW.txt")
 
+# Compute CI 
+ci <- qnorm(1 -0.05)
+dfSW$lc <- dfSW$H - (ci * sqrt(dfSW$varH)) 
+dfSW$uc <- dfSW$H + (ci * sqrt(dfSW$varH)) 
+
+# Convert GWAS to a factor
+tmp1 <- dfSW %>% filter(gwas %in% c("e5", "e10", "e50", "e200"))%>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp2 <- dfSW %>% filter(gwas %in% c("WBS", "ALL"))
+dfSW  <- rbind(tmp1, tmp2)
+dfSW$gwas <- factor(dfSW$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")) 
+
+# Mark all significant tests 
+dfSW <- dfSW %>% mutate(Sig = case_when(pvalNorm <= 0.05 ~ TRUE, pvalNorm > 0.05 ~ FALSE))
+```
+
+```{r}
+dfSW %>% ggplot(aes(x = L, y = H, color = gwas)) + geom_point() + geom_function(fun = function(x) 1/x, color = "red", linetype = "dashed")+ scale_x_log10() + scale_y_log10()  + geom_errorbar(aes(x = L, ymin = lc, ymax = uc), width = 0.05) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1")) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white")) 
+```
+
+```{r}
+dfSW %>% ggplot(aes(x = gwas, y = H, color = gwas, shape = Sig)) + geom_point() + scale_y_log10()+ scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1")) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white")) + facet_wrap(~L) +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = meanH, yend = meanH), color = "green") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.9) + geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red")
+```
+
+Compare approaches 
+
+```{r}
+tmp <- dfBJ %>% filter(L < 40000)
+dfAll <- rbind(dfSW, tmp)
+```
+
+```{r}
+dfAll %>% ggplot(aes(x = L, y = H, color = method)) + geom_point()+ facet_wrap(~gwas)+ geom_function(fun = function(x) 1/x, color = "red", linetype = "dashed")+ scale_x_log10() + scale_y_log10()  + geom_errorbar(aes(x = L, ymin = lc, ymax = uc), width = 0.05) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white")) 
+```
 
 
 
