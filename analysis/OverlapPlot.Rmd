@@ -32,10 +32,13 @@ dfBJ$gwas <- factor(dfBJ$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")
 
 # Mark all significant tests 
 dfBJ <- dfBJ %>% mutate(Sig = case_when(pvalNorm <= 0.05 ~ TRUE, pvalNorm > 0.05 ~ FALSE))
+
+# Calculate bias and correction 
+#dfBJ <- dfBJ %>% mutate(bias = 580 * (meanH - H)) %>% mutate(correctedH = H - bias)
 ```
 
 ```{r}
-dfBJ %>% ggplot(aes(x = L, y = H, color = gwas)) + geom_point() + geom_function(fun = function(x) 1/x, color = "red", linetype = "dashed")+ scale_x_log10() + scale_y_log10()  + geom_errorbar(aes(x = L, ymin = lc, ymax = uc), width = 0.05) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1")) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white"))
+dfBJ %>% ggplot(aes(x = L, y = H, color = gwas)) + geom_point() + geom_function(fun = function(x) 1/x, color = "red", linetype = "dashed")+ scale_x_log10() + scale_y_log10() + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1")) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white")) + geom_errorbar(aes(x = L, ymin = lc, ymax = uc), width = 0.05)
 ```
 
 ```{r}
@@ -75,8 +78,7 @@ dfSW %>% ggplot(aes(x = gwas, y = H, color = gwas, shape = Sig)) + geom_point() 
 Compare approaches 
 
 ```{r}
-tmp <- dfBJ %>% filter(L < 40000)
-dfAll <- rbind(dfSW, tmp)
+dfAll <- rbind(dfSW, dfBJ)
 ```
 
 ```{r}
