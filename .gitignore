@@ -13,3 +13,4 @@ logs/*
 .snakemake/
 output/*
 data/*
+plots/big_files/*
