@@ -1,0 +1,161 @@
+---
+title: "GWASPanels"
+output: html_document
+date: "2025-03-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(data.table)
+library(tidyverse)
+library(maps)
+library(latex2exp)
+library(ggpubr)
+```
+
+## UK Biobank PCA
+
+Plot PC1 vs PC2 colored by self-identified ethnic background
+```{r, warning=FALSE}
+# Load data and combine
+dfPCA <- fread("../plots/ukbb/whole_biobank.eigenvec.gz")
+dfEB <- fread("../plots/ukbb/EthnicBackground_21000.txt")
+df <- inner_join(dfPCA, dfEB)
+
+# Use continental labels 
+df <- df %>% mutate(continental = case_when(EthnicBackground_21000 %in% c(4, 4001, 4002, 4003) ~ "Africa", EthnicBackground_21000 %in% c(1, 1001, 1002, 1003) ~ "Europe", EthnicBackground_21000 %in% c(2, 2001, 2002, 2003, 2004) ~ "Mixed", EthnicBackground_21000 %in% c(3, 3001, 3002, 3003, 3004) ~ "Asia"))
+```
+
+```{r}
+# Make PCA plot color based on self identified Ethnic background
+ggplot(data = df, aes(x = PC1, y = PC2, color = continental)) + geom_point() + theme_classic(base_size = 14) + scale_color_manual(values = c("darkred", "navy", "goldenrod4", "gray50"), na.value = "gray70")
+```
+
+## Construct distance metric
+
+Calculate distance from centroid using 2 PCs
+```{r, warning=FALSE}
+# Get median of whole biobank
+medianPC2 <- apply(df[,3:4], 2, median)
+
+# Calculate from WBS centroid 
+df$distance2 <- sqrt(rowSums((df[,3:4] - medianPC2)^2))
+```
+
+
+## Create different subsets
+
+Using 2 PCs
+```{r}
+epsilon <- 1e-4
+
+dfDS <- df %>% mutate(e5 = case_when(distance2 <= (5 * epsilon) ~ TRUE, TRUE ~ FALSE),
+                      e10 =case_when(distance2 <= (10 * epsilon) ~ TRUE, TRUE ~ FALSE),
+                      e50 = case_when(distance2 <= (50 * epsilon) ~ TRUE, TRUE ~ FALSE),
+                      e200 = case_when(distance2 <= (200 * epsilon) ~ TRUE, TRUE ~ FALSE))
+```
+
+
+```{r}
+dfDS <- dfDS[order(dfDS$e5, decreasing = FALSE), ]
+p1 <-  ggplot(data = dfDS, aes(x = PC1, y = PC2, color = e5)) + geom_point() + theme_classic(base_size = 14) + scale_color_manual(values = c("grey70", "darkred")) + ggtitle("e5") + theme(legend.position = "none")
+
+dfDS <- dfDS[order(dfDS$e10, decreasing = FALSE), ]
+p2 <-  ggplot(data = dfDS, aes(x = PC1, y = PC2, color = e10)) + geom_point() + theme_classic(base_size = 14) + scale_color_manual(values = c("grey70", "darkred")) + ggtitle("e10") + theme(legend.position = "none")
+
+
+dfDS <- dfDS[order(dfDS$e50, decreasing = FALSE), ]
+p3 <-  ggplot(data = dfDS, aes(x = PC1, y = PC2, color = e50)) + geom_point() + theme_classic(base_size = 14) + scale_color_manual(values = c("grey70", "darkred")) + ggtitle("e50") + theme(legend.position = "none")
+
+dfDS <- dfDS[order(dfDS$e200, decreasing = FALSE), ]
+p4 <-  ggplot(data = dfDS, aes(x = PC1, y = PC2, color = e200)) + geom_point(color = "darkred") + theme_classic(base_size = 14)  + ggtitle("e200") + theme(legend.position = "none")
+
+
+p <- ggarrange(p1,p2,p3,p4, nrow = 1)
+p
+```
+
+## Create GWAS panels based on PC2 
+
+```{r}
+set.seed(12121212)
+
+dfe5 <- dfDS %>% filter(e5 == TRUE) %>% sample_n(100000) %>% select("#FID", "IID", "POP")
+#fwrite(dfe5,"../data/ids/gwas_ids/e5.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+
+dfe10 <- dfDS %>% filter(e10 == TRUE) %>% sample_n(100000) %>% select("#FID", "IID", "POP")
+#fwrite(dfe10,"../data/ids/gwas_ids/e10.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+
+dfe50 <- dfDS %>% filter(e50 == TRUE) %>% sample_n(100000) %>% select("#FID", "IID", "POP")
+#fwrite(dfe50,"../data/ids/gwas_ids/e50.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+
+dfe200 <- dfDS %>% filter(e200 == TRUE) %>% sample_n(100000) %>% select("#FID", "IID", "POP")
+#fwrite(dfe200,"../data/ids/gwas_ids/e200.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+```
+
+## Create PCA plots 
+
+```{r}
+dfe5 <- fread("../data/ids/gwas_ids/e5.txt")
+dfe5$Sample <- TRUE
+
+dfPlot <- left_join(df, dfe5)
+dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
+dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
+
+p1 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 14) + scale_color_manual(values = c("grey70", "purple1")) + ggtitle(TeX("$5 \\epsilon$")) + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+dfe10 <- fread("../data/ids/gwas_ids/e10.txt")
+dfe10$Sample <- TRUE
+
+dfPlot <- left_join(df, dfe10)
+dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
+dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
+
+p2 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 14) + scale_color_manual(values = c("grey70", "darkorange")) + ggtitle(TeX("$10 \\epsilon$")) + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+```
+```{r}
+dfe50 <- fread("../data/ids/gwas_ids/e50.txt")
+dfe50$Sample <- TRUE
+
+dfPlot <- left_join(df, dfe50)
+dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
+dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
+
+p3 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 14) + scale_color_manual(values = c("grey70", "skyblue2")) + ggtitle(TeX("$50 \\epsilon$")) + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+dfe200 <- fread("../data/ids/gwas_ids/e200.txt")
+dfe200$Sample <- TRUE
+
+dfPlot <- left_join(df, dfe200)
+dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
+dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
+
+p4 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 14) + scale_color_manual(values = c("grey70", "seagreen")) + ggtitle(TeX("$200 \\epsilon$")) + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+p <- grid.arrange(p1,p2,p3,p4, nrow = 1)
+```
+
+## Remove country of birth contrasts for WBS and all 
+
+```{r}
+dfWBS <- fread("../plots/ukbb/WBS.txt")
+dfALL <- fread("../plots/ukbb/ALL.txt")
+dfCoB <- fread("../plots/ukbb/CountryOfBirthUK.txt")
+
+# Remove CoB from other data
+dfWBS_removed <- dfWBS %>% filter(!IID %in% dfCoB$IID)
+dfALL_removed <- dfALL %>% filter(!IID %in% dfCoB$IID)
+
+# Save
+fwrite(dfWBS_removed,"../plots/ukbb/WBS-R.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(dfALL_removed,"../plots/ukbb/ALL-R.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+```
+
+

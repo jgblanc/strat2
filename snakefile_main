@@ -7,7 +7,7 @@ GWAS= ["e5", "e10", "e50", "e200", "WBS", "ALL"]
 DATASET = ["HGDP1KG"]
 CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 #CONTRASTS = ["eurasia-long"]
-NSNP = ["L-pruneall"]
+
 
 def get_rep_num(x):
   out = int(x)
@@ -19,6 +19,8 @@ wildcard_constraints:
 rule all:
     input:
         expand("plots/H_{dataset}.txt" ,chr=CHR, gwas =GWAS, nsnp=NSNP, dataset=DATASET,contrasts=CONTRASTS)
+
+
 
 ##### Calculate H #####
 
@@ -66,7 +68,7 @@ rule concat_chr:
         --make-pgen \
         --freq \
         --out {params.prefix_out}
-cp         """
+         """
 
 # Calculate H
 
