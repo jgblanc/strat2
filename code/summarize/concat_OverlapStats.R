@@ -13,7 +13,7 @@ suppressWarnings(suppressMessages({
 
 outfile = args[1]
 
-dfOut <- matrix(NA, nrow = 1, ncol = 10)
+dfOut <- matrix(NA, nrow = 1, ncol = 8)
 
 for (i in 2:length(args)) {
 
@@ -28,12 +28,9 @@ for (i in 2:length(args)) {
   # Extract which GWAS
   gwas <- strsplit(filename, "/")[[1]][4]
 
-  # Extract NSNP
-  tmp <- strsplit(filename, "/")[[1]][5]
-  nsnp <- strsplit(tmp, "L-")[[1]][2]
 
   # Extract constrasts
-  tmp <- strsplit(filename, "/")[[1]][6]
+  tmp <- strsplit(filename, "/")[[1]][5]
   tmp2 <- strsplit(tmp, "H_")[[1]][2]
   constrasts <- strsplit(tmp2, ".txt")[[1]][1]
 
@@ -43,8 +40,7 @@ for (i in 2:length(args)) {
   df$dataset <- dataset
   df$gwas <- gwas
   df$contrasts <- constrasts
-  df$nsnp <- nsnp
-  colnames(dfOut) <- c(names_from_file, "dataset", "gwas", "contrasts", "nsnp")
+  colnames(dfOut) <- c(names_from_file, "dataset", "gwas", "contrasts")
   print(head(df))
   dfOut <- rbind(dfOut, df)
 
