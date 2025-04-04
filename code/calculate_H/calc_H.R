@@ -47,7 +47,7 @@ print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 dfSNP <- fread(snp_file) %>% select("ID", "block")
 
 # Combine SNP and R files
-dfALL <- inner_join(df, dfSNP)
+dfALL <- inner_join(df, dfSNP) %>% drop_na()
 print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
 print(L)
