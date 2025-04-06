@@ -3,7 +3,7 @@ CHR =[]
 for i in range(1, 23):
   CHR.append(str(i))
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
-GWAS=["ALL", "WBS"]
+GWAS=["ALL-R", "WBS-R"]
 #GWAS=["q1"]
 
 
