@@ -1,8 +1,8 @@
-## Compute H using one SNP per independent block
+## Compute FGr using one PC SNPs
 
 args=commandArgs(TRUE)
 
-if(length(args)<6){stop("Rscript calc_H.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
+if(length(args)<7){stop("Rscript calc_FGr.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
@@ -14,9 +14,8 @@ r_prefix = args[2]
 out_prefix = args[3]
 snp_file = args[4]
 id_file = args[5]
-out_file = args[6]
-nsnp = as.numeric(args[7])
-
+out_file_error = args[6]
+out_file_FGr = args[6]
 
 # Read in IDs
 dfIDs <- fread(id_file)
@@ -48,23 +47,12 @@ print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 dfSNP <- fread(snp_file) %>% select("ID", "block")
 
 # Combine SNP and R files
-numBlocks <- length(unique(dfSNP$block))
-nsnp_per_block <- floor(nsnp / numBlocks)
-dftmp1 <- inner_join(dfSNP, df, by = "ID") %>% drop_na()
-dftmp2 <- dftmp1 %>%
-  group_by(block) %>%
-  mutate(n_snp_block = n()) %>%
-  sample_n(min(nsnp_per_block, n_snp_block)) %>%
-  ungroup() %>% select(-n_snp_block)
-makeup <- nsnp - nrow(dftmp2)
-print(makeup)
-dftmp3 <- dftmp1 %>% filter(!ID %in% dftmp2$ID) %>% sample_n(makeup)
-dfALL <- rbind(dftmp2, dftmp3)
+dfALL <- inner_join(df, dfSNP) %>% drop_na()
 print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
 print(L)
 
-# Standardize r values and divide by GWAS variance
+# Standardize r values
 dfALL$r <- dfALL$r / sd(dfALL$r)
 print(paste0("The variance of r is ", var(dfALL$r)))
 print(paste0("The mean of r is ", mean(dfALL$r)))
@@ -73,7 +61,6 @@ print(paste0("The mean of r is ", mean(dfALL$r)))
 numBlocks <- length(unique(dfALL$block))
 dfSNPs <- as.data.frame(matrix(NA, ncol = 2, nrow = numBlocks))
 colnames(dfSNPs) <- c("Block", "nSNP")
-print(dim(dfSNPs))
 print(paste0("The total number of blocks is ", numBlocks))
 dfFGr_mat <- matrix(NA, nrow = M, ncol = numBlocks)
 
@@ -81,7 +68,6 @@ dfFGr_mat <- matrix(NA, nrow = M, ncol = numBlocks)
 dfSNP_tmp <- dfALL %>% select("ID")
 snp_name <- paste0(out_prefix, ".snp")
 fwrite(dfSNP_tmp, snp_name, quote = F, row.names = F, sep = "\t")
-
 
 # Get freq file
 plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 ",
@@ -132,34 +118,35 @@ print(paste0("The raw var is ", var(FGr_raw)))
 FGr <- FGr_raw * (1/(sqrt(L-1)))
 print(paste0("The scaled var is ", var(FGr)))
 
-# Calculate H
-H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
-print(paste0("H is ", H))
-print(paste0("1/L is ", 1/L))
 
-# Compute SE for H
-allHs <- rep(NA, numBlocks)
-allHi <- rep(NA, numBlocks)
+# Compute Jacknife of each FGR
+jckFGr <- matrix(NA, nrow = M, ncol = numBlocks)
 for (i in 1:numBlocks) {
 
-  print(paste0("This is rep number ",i)) 
+  print(paste0("This is rep number ",i))
   mi <- as.numeric(dfSNPs[i,2])
-  FGri <- (FGr_raw - dfFGr_mat[,i]) * (1/sqrt(L-mi-1))
-  Hi <- sum(FGri^2) * (1/M) * (1/(L-mi-1))
-  allHs[i] <- ((L - mi)/mi) * (H - Hi)^2
-  allHi[i] <- Hi 
-
+  FGri <- (FGr_raw - dfFGr_mat[,i])^2 * (1/sqrt(L-mi-1))
+  jckFGr[,i] <- (FGr - FGri)^2  * ((L - mi)/mi)
 }
-varH <- mean(allHs)
-meanH <- mean(allHi)
 
-# P-value from sims
-pvalSim <- pnorm(H ,mean = meanH, sd = sqrt(varH), lower.tail = FALSE)
-pvalNorm <- pnorm(H, mean = 1/L, sd=sqrt(varH), lower.tail = FALSE)
+# Compute Numerator for error
+meanJCK <- rowMeans(jckFGr)
+numerator <- mean(tmp)
+print(paste0("The numerator is ",numerator))
+
+# Compute Denominator
+varFGr <- var(FGr)
+
+# Find Error
+error <- numerator / varFGr
+
+# Final signal
+signal <- 1 - error
+
 
 # Construct output
-dfOut <- data.frame(H = H, L = L, meanH = meanH, varH = varH, pvalNorm = pvalNorm, pvalSim = pvalSim)
-fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
+dfOut <- data.frame(error = error, signal = signal, L = L, varFGr = varFGr, jckVar = numerator)
+fwrite(dfOut, out_file_FGr, quote = F, row.names = F, sep = "\t")
 
 
 

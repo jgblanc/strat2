@@ -38,7 +38,7 @@ rule calc_H_Window:
         time="48:00:00"
     shell:
         """
-        Rscript code/calculate_overlap/vp_SW.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H} {params.num}
+        Rscript code/calculate_H/vp_SW.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H} {params.num}
 	      """
 
 
@@ -75,7 +75,7 @@ rule calc_H_Jacknife:
         time="06:00:00"
     shell:
         """
-        Rscript code/calculate_overlap/vp_BJ.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H} {params.num}
+        Rscript code/calculate_H/vp_BJ.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H} {params.num}
 	      """
 
 ## Summarize data

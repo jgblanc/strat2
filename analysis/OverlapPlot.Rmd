@@ -9,7 +9,168 @@ knitr::opts_chunk$set(echo = TRUE)
 library(data.table)
 library(tidyverse)
 library(latex2exp)
+library("gridExtra")
+library(grid)
 ```
+
+## PCA Plots 
+
+```{r}
+# Load PCA Data
+df <- fread("../plots/ukbb/whole_biobank.eigenvec.gz")
+```
+
+```{r}
+dfe5 <- fread("../plots/ukbb/e5.txt")
+dfe5$Sample <- TRUE
+
+dfPlot <- left_join(df, dfe5)
+dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
+dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
+
+p1 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 10) + scale_color_manual(values = c("grey70", "purple1")) + ggtitle(TeX("$5 \\epsilon$")) + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+dfe10 <- fread("../plots/ukbb/e10.txt")
+dfe10$Sample <- TRUE
+
+dfPlot <- left_join(df, dfe10)
+dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
+dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
+
+p2 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 10) + scale_color_manual(values = c("grey70", "darkorange")) + ggtitle(TeX("$10 \\epsilon$")) + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+dfe50 <- fread("../plots/ukbb/e50.txt")
+dfe50$Sample <- TRUE
+
+dfPlot <- left_join(df, dfe50)
+dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
+dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
+
+p3 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 10) + scale_color_manual(values = c("grey70", "skyblue2")) + ggtitle(TeX("$50 \\epsilon$")) + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+dfe200 <- fread("../plots/ukbb/e200.txt")
+dfe200$Sample <- TRUE
+
+dfPlot <- left_join(df, dfe200)
+dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
+dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
+
+p4 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 10) + scale_color_manual(values = c("grey70", "seagreen")) + ggtitle(TeX("$200 \\epsilon$")) + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+dfWBS <- fread("../plots/ukbb/WBS.txt")
+dfWBS$Sample <- TRUE
+
+dfPlot <- left_join(df, dfWBS)
+dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
+dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
+
+pWBS <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 10) + scale_color_manual(values = c("grey70", "orchid1")) + ggtitle("WBS") + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+
+```
+
+```{r}
+dfAll <- fread("../plots/ukbb/ALL.txt")
+dfAll$Sample <- TRUE
+
+dfPlot <- left_join(df, dfAll)
+dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
+dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
+
+pAll <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 10) + scale_color_manual(values = c("grey70", "seagreen1")) + ggtitle("ALL") + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
+
+```
+
+
+## Main text figures 
+
+Read in data and bonferoni correct CI 
+```{r}
+# Combine all data
+tmp1 <- fread("../plots/overlap_stats/H_HGDP1KG.txt")
+tmp2 <- fread("../plots/overlap_stats/H_InUKBB.txt")
+
+# Format Data
+dfAllOverlap <- rbind(tmp1, tmp2)
+tmp1 <- dfAllOverlap %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- dfAllOverlap %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  dfAllOverlap %>% filter(gwas %in% c("WBS", "ALL"))
+dfAllOverlap <- rbind(tmp1, tmp2, tmp3)
+dfAllOverlap$gwas <- factor(dfAllOverlap$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+dfAllOverlap$contrasts <- str_replace_all(dfAllOverlap$contrasts, rep_str)
+
+# Bonferonni correction 
+dfAllOverlap$pAjust <- p.adjust(dfAllOverlap$pvalNorm, method = "bonferroni")
+ci <- qnorm(1 -(0.025/nrow(dfAllOverlap)))
+dfAllOverlap$lc <- dfAllOverlap$H - (ci * sqrt(dfAllOverlap$varH)) 
+dfAllOverlap$uc <- dfAllOverlap$H + (ci * sqrt(dfAllOverlap$varH)) 
+```
+
+HGDP1KG - Continental
+```{r}
+dfPlot <- dfAllOverlap %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
+
+plCont <- dfPlot %>% ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 12) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 6)) + ylab("") + scale_y_log10(breaks = c(1e-5, 1e-4, 1e-3, 1e-2)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5))
+plCont
+```
+
+HGDP1KG - Continental
+```{r}
+dfPlot <- dfAllOverlap %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-long","eur-lat", "eur-long", "sdi-eur")) 
+
+
+plLat <- dfPlot %>% ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 12) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 8)) + ylab("") + scale_y_log10(breaks = c(1e-5, 1e-4, 1e-3, 1e-2),  limits = c(7e-6, 1e-2)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5)) 
+plLat
+```
+
+InUKBB
+```{r}
+dfPlot <- dfAllOverlap %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
+
+
+plInUKBB <- dfPlot %>% ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 12) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 6)) + ylab("") + scale_y_log10(breaks = c(1e-5, 1e-4, 1e-3),  limits = c(5e-6, 1e-3)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5))
+plInUKBB
+```
+
+Combine PCA + Overlap Figures 
+```{r}
+# Define label grobs
+label_a <- textGrob("a", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_b <- textGrob("b", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_c <- textGrob("c", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_d <- textGrob("d", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+
+# Combine the first row of 7 plots
+top_row <- arrangeGrob(pWBS, p1, p2, p3, p4, pAll, ncol = 6, top = label_a)
+
+# Wrap other plots with labels
+row_b <- arrangeGrob(plCont, top = label_b)
+row_c <- arrangeGrob(plLat, top = label_c)
+row_d <- arrangeGrob(plInUKBB, top = label_d)
+
+# Final arrangement
+pl <- grid.arrange(top_row, row_b, row_c, row_d, ncol = 1, heights = c(1.3, 1, 1, 1))
+ggsave("~/Desktop/Fig1.png", pl, height = 10, width = 12)
+```
+
 
 ## Compare parameters and methods
 
