@@ -2,7 +2,7 @@
 
 args=commandArgs(TRUE)
 
-if(length(args)<7){stop("Rscript calc_FGr.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
+if(length(args)<6){stop("Rscript calc_FGr.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
@@ -125,13 +125,13 @@ for (i in 1:numBlocks) {
 
   print(paste0("This is rep number ",i))
   mi <- as.numeric(dfSNPs[i,2])
-  FGri <- (FGr_raw - dfFGr_mat[,i])^2 * (1/sqrt(L-mi-1))
+  FGri <- (FGr_raw - dfFGr_mat[,i]) * (1/sqrt(L-mi-1))
   jckFGr[,i] <- (FGr - FGri)^2  * ((L - mi)/mi)
 }
 
 # Compute Numerator for error
 meanJCK <- rowMeans(jckFGr)
-numerator <- mean(tmp)
+numerator <- mean(meanJCK)
 print(paste0("The numerator is ",numerator))
 
 # Compute Denominator
