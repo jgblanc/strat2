@@ -31,7 +31,7 @@ for (i in 2:length(args)) {
 
   # Extract constrasts
   tmp <- strsplit(filename, "/")[[1]][5]
-  tmp2 <- strsplit(tmp, "error")[[1]][2]
+  tmp2 <- strsplit(tmp, "error_")[[1]][2]
   constrasts <- strsplit(tmp2, ".txt")[[1]][1]
 
   # Read in results
