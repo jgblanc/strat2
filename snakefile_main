@@ -18,7 +18,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("output/calculate_FGr/{dataset}/{gwas}/error_{contrasts}.txt" ,chr=CHR, gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("plots/error/error_{dataset}.txt" ,chr=CHR, gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
@@ -123,6 +123,15 @@ rule calc_error:
         time="02:00:00"
     shell:
         """
-        Rscript code/calculate_FGr/calc_FGr.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.error}
+        Rscript code/calculate_FGr/calc_error.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.error}
 	      """
 
+rule concat_error:
+    input:
+        expand("output/calculate_FGr/{{dataset}}/{gwas}/error_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS)
+    output:
+        "plots/error/error_{dataset}.txt"
+    shell:
+        """
+        Rscript code/summarize/concat_Error.R {output} {input}
+	      """
