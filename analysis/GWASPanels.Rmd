@@ -20,7 +20,9 @@ Plot PC1 vs PC2 colored by self-identified ethnic background
 # Load data and combine
 dfPCA <- fread("../plots/ukbb/whole_biobank.eigenvec.gz")
 dfEB <- fread("../plots/ukbb/EthnicBackground_21000.txt")
-df <- inner_join(dfPCA, dfEB)
+wd <- fread("../data/withdraw69046_286_20250212.txt")
+colnames(wd) <- "IID"
+df <- inner_join(dfPCA, dfEB) %>% filter(!IID %in% wd$IID)
 
 # Use continental labels 
 df <- df %>% mutate(continental = case_when(EthnicBackground_21000 %in% c(4, 4001, 4002, 4003) ~ "Africa", EthnicBackground_21000 %in% c(1, 1001, 1002, 1003) ~ "Europe", EthnicBackground_21000 %in% c(2, 2001, 2002, 2003, 2004) ~ "Mixed", EthnicBackground_21000 %in% c(3, 3001, 3002, 3003, 3004) ~ "Asia"))
@@ -52,7 +54,7 @@ epsilon <- 1e-4
 dfDS <- df %>% mutate(e5 = case_when(distance2 <= (5 * epsilon) ~ TRUE, TRUE ~ FALSE),
                       e10 =case_when(distance2 <= (10 * epsilon) ~ TRUE, TRUE ~ FALSE),
                       e50 = case_when(distance2 <= (50 * epsilon) ~ TRUE, TRUE ~ FALSE),
-                      e200 = case_when(distance2 <= (200 * epsilon) ~ TRUE, TRUE ~ FALSE))
+                      e200 = case_when(distance2 <= (200 * epsilon) ~ TRUE, TRUE ~ FALSE)) 
 ```
 
 
@@ -71,8 +73,8 @@ dfDS <- dfDS[order(dfDS$e200, decreasing = FALSE), ]
 p4 <-  ggplot(data = dfDS, aes(x = PC1, y = PC2, color = e200)) + geom_point(color = "darkred") + theme_classic(base_size = 14)  + ggtitle("e200") + theme(legend.position = "none")
 
 
-p <- ggarrange(p1,p2,p3,p4, nrow = 1)
-p
+#p <- ggarrange(p1,p2,p3,p4, nrow = 1)
+#p
 ```
 
 ## Create GWAS panels based on PC2 
@@ -80,23 +82,26 @@ p
 ```{r}
 set.seed(12121212)
 
+dfDS <- dfDS %>% mutate(POP = continental)
+
 dfe5 <- dfDS %>% filter(e5 == TRUE) %>% sample_n(100000) %>% select("#FID", "IID", "POP")
-#fwrite(dfe5,"../data/ids/gwas_ids/e5.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(dfe5,"../plots/ukbb/e5.txt", row.names = F, col.names = T, quote = F, sep = "\t")
 
 dfe10 <- dfDS %>% filter(e10 == TRUE) %>% sample_n(100000) %>% select("#FID", "IID", "POP")
-#fwrite(dfe10,"../data/ids/gwas_ids/e10.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(dfe10,"../plots/ukbb/e10.txt", row.names = F, col.names = T, quote = F, sep = "\t")
 
 dfe50 <- dfDS %>% filter(e50 == TRUE) %>% sample_n(100000) %>% select("#FID", "IID", "POP")
-#fwrite(dfe50,"../data/ids/gwas_ids/e50.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(dfe50,"../plots/ukbb/e50.txt", row.names = F, col.names = T, quote = F, sep = "\t")
 
 dfe200 <- dfDS %>% filter(e200 == TRUE) %>% sample_n(100000) %>% select("#FID", "IID", "POP")
-#fwrite(dfe200,"../data/ids/gwas_ids/e200.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(dfe200,"../plots/ukbb/e200.txt", row.names = F, col.names = T, quote = F, sep = "\t")
 ```
 
 ## Create PCA plots 
 
+
 ```{r}
-dfe5 <- fread("../data/ids/gwas_ids/e5.txt")
+dfe5 <- fread("../plots/ukbb/e5.txt")
 dfe5$Sample <- TRUE
 
 dfPlot <- left_join(df, dfe5)
@@ -142,12 +147,23 @@ p4 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point(
 p <- grid.arrange(p1,p2,p3,p4, nrow = 1)
 ```
 
+## Remove withdrawn participants 
+
+```{r}
+dfWBS <- fread("../plots/ukbb/WBS.txt") %>% filter(!IID %in% wd$IID)  %>% select("#FID", "IID", "POP")
+dfALL <- fread("../plots/ukbb/ALL.txt") %>% filter(!IID %in% wd$IID)  %>% select("#FID", "IID", "POP")
+
+fwrite(dfWBS,"../plots/ukbb/WBS.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(dfALL,"../plots/ukbb/ALL.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+```
+
+
 ## Remove country of birth contrasts for WBS and all 
 
 ```{r}
-dfWBS <- fread("../plots/ukbb/WBS.txt")
-dfALL <- fread("../plots/ukbb/ALL.txt")
-dfCoB <- fread("../plots/ukbb/CountryOfBirthUK.txt")
+dfWBS <- fread("../plots/ukbb/WBS.txt") %>% filter(!IID %in% wd$IID)  %>% select("#FID", "IID", "POP")
+dfALL <- fread("../plots/ukbb/ALL.txt") %>% filter(!IID %in% wd$IID)  %>% select("#FID", "IID", "POP")
+dfCoB <- fread("../plots/ukbb/CountryOfBirthUK.txt") %>% filter(!IID %in% wd$IID) 
 
 # Remove CoB from other data
 dfWBS_removed <- dfWBS %>% filter(!IID %in% dfCoB$IID)

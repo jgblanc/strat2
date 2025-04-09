@@ -1,0 +1,49 @@
+---
+title: "FGrPlot"
+output: html_document
+date: "2025-04-08"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE)
+library(data.table)
+library(tidyverse)
+library(latex2exp)
+library("gridExtra")
+library(grid)
+library(scales)
+```
+
+
+## Plot all Error 
+
+```{r}
+# Overlap data
+tmp1 <- fread("../plots/overlap_stats/H_HGDP1KG.txt")
+tmp2 <- fread("../plots/overlap_stats/H_InUKBB.txt")
+dfAllOverlap <- rbind(tmp1, tmp2)
+
+# Error data
+tmp1 <- fread("../plots/error/error_HGDP1KG.txt")
+tmp2 <- fread("../plots/error/error_InUKBB.txt")
+dfError <- rbind(tmp1, tmp2)
+
+# Combine
+df <- inner_join(dfError, dfAllOverlap)
+
+# Format Data
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
+df <- rbind(tmp1, tmp2, tmp3)
+df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+```
+
+```{r}
+df %>% ggplot(aes(x = H, y = error, color = gwas)) + geom_point(size = 2) + scale_x_log10() + scale_y_log10() + xlab(TeX("Proportion of variance explained ($\\hat{H}$)")) + ylab(TeX("Error ($\\hat{e}_{f}$)")) + theme_bw(base_size = 12) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL")))  + theme(panel.grid.minor = element_line(linetype = "dashed")) +  guides(color = guide_legend(title = "GWAS", label = scales::label_parse()))
+```
+
+
+
