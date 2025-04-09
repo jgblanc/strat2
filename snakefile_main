@@ -18,7 +18,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/H_BJ_{contrasts}.txt" ,chr=CHR, gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("plots/error/error_{dataset}.txt" ,chr=CHR, gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
