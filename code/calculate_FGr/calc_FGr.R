@@ -15,7 +15,7 @@ out_prefix = args[3]
 snp_file = args[4]
 id_file = args[5]
 out_file_FGr = args[6]
-out_file_SNPs = args[7]
+out_file_SNP = args[7]
 
 # Read in IDs
 dfIDs <- fread(id_file)
@@ -44,14 +44,15 @@ for (i in 2:22) {
 print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 
 # Read in SNP file
-dfSNP <- fread(snp_file) %>% select("ID", "block") %>% separate("ID", c("CHR", "tmp"),sep = ":" ,remove = FALSE) %>% select("ID", "block", "CHR")
-head(dfSNP)
+dfSNP <- fread(snp_file) %>% select("ID", "block")
+
 
 # Combine SNP and R files
 dfALL <- inner_join(df, dfSNP) %>% drop_na()
 print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
 print(L)
+print(head(dfALL))
 
 # Standardize r values
 dfALL$r <- dfALL$r / sd(dfALL$r)
@@ -117,7 +118,7 @@ system(rm_cmd)
 
 # Save Raw FGR
 dfFGr <- as.data.frame(dfFGr_mat)
-fwrite(dfOut, out_file_FGr, quote = F, row.names = F, sep = "\t")
+fwrite(dfFGr, out_file_FGr, quote = F, row.names = F, sep = "\t")
 
 # Save SNP file
 fwrite(dfSNPs, out_file_SNP, quote = F, row.names = F, sep = "\t")
