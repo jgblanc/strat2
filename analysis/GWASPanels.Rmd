@@ -172,6 +172,7 @@ dfALL_removed <- dfALL %>% filter(!IID %in% dfCoB$IID)
 # Save
 fwrite(dfWBS_removed,"../plots/ukbb/WBS-R.txt", row.names = F, col.names = T, quote = F, sep = "\t")
 fwrite(dfALL_removed,"../plots/ukbb/ALL-R.txt", row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(dfCoB,"../plots/ukbb/CountryOfBirthUK.txt", row.names = F, col.names = T, quote = F, sep = "\t")
 ```
 
 

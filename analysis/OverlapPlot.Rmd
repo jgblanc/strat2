@@ -29,7 +29,6 @@ dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
 dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
 
 p1 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 10) + scale_color_manual(values = c("grey70", "purple1")) + ggtitle(TeX("$5 \\epsilon$")) + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
-p1
 ```
 
 ```{r}
@@ -41,7 +40,6 @@ dfPlot$Sample[is.na(dfPlot$Sample)] <- FALSE
 dfPlot <- dfPlot[order(dfPlot$Sample, decreasing = FALSE), ]
 
 p2 <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_point() + theme_classic(base_size = 10) + scale_color_manual(values = c("grey70", "darkorange")) + ggtitle(TeX("$10 \\epsilon$")) + theme(legend.position = "none",plot.title = element_text(hjust = 0.5))
-p2
 ```
 
 ```{r}
@@ -189,7 +187,7 @@ dfBJ$uc <- dfBJ$H + (ci * sqrt(dfBJ$varH))
 tmp1 <- dfBJ %>% filter(gwas %in% c("e5", "e10", "e50", "e200"))%>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
 tmp2 <- dfBJ %>% filter(gwas %in% c("WBS", "ALL"))
 dfBJ  <- rbind(tmp1, tmp2)
-dfBJ$gwas <- factor(dfBJ$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")) 
+dfBJ$gwas <- factor(dfBJ$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL")) 
 
 # Mark all significant tests 
 dfBJ <- dfBJ %>% mutate(Sig = case_when(pvalNorm <= 0.05 ~ TRUE, pvalNorm > 0.05 ~ FALSE))
@@ -198,8 +196,11 @@ dfBJ <- dfBJ %>% mutate(Sig = case_when(pvalNorm <= 0.05 ~ TRUE, pvalNorm > 0.05
 #dfBJ <- dfBJ %>% mutate(bias = 580 * (meanH - H)) %>% mutate(correctedH = H - bias)
 ```
 
+Supplemental Figure 
 ```{r}
-dfBJ %>% ggplot(aes(x = L, y = H, color = gwas)) + geom_point() + geom_function(fun = function(x) 1/x, color = "red", linetype = "dashed")+ scale_x_log10() + scale_y_log10() + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1")) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white")) + geom_errorbar(aes(x = L, ymin = lc, ymax = uc), width = 0.05)
+pl <- dfBJ %>% ggplot(aes(x = L, y = H, color = gwas)) + geom_point() + geom_function(fun = function(x) 1/x, color = "red", linetype = "dashed")+ scale_x_log10() + scale_y_log10() + scale_color_manual(values = c( "orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"),  labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL"))) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white"), panel.grid.minor = element_line(linetype = "dashed")) + geom_errorbar(aes(x = L, ymin = lc, ymax = uc), width = 0.05) +  guides(color = guide_legend(title = "GWAS", label = scales::label_parse())) + ylab(TeX("$\\hat{H}$"))
+
+ggsave("~/Desktop/SupH.png", pl, height = 5, width = 7)
 ```
 
 ```{r}
@@ -207,109 +208,6 @@ dfBJ %>% ggplot(aes(x = gwas, y = H, color = gwas, shape = Sig)) + geom_point() 
 ```
 
 
-Sliding Window
-
-```{r}
-# Read in data 
-dfSW <- fread("../plots/overlap_stats/H_vp_SW.txt")
-
-# Compute CI 
-ci <- qnorm(1 -0.05)
-dfSW$lc <- dfSW$H - (ci * sqrt(dfSW$varH)) 
-dfSW$uc <- dfSW$H + (ci * sqrt(dfSW$varH)) 
-
-# Convert GWAS to a factor
-tmp1 <- dfSW %>% filter(gwas %in% c("e5", "e10", "e50", "e200"))%>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
-tmp2 <- dfSW %>% filter(gwas %in% c("WBS", "ALL"))
-dfSW  <- rbind(tmp1, tmp2)
-dfSW$gwas <- factor(dfSW$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")) 
-
-# Mark all significant tests 
-dfSW <- dfSW %>% mutate(Sig = case_when(pvalNorm <= 0.05 ~ TRUE, pvalNorm > 0.05 ~ FALSE))
-```
-
-```{r}
-dfSW %>% ggplot(aes(x = L, y = H, color = gwas)) + geom_point() + geom_function(fun = function(x) 1/x, color = "red", linetype = "dashed")+ scale_x_log10() + scale_y_log10()  + geom_errorbar(aes(x = L, ymin = lc, ymax = uc), width = 0.05) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1")) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white")) 
-```
-
-```{r}
-dfSW %>% ggplot(aes(x = gwas, y = H, color = gwas, shape = Sig)) + geom_point() + scale_y_log10()+ scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1")) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white")) + facet_wrap(~L) +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = meanH, yend = meanH), color = "green") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.9) + geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red")
-```
-
-Compare approaches 
-
-```{r}
-dfAll <- rbind(dfSW, dfBJ)
-```
-
-```{r}
-dfAll %>% ggplot(aes(x = L, y = H, color = method)) + geom_point()+ facet_wrap(~gwas)+ geom_function(fun = function(x) 1/x, color = "red", linetype = "dashed")+ scale_x_log10() + scale_y_log10()  + geom_errorbar(aes(x = L, ymin = lc, ymax = uc), width = 0.05) + theme_bw(base_size = 12)+ theme( strip.background=element_rect(colour="black",fill="white")) 
-```
-
-
-
-
-## Overlap main figures 
-
-```{r}
-# Combine all data
-tmp1 <- fread("../plots/H_HGDP1KG.txt")
-tmp2 <- fread("../plots/H_InUKBB.txt")
-tmp3 <- fread("../plots/H_SDS.txt")
-#tmp4 <- fread("../endpoints/SDS/OverlapStats.txt")
-
-# Format Data
-dfAllOverlap <- rbind(tmp1, tmp2, tmp3)
-tmp1 <- dfAllOverlap%>% filter(gwas %in% c("e5", "e10", "e50", "e200"))%>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
-tmp2 <- dfAllOverlap%>% filter(gwas %in% c("WBS", "ALL"))
-dfAllOverlap <- rbind(tmp1, tmp2)
-dfAllOverlap$gwas <- factor(dfAllOverlap$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")) 
-rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
-dfAllOverlap$contrasts <- str_replace_all(dfAllOverlap$contrasts, rep_str)
-
-# Bonferonni correction 
-dfAllOverlap$pAjust <- p.adjust(dfAllOverlap$pvalSim, method = "bonferroni")
-ci <- qnorm(1 -(0.05/nrow(dfAllOverlap)))
-dfAllOverlap$lc <- dfAllOverlap$H - (ci * sqrt(dfAllOverlap$varH)) 
-dfAllOverlap$uc <- dfAllOverlap$H + (ci * sqrt(dfAllOverlap$varH)) 
-```
-
-
-HGDP1KG - Continental
-```{r}
-dfPlot <- dfAllOverlap %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))
-dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
-
-plCont <- dfPlot %>% ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 12) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 8, angle = 45, hjust = 1)) + ylab("") + scale_y_log10() + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = meanH, yend = meanH), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.9) + theme(plot.margin = margin(t = 0.5, b = 0.5))
-plCont
-```
-
-
-HGDP - Lat/Long/SDI 
-```{r}
-dfPlot <- dfAllOverlap %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eurasia-long", "eur-long", "sdi-eur"))
-dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur"))  
-
-plLat <- dfPlot %>% ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 12) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 8, angle = 45, hjust = 1)) + ylab("") + scale_y_log10() + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = meanH, yend = meanH), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.9) + theme(plot.margin = margin(t = 0.5, b = 0.5))
-plLat
-```
-
-
-InUKBB 
-```{r}
-dfPlot <- dfAllOverlap %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))
-dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
-
-plInUKBB <- dfPlot %>%ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 12) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 8, angle = 45, hjust = 1)) + ylab("") + scale_y_log10() + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = meanH, yend = meanH), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.9) + theme(plot.margin = margin(t = 0.5, b = 0.5))
-plInUKBB
-```
-SDS 
-```{r}
-dfPlot <- dfAllOverlap %>% filter(contrasts %in%c("Han", "UK10K"))
-  
-plSDS <- dfPlot %>%ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 12) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen",  "orchid1", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 8, angle = 45, hjust = 1)) + ylab("") + scale_y_log10() + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = meanH, yend = meanH), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5))
-plSDS
-```
 
 
 
@@ -331,52 +229,16 @@ plSDS
 
 
 
-```{r}
-df <- fread("../plots/H_HGDP1KG_pcaSNPs_blckjck.txt")
-dfNum <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200") )%>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
-dfNNum <- df %>% filter(gwas %in% c("WBS", "ALL"))
-df <- rbind(dfNum, dfNNum)
-df$gwas <- factor(df$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")) 
-df <- df %>% mutate(uc = H + (1.96*(sqrt(varH))), lc = H - (1.96*(sqrt(varH))))
 
 
-pl <- df %>% filter(contrasts %in% c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr")) %>% ggplot(aes(x = gwas, y = H, color = gwas)) + geom_point(size = 2) + xlab("") + ylab("") + theme_bw(base_size = 14)  + guides(fill="none") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = 8, angle = 45, hjust = 1), strip.background=element_rect(colour="black",fill="white"), legend.position = "none")+facet_wrap(~contrasts, nrow = 1)+ scale_y_log10() + geom_hline(aes(yintercept = 1/L) , color = "red", linetype = "dashed") + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen", "orchid1", "seagreen1")) + geom_errorbar(aes(ymin = lc, ymax = uc), width = 0.8)
-pl
-#ggsave("~/Desktop/tmp.png", pl, height = 2.2, width = 12)
-
-pl <- df %>% filter(contrasts %in% c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur")) %>% ggplot(aes(x = gwas, y = H, color = gwas)) + geom_point(size = 2) + xlab("") + ylab("") + theme_bw(base_size = 14)  + guides(fill="none") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = 8, angle = 45, hjust = 1), strip.background=element_rect(colour="black",fill="white"), legend.position = "none")+facet_wrap(~contrasts, nrow = 1)+ scale_y_log10() + geom_hline(aes(yintercept = 1/L), color = "red", linetype = "dashed") + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen", "orchid1", "seagreen1")) + geom_errorbar(aes(ymin = lc, ymax = uc), width = 0.8)
-pl
-#ggsave("~/Desktop/tmp2.png", pl, height = 2.2, width = 12)
-
-```
-```{r}
-df <- fread("../plots/H_InUKBB.txt")
-dfNum <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200") )%>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
-dfNNum <- df %>% filter(gwas %in% c("WBS", "ALL"))
-df <- rbind(dfNum, dfNNum)
-df$gwas <- factor(df$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")) 
-df <- df %>% mutate(uc = H + (1.96*(sqrt(varH))), lc = H - (1.96*(sqrt(varH))))
-rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI"  )
-df$contrasts <- str_replace_all(df$contrasts, rep_str)
 
 
-pl <- df %>% ggplot(aes(x = gwas, y = H, color = gwas)) + geom_point(size = 2) + xlab("") + ylab("") + theme_bw(base_size = 14)  + guides(fill="none") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = 8, angle = 45, hjust = 1), strip.background=element_rect(colour="black",fill="white"), legend.position = "none")+facet_wrap(~contrasts, nrow = 1)+ scale_y_log10() + geom_hline(yintercept = 1/1703, color = "red", linetype = "dashed") + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen", "orchid1", "seagreen1")) + geom_errorbar(aes(ymin = lc, ymax = uc), width = 0.8)
-pl
-#ggsave("~/Desktop/tmp3.png", pl, height = 2.2, width = 12)
-
-```
 
 
-```{r}
-df <- fread("../plots/H_SDS_pcaSNPs_blckjck.txt")
-dfNum <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200") )%>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
-dfNNum <- df %>% filter(gwas %in% c("WBS", "ALL"))
-df <- rbind(dfNum, dfNNum)
-df$gwas <- factor(df$gwas, levels = c( "5", "10", "50", "200", "WBS", "ALL")) 
-df <- df %>% mutate(uc = H + (1.96*(sqrt(varH))), lc = H - (1.96*(sqrt(varH))))
 
-pl <- df %>% ggplot(aes(x = gwas, y = H, color = gwas)) + geom_point(size = 2) + xlab("") + ylab("") + theme_bw(base_size = 14)  + guides(fill="none") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = 8, angle = 45, hjust = 1), strip.background=element_rect(colour="black",fill="white"), legend.position = "none")+facet_wrap(~contrasts, nrow = 1)+ scale_y_log10() + geom_hline(yintercept = 1/1703, color = "red", linetype = "dashed") + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen", "orchid1", "seagreen1")) + geom_errorbar(aes(ymin = lc, ymax = uc), width = 0.8)
-pl
-ggsave("~/Desktop/tmp3.png", pl, height = 2.2, width = 12)
 
-```
+
+
+
+
+

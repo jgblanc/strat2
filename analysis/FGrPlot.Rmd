@@ -42,7 +42,8 @@ df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
 ```
 
 ```{r}
-df %>% ggplot(aes(x = H, y = error, color = gwas)) + geom_point(size = 2) + scale_x_log10() + scale_y_log10() + xlab(TeX("Proportion of variance explained ($\\hat{H}$)")) + ylab(TeX("Error ($\\hat{e}_{f}$)")) + theme_bw(base_size = 12) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL")))  + theme(panel.grid.minor = element_line(linetype = "dashed")) +  guides(color = guide_legend(title = "GWAS", label = scales::label_parse()))
+pl <- df %>% ggplot(aes(x = H, y = error, color = gwas)) + geom_point(size = 2) + scale_x_log10() + scale_y_log10() + xlab(TeX("Proportion of variance explained ($\\hat{H}$)")) + ylab(TeX("Error ($\\hat{e}_{f}$)")) + theme_bw(base_size = 12) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL")))  + theme(panel.grid.minor = element_line(linetype = "dashed")) +  guides(color = guide_legend(title = "GWAS", label = scales::label_parse()))
+ggsave("~/Desktop/Error.png", pl, height = 4, width = 6)
 ```
 
 
