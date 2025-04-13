@@ -1,0 +1,16 @@
+PLINK v2.0.0-a.6.9LM 64-bit Intel (29 Jan 2025)
+Options in effect:
+  ----pca 40 approx
+  --chr 1-22
+  --keep data/ids/gwas_ids/e5.txt
+  --pfile /scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3
+  --threads 8
+
+Hostname: cri22cn090.cri.uchicago.edu
+Working directory: /gpfs/data/berg-lab/jgblanc/strat2
+Start time: Sun Apr 13 17:23:54 2025
+
+Error: Unrecognized flag ('----pca').
+For more info, try "plink2 --help <flag name>" or "plink2 --help | more".
+
+End time: Sun Apr 13 17:23:54 2025
