@@ -9,8 +9,12 @@ DATASET = ["InUKBB"]
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 #CONTRASTS = ["eurasia-lat"]
 
-def get_rep_num(x):
-  out = int(x)
+def get_chr_range(x):
+  if x == 1:
+    out = x
+  else:
+    out = "1-" + x
+  print(out)
   return out
 
 wildcard_constraints:
@@ -18,7 +22,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("output/calculate_PCA/{gwas}/PCA_1.eigenvec" ,chr=CHR, gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_PCA/{gwas}/PCA_{chr}.eigenvec" ,chr=CHR, gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
@@ -163,17 +167,24 @@ rule calc_chr_PCA:
     input:
         IDs="data/ids/gwas_ids/{gwas}.txt"
     output:
-        "output/calculate_PCA/{gwas}/PCA_1.eigenvec",
-        "output/calculate_PCA/{gwas}/PCA_1.eigenval"
+        "output/calculate_PCA/{gwas}/PCA_{chr}.eigenvec",
+        "output/calculate_PCA/{gwas}/PCA_{chr}.eigenval"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3",
-        out_prefix="output/calculate_PCA/{gwas}/PCA"
-    threads: 8
+        out_prefix="output/calculate_PCA/{gwas}/PCA_{chr}",
+        chr_range = lambda wildcards: get_chr_range(wildcards.chr)
+    threads: 16
     resources:
-        mem_mb=38000,
-        time="02:00:00"
+        mem_mb=60000,
+        time="24:00:00"
     shell:
         """
-        Rscript code/calculate_PCA/calc_PCA_chr.R {params.plink_prefix} {params.out_prefix} {input.IDs}
+        plink2 --pfile {params.plink_prefix} \
+        --keep {input.IDs} \
+        --chr {params.chr_range} \
+        --threads 16 \
+        --pca 40 approx \
+        --memory 60000 \
+        --out {params.out_prefix}
 	      """
 
