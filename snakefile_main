@@ -2,7 +2,7 @@
 CHR = []
 for i in range(1, 22):
   CHR.append(str(i))
-GWAS= ["e5", "e10", "e50", "e200", "WBS", "ALL"]
+GWAS= ["e5", "e10", "e50", "e200"]
 #GWAS = ["e5"]
 DATASET = ["HGDDP1KG"]
 CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
@@ -22,7 +22,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("output/calculate_PCA/{gwas}/PCA_{chr}.eigenvec" ,chr=CHR, gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("plots/error/R2Chr_{dataset}.txt" ,chr=CHR, gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
@@ -200,3 +200,12 @@ rule calc_R2_chr:
         Rscript code/calculate_FGr/R2_chr.R {input.PCs} {input.FGr} {input.SNPs} {output.R2}
 	      """
 
+rule concat_error:
+    input:
+        expand("output/calculate_FGr/{{dataset}}/{gwas}/R2_chr/{contrasts}_{chr}.txt", gwas=GWAS, contrasts=CONTRASTS, chr=CHR)
+    output:
+        "plots/error/R2Chr_{dataset}.txt"
+    shell:
+        """
+        Rscript code/summarize/concat_R2Chr.R {output} {input}
+	      """
