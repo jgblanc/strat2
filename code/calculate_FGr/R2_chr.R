@@ -24,8 +24,8 @@ PC_nums <- PCs[,3:ncol(PCs)]
 PC_nums <- scale(PC_nums)
 
 # Get the PCA Chrs
-chrPCA <- strsplit(strsplit(out_file, "_")[[2]], ".txt")[[1]]
-print(chrPCA)
+tmp <- strsplit(out_file, "_")[[1]][4]
+chrPCA <- as.numeric(strsplit(tmp, ".txt")[[1]][1])
 
 # Figure out number of FGr Chrs
 chrFGr <-seq(1, 22)[ seq(1, 22) >  chrPCA]
@@ -83,7 +83,7 @@ FGr_scale <- scale(FGr)
 for (i in 1:ncol(PC_nums)) {
 
   # Calc cov
-  B <- cov(FG_scale, PC_nums[,i])
+  B <- cov(FGr_scale, PC_nums[,i])
   B2 <- B^2
 
   # Collect output
