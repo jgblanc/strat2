@@ -43,8 +43,59 @@ df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
 
 ```{r}
 pl <- df %>% ggplot(aes(x = H, y = error, color = gwas)) + geom_point(size = 2) + scale_x_log10() + scale_y_log10() + xlab(TeX("Proportion of variance explained ($\\hat{H}$)")) + ylab(TeX("Error ($\\hat{e}_{f}$)")) + theme_bw(base_size = 12) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL")))  + theme(panel.grid.minor = element_line(linetype = "dashed")) +  guides(color = guide_legend(title = "GWAS", label = scales::label_parse()))
-ggsave("~/Desktop/Error.png", pl, height = 4, width = 6)
+#ggsave("~/Desktop/Error.png", pl, height = 4, width = 6)
 ```
 
+## Plot R2 by Chr 
+
+```{r}
+tmp1 <- fread("../plots/error/R2Chr_HGDP1KG.txt")
+tmp2 <- fread("../plots/error/R2Chr_InUKBB.txt")
+df <- rbind(tmp1, tmp2)
+
+# Format Data
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
+df <- rbind(tmp1, tmp2, tmp3)
+df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+df$contrasts <- str_replace_all(df$contrasts, rep_str)
+```
+
+#### Signal vs Number of Chromosomes used to calculate it 
+
+```{r}
+df %>% filter(PC == "1" ) %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr")) %>% mutate("FGr_chrs" = 22 - pca_chrs) %>% ggplot(aes(x = pca_chrs, y = Signal, color = gwas)) + geom_point() + facet_wrap(~contrasts)
+```
+
+
+```{r}
+df %>% filter(PC == "1" ) %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur")) %>% mutate("FGr_chrs" = 22 - pca_chrs) %>% ggplot(aes(x = pca_chrs, y = Signal, color = gwas)) + geom_point() + facet_wrap(~contrasts)
+```
+
+
+```{r}
+df %>% filter(PC == "1" ) %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL")) %>% mutate("FGr_chrs" = 22 - pca_chrs) %>% ggplot(aes(x = pca_chrs, y = Signal, color = gwas)) + geom_point() + facet_wrap(~contrasts)
+```
+
+### Ratio vs Chr split
+
+
+```{r}
+df %>% filter(PC == "40") %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr")) %>% mutate("FGr_chrs" = 22 - pca_chrs) %>% ggplot(aes(x = pca_chrs, y = Ratio, color = gwas)) + geom_point() + facet_wrap(~contrasts) + ylim(0,1)
+```
+
+```{r}
+df %>% filter(PC == "40") %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur")) %>% mutate("FGr_chrs" = 22 - pca_chrs) %>% ggplot(aes(x = pca_chrs, y = Ratio, color = gwas)) + geom_point() + facet_wrap(~contrasts) 
+```
+
+
+```{r}
+df %>% filter(PC == "40") %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL")) %>% mutate("FGr_chrs" = 22 - pca_chrs) %>% ggplot(aes(x = pca_chrs, y = Ratio, color = gwas)) + geom_point() + facet_wrap(~contrasts)
+```
 
 
