@@ -21,7 +21,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("output/calculate_PCA/{gwas}/odd_PCA.eigenvec" , gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_FGr/{dataset}/{gwas}/R2_EO/{contrasts}_{chr}.txt" , gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
@@ -235,4 +235,19 @@ rule calc_odd_PCA:
         --pca 40 approx \
         --memory 60000 \
         --out {params.out_prefix}
+	      """
+
+rule calc_R2_even:
+    input:
+        PCs="output/calculate_PCA/{gwas}/odd_PCA.eigenvec",
+        FGr="output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt",
+        SNPs="output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt"
+    output:
+        R2="output/calculate_FGr/{dataset}/{gwas}/R2_EO/{contrasts}_{chr}.txt",
+    resources:
+        mem_mb=38000,
+        time="08:00:00"
+    shell:
+        """
+        Rscript code/calculate_FGr/R2_EO.R {input.PCs} {input.FGr} {input.SNPs} {output.R2}
 	      """
