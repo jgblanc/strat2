@@ -21,7 +21,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("output/calculate_PCA/{gwas}/PCA_odd.eigenvec" ,chr=CHR, gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_PCA/{gwas}/odd_PCA.eigenvec" , gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
@@ -213,16 +213,15 @@ rule concat_R2_chr:
 
 ## Compute R2 for even/odd chromosomes
 
-rule calc_even_PCA:
+rule calc_odd_PCA:
     input:
         IDs="data/ids/gwas_ids/{gwas}.txt"
     output:
-        "output/calculate_PCA/{gwas}/PCA_odd.eigenvec",
-        "output/calculate_PCA/{gwas}/PCA_odd.eigenval"
+        "output/calculate_PCA/{gwas}/odd_PCA.eigenvec",
+        "output/calculate_PCA/{gwas}/odd_PCA.eigenval"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3",
-        out_prefix="output/calculate_PCA/{gwas}/PCA_odd",
-        chr_range = lambda wildcards: get_chr_range(wildcards.chr)
+        out_prefix="output/calculate_PCA/{gwas}/odd_PCA"
     threads: 16
     resources:
         mem_mb=60000,
