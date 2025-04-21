@@ -6,7 +6,7 @@ GWAS = ["WBS-R", "ALL-R"]
 
 rule all:
     input:
-        expand("data/ukbb/variantFreq/{gwas}_{chr}.afreq" ,chr=CHR, gwas=GWAS)
+        expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/rare_variants_{chr}.snplist" ,chr=CHR, gwas=GWAS)
 
 
 ## UKBB Genotype data processing
@@ -63,3 +63,37 @@ rule get_AF_GWAS:
         --memory 38000 \
         --out {params.prefix_out_gwas}
         """
+
+
+## Prep for Rare Variant PCA
+
+rule :
+    input:
+        bgen="/gpfs/data/xhe-lab/uk-biobank-genotypes/ukb_imp_chr{chr}_v3.bgen",
+        sample="/gpfs/data/berg-lab/data/ukbb/ukb22828_c22_b0_v3_s487192.sample",
+        ids="data/ids/gwas_ids/{gwas}.txt"
+    output:
+        psam="/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/rare_variants_{chr}.snplist"
+    params:
+        prefix="/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/rare_variants_{chr}"
+    threads: 16
+    resources:
+        mem_mb=38000,
+        time="06:00:00"
+    shell:
+        """
+	      plink2 --bgen {input.bgen} ref-first \
+	      --sample {input.sample} \
+	      --mind 0.1 \
+        --geno 0.1 \
+        --max-maf 0.01 \
+	      --rm-dup exclude-all \
+	      --keep {input.IDs} \
+	      --snps-only \
+	      --max-alleles 2 \
+	       --write-snplist \
+	      --set-all-var-ids @:# \
+	      --threads 16 \
+	      --memory 38000 \
+	      --out {params.prefix}
+	      """
