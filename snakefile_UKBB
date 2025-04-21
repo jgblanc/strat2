@@ -1,8 +1,8 @@
 # Snakefile to prep UKBB for analysis
-CHR =[]
-for i in range(1, 23):
-  CHR.append(str(i))
-GWAS = ["WBS-R", "ALL-R"]
+CHR =["22"]
+#for i in range(1, 23):
+#  CHR.append(str(i))
+GWAS = ["e5"]
 
 rule all:
     input:
