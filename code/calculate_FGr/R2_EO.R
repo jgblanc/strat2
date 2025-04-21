@@ -123,7 +123,7 @@ for (i in 1:ncol(PC_nums)) {
   dfOut[i,5] <- Ratio
 
   # Get CI
-  result <- bootstrap_ratio_ci(FGr_scale, PC_nums[,1:i], signal, n_boot = 100, conf = 0.95)
+  result <- bootstrap_ratio_ci(FGr_scale, PC_nums[,1:i], signal, n_boot = 1000, conf = 0.95)
   dfOut[i,8] <- result$se
   dfOut[i,6] <- as.numeric(result$ci[1])
   dfOut[i,7] <- as.numeric(result$ci[2])
