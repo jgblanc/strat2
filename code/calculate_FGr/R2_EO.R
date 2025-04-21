@@ -42,6 +42,23 @@ FGr_raw <- apply(dfF_select, 1, sum)
 FGr <- FGr_raw * (1/(sqrt(L-1)))
 M <- length(FGr)
 
+# Calculate H
+H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
+
+# Compute SE for H
+allHs <- rep(NA, numBlocks)
+allHi <- rep(NA, numBlocks)
+for (i in 1:numBlocks) {
+
+  mi <- as.numeric(dfSNP_filter[i,2])
+  FGri <- (FGr_raw - dfF_select[,i]) * (1/sqrt(L-mi-1))
+  Hi <- sum(FGri^2) * (1/M) * (1/(L-mi-1))
+  allHs[i] <- ((L - mi)/mi) * (H - Hi)^2
+  allHi[i] <- Hi
+
+}
+varH <- mean(allHs)
+
 # Compute Jacknife of each FGR
 jckFGr <- matrix(NA, nrow = M, ncol = numBlocks)
 for (i in 1:numBlocks) {
@@ -100,8 +117,8 @@ bootstrap_ratio_ci <- function(Fvec, PC, signal, n_boot = 1000, conf = 0.95) {
 }
 
 # Construct output
-dfOut <- matrix(NA, nrow=ncol(PC_nums), ncol = 8)
-colnames(dfOut) <- c("PC", "B2", "R2", "Signal", "Ratio", "lc", "uc", "se")
+dfOut <- matrix(NA, nrow=ncol(PC_nums), ncol = 10)
+colnames(dfOut) <- c("H","varH", "Signal","PC", "B2", "R2", "Ratio", "lc", "uc", "se")
 FGr_scale <- scale(FGr)
 
 
@@ -114,19 +131,19 @@ for (i in 1:ncol(PC_nums)) {
   B2 <- B^2
 
   # Collect output
-  dfOut[i, 1] <- i
-  dfOut[i,2] <- B2
-  R2 <- sum(dfOut[1:i, 2])
-  dfOut[i,3] <- R2
-  dfOut[i,4] <- signal
+  dfOut[i, 4] <- i
+  dfOut[i,5] <- B2
+  R2 <- sum(dfOut[1:i, 5])
+  dfOut[i,6] <- R2
+  dfOut[i,3] <- signal
   Ratio <- R2/signal
-  dfOut[i,5] <- Ratio
+  dfOut[i,7] <- Ratio
 
   # Get CI
   result <- bootstrap_ratio_ci(FGr_scale, PC_nums[,1:i], signal, n_boot = 1000, conf = 0.95)
-  dfOut[i,8] <- result$se
-  dfOut[i,6] <- as.numeric(result$ci[1])
-  dfOut[i,7] <- as.numeric(result$ci[2])
+  dfOut[i,10] <- result$se
+  dfOut[i,9] <- as.numeric(result$ci[1])
+  dfOut[i,10] <- as.numeric(result$ci[2])
 
 }
 

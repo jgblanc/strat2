@@ -46,6 +46,31 @@ pl <- df %>% ggplot(aes(x = H, y = error, color = gwas)) + geom_point(size = 2) 
 #ggsave("~/Desktop/Error.png", pl, height = 4, width = 6)
 ```
 
+## Plot R2 Even/Odd
+
+```{r}
+tmp1 <- fread("../plots/error/R2EO_HGDP1KG.txt")
+tmp2 <- fread("../plots/error/R2EO_InUKBB.txt")
+df <- rbind(tmp1, tmp2)
+
+# Format Data
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
+df <- rbind(tmp1, tmp2, tmp3)
+df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+df$contrasts <- str_replace_all(df$contrasts, rep_str)
+```
+
+Plot Signal 
+
+
+
+
 ## Plot R2 by Chr 
 
 ```{r}
