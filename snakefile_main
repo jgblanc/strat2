@@ -251,3 +251,13 @@ rule calc_R2_even:
         """
         Rscript code/calculate_FGr/R2_EO.R {input.PCs} {input.FGr} {input.SNPs} {output.R2}
 	      """
+
+rule concat_R2_EO:
+    input:
+        expand("output/calculate_FGr/{{dataset}}/{gwas}/R2_EO/{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS, chr=CHR)
+    output:
+        "plots/error/R2EO_{dataset}.txt"
+    shell:
+        """
+        Rscript code/summarize/concat_R2EO.R {output} {input}
+	      """
