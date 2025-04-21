@@ -16,12 +16,10 @@ def get_chr_range(x):
     out = "1-" + x
   return out
 
-wildcard_constraints:
-    nsnp="L-pruneall"
 
 rule all:
     input:
-        expand("output/calculate_FGr/{dataset}/{gwas}/R2_EO/{contrasts}.txt" , gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("plots/error/R2EO_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
