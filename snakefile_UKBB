@@ -134,3 +134,4 @@ rule concat_chr:
 	rm {input.pgen}
 	rm {params.prefix_out}-merge.*
          """
+
