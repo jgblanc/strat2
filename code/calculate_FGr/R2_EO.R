@@ -131,19 +131,21 @@ for (i in 1:ncol(PC_nums)) {
   B2 <- B^2
 
   # Collect output
+  dfOut[i, 1] <- H
+  dfOut[i, 2] <- varH
+  dfOut[i,3] <- signal
   dfOut[i, 4] <- i
   dfOut[i,5] <- B2
   R2 <- sum(dfOut[1:i, 5])
   dfOut[i,6] <- R2
-  dfOut[i,3] <- signal
   Ratio <- R2/signal
   dfOut[i,7] <- Ratio
 
   # Get CI
   result <- bootstrap_ratio_ci(FGr_scale, PC_nums[,1:i], signal, n_boot = 1000, conf = 0.95)
   dfOut[i,10] <- result$se
-  dfOut[i,9] <- as.numeric(result$ci[1])
-  dfOut[i,10] <- as.numeric(result$ci[2])
+  dfOut[i,8] <- as.numeric(result$ci[1])
+  dfOut[i,9] <- as.numeric(result$ci[2])
 
 }
 

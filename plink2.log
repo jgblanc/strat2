@@ -1,16 +1,22 @@
 PLINK v2.0.0-a.6.9LM 64-bit Intel (29 Jan 2025)
 Options in effect:
-  ----pca 40 approx
-  --chr 1-22
+  --bgen /gpfs/data/xhe-lab/uk-biobank-genotypes/ukb_imp_chr22_v3.bgen ref-first
+  --geno 0.1
+  --indep-pairwise 1000 80 0.1
   --keep data/ids/gwas_ids/e5.txt
-  --pfile /scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3
-  --threads 8
+  --make-pgen  
+  --max-alleles 2
+  --max-maf 0.01
+  --mind 0.1
+  --rm-dup exclude-all
+  --sample /gpfs/data/berg-lab/data/ukbb/ukb22828_c22_b0_v3_s487192.sample
+  --snps-only
 
-Hostname: cri22cn090.cri.uchicago.edu
+Hostname: cri22cn109.cri.uchicago.edu
 Working directory: /gpfs/data/berg-lab/jgblanc/strat2
-Start time: Sun Apr 13 17:23:54 2025
+Start time: Mon Apr 21 15:41:00 2025
 
-Error: Unrecognized flag ('----pca').
+Error: Invalid --make-pgen argument ' '.
 For more info, try "plink2 --help <flag name>" or "plink2 --help | more".
 
-End time: Sun Apr 13 17:23:54 2025
+End time: Mon Apr 21 15:41:00 2025
