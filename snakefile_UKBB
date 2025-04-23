@@ -129,4 +129,8 @@ rule concat_chr:
         --memory 60000 \
         --make-pgen \
         --out {params.prefix_out}
+	rm {input.pgen}
+	rm {input.pvar}
+	rm {input.pgen}
+	rm {params.prefix_out}-merge.*
          """
