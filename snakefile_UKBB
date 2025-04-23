@@ -6,7 +6,7 @@ GWAS = ["e5"]
 
 rule all:
     input:
-        expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/rare_variants_{chr}.prune.in" ,chr=CHR, gwas=GWAS)
+        expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/pcSNPs_ALL.pgen" ,chr=CHR, gwas=GWAS)
 
 
 ## UKBB Genotype data processing
@@ -98,3 +98,35 @@ rule extract_rare_variants:
 	      --memory 38000 \
 	      --out {params.prefix}
 	      """
+
+# Concat chromosomes and extract PCA SNPs
+
+rule concat_chr:
+    input:
+        pgen=expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{{gwas}}/rare_variants_{chr}.pgen", chr=CHR),
+        pvar=expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{{gwas}}/rare_variants_{chr}.pvar", chr=CHR),
+        psam=expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{{gwas}}/rare_variants_{chr}.psam", chr=CHR),
+        snps=expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{{gwas}}/rare_variants_{chr}.prune.in", chr=CHR)
+    output:
+        "/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/pcSNPs_ALL.pgen",
+        "/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/pcSNPs_ALL.pvar",
+        "/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/pcSNPs_ALL.psam",
+    params:
+        prefix_out="/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/pcSNPs_ALL",
+        merge_prefix=expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{{gwas}}/rare_variants_{chr}", chr=CHR, newline="\n")
+    threads: 16
+    resources:
+        mem_mb=60000,
+        time="12:00:00"
+    shell:
+        """
+        cat {input.snps} > snplist_{wildcards.gwas}.txt
+        echo {params.merge_prefix} > tmp_{wildcards.gwas}.txt
+	tr ' ' '\n' < "tmp_{wildcards.gwas}.txt" > "tmp_chr_list_{wildcards.gwas}.txt"
+        plink2 --pmerge-list tmp_chr_list_{wildcards.gwas}.txt \
+        --extract snplist_{wildcards.gwas}.txt \
+	      --threads 16 \
+        --memory 60000 \
+        --make-pgen \
+        --out {params.prefix_out}
+         """
