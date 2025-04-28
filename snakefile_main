@@ -19,7 +19,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_PCA/{gwas}/rare_odd_PCA.eigenvec", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("plots/error/rare_R2EO_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
@@ -286,3 +286,31 @@ rule calc_odd_PCA_rare:
         --memory 60000 \
         --out {params.out_prefix}
 	      """
+
+rule calc_R2_even_rare:
+    input:
+        PCs="output/calculate_PCA/{gwas}/rare_odd_PCA.eigenvec",
+        FGr="output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt",
+        SNPs="output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt"
+    output:
+        R2="output/calculate_FGr/{dataset}/{gwas}/rare_R2_EO/{contrasts}.txt",
+    resources:
+        mem_mb=38000,
+        time="08:00:00"
+    shell:
+        """
+        Rscript code/calculate_FGr/R2_EO.R {input.PCs} {input.FGr} {input.SNPs} {output.R2}
+	      """
+
+rule concat_R2_EO_rare:
+    input:
+        expand("output/calculate_FGr/{{dataset}}/{gwas}/rare_R2_EO/{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS, chr=CHR)
+    output:
+        "plots/error/rare_R2EO_{dataset}.txt"
+    shell:
+        """
+        Rscript code/summarize/concat_R2EO.R {output} {input}
+	      """
+
+
+
