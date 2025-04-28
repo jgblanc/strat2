@@ -19,7 +19,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_PCA/{gwas}/odd_PCA.eigenvec", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_PCA/{gwas}/rare_odd_PCA.eigenvec", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 

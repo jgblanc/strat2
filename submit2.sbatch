@@ -17,6 +17,6 @@ module load R
 
 echo "SLURM_JOBID="$SLURM_JOBID
 rm -r .snakemake/
-cat snakefile_UKBB
-snakemake --unlock -s snakefile_UKBB
-snakemake --profile cluster-setup/ -s snakefile_UKBB --rerun-incomplete
+cat snakefile_main2
+snakemake --unlock -s snakefile_main2
+snakemake --profile cluster-setup/ -s snakefile_main2 --rerun-incomplete
