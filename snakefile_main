@@ -2,9 +2,9 @@
 CHR = []
 for i in range(1, 22):
   CHR.append(str(i))
-#GWAS= ["e5", "e10", "e50", "e200", "WBS-R", "ALL-R"]
-GWAS = ["e5"]
-#DATASET = ["InUKBB"]
+GWAS= ["e5", "e10", "e50", "e200"]
+#GWAS = ["e5"]
+DATASET = ["InUKBB"]
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 #CONTRASTS = ["eurasia-lat"]
@@ -274,14 +274,15 @@ rule calc_odd_PCA_rare:
     threads: 16
     resources:
         mem_mb=60000,
-        time="12:00:00"
+        time="36:00:00"
     shell:
         """
         plink2 --pfile {params.plink_prefix} \
         --keep {input.IDs} \
+	--thin-count 1000000 \
         --chr 1,3,5,7,9,11,13,15,17,19,21 \
         --threads 16 \
-        --pca 1 approx \
+        --pca 40 approx \
         --memory 60000 \
         --out {params.out_prefix}
 	      """

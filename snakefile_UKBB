@@ -2,7 +2,7 @@
 CHR =[]
 for i in range(1, 23):
   CHR.append(str(i))
-GWAS = ["e5"]
+GWAS = ["WBS", "WBS-R", "ALL", "ALL-R"]
 
 rule all:
     input:
@@ -73,13 +73,16 @@ rule extract_rare_variants:
         sample="/gpfs/data/berg-lab/data/ukbb/ukb22828_c22_b0_v3_s487192.sample",
         ids="data/ids/gwas_ids/{gwas}.txt"
     output:
-        psam="/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/rare_variants_{chr}.prune.in"
+        "/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/rare_variants_{chr}.prune.in",
+	"/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/rare_variants_{chr}.psam",
+	"/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/rare_variants_{chr}.pvar",
+	"/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/rare_variants_{chr}.pgen"
     params:
         prefix="/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/rare_variants_{chr}"
     threads: 16
     resources:
         mem_mb=38000,
-        time="12:00:00"
+        time="36:00:00"
     shell:
         """
 	      plink2 --bgen {input.bgen} ref-first \
@@ -117,7 +120,7 @@ rule concat_chr:
     threads: 16
     resources:
         mem_mb=60000,
-        time="12:00:00"
+        time="24:00:00"
     shell:
         """
         cat {input.snps} > snplist_{wildcards.gwas}.txt
@@ -129,9 +132,5 @@ rule concat_chr:
         --memory 60000 \
         --make-pgen \
         --out {params.prefix_out}
-	rm {input.pgen}
-	rm {input.pvar}
-	rm {input.pgen}
-	rm {params.prefix_out}-merge.*
          """
 

@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=main
-#SBATCH --output=logs/main.out
-#SBATCH --error=logs/main.err
-#SBATCH --time=24:00:00
+#SBATCH --job-name=main2
+#SBATCH --output=logs/main2.out
+#SBATCH --error=logs/main2.err
+#SBATCH --time=36:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem-per-cpu=40000
@@ -17,6 +17,6 @@ module load R
 
 echo "SLURM_JOBID="$SLURM_JOBID
 rm -r .snakemake/
-cat snakefile_main
-snakemake --unlock -s snakefile_main
-snakemake --profile cluster-setup/ -s snakefile_main --rerun-incomplete
+cat snakefile_UKBB
+snakemake --unlock -s snakefile_UKBB
+snakemake --profile cluster-setup/ -s snakefile_UKBB --rerun-incomplete
