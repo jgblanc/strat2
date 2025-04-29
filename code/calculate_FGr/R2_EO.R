@@ -63,7 +63,6 @@ varH <- mean(allHs)
 jckFGr <- matrix(NA, nrow = M, ncol = numBlocks)
 for (i in 1:numBlocks) {
 
-  print(paste0("This is rep number ",i))
   mi <- as.numeric(dfSNP_filter[i,2])
   FGri <- (FGr_raw - dfF_select[,i]) * (1/sqrt(L-mi-1))
   jckFGr[,i] <- (FGr - FGri)^2  * ((L - mi)/mi)
@@ -87,8 +86,34 @@ signal <- 1 - error
 # Find R2 for each PC
 
 # Compute R2 function
-compute_Ratio <- function(Fvec, PC, signal) {
+compute_Ratio <- function(FGr_raw, PC) {
 
+  FGr <- FGr_raw * (1/(sqrt(L-1)))
+
+  # Compute Jacknife of each FGR
+  jckFGr <- matrix(NA, nrow = M, ncol = numBlocks)
+  for (i in 1:numBlocks) {
+
+    mi <- as.numeric(dfSNP_filter[i,2])
+    FGri <- (FGr_raw - dfF_select[,i]) * (1/sqrt(L-mi-1))
+    jckFGr[,i] <- (FGr - FGri)^2  * ((L - mi)/mi)
+  }
+
+  # Compute Numerator for error
+  meanJCK <- rowMeans(jckFGr)
+  numerator <- mean(meanJCK)
+
+  # Compute Denominator
+  varFGr <- var(FGr)
+
+  # Find Error
+  error <- numerator / varFGr
+
+  # Final signal
+  signal <- 1 - error
+
+  # Get final Fvec
+  Fvec <- scale(FGr)
   mod <- lm(Fvec ~ PC)
   R2 <- summary(mod)$r.squared
   Ratio <- R2/signal
@@ -97,14 +122,14 @@ compute_Ratio <- function(Fvec, PC, signal) {
 }
 
 # Bootstrap function
-bootstrap_ratio_ci <- function(Fvec, PC, signal, n_boot = 1000, conf = 0.95) {
+bootstrap_ratio_ci <- function(FGr_raw, PC, n_boot = 1000, conf = 0.95) {
 
   PC <- as.matrix(PC)
-  n <- length(Fvec)
+  n <- nrow(FGr_raw)
 
   boot_ratios <- replicate(n_boot, {
     idx <- sample(n, replace = TRUE)
-    compute_Ratio(Fvec[idx], PC[idx, , drop = FALSE], signal)
+    compute_Ratio(FGr_raw[idx, , drop = FALSE], PC[idx, , drop = FALSE])
   })
 
   alpha <- 1 - conf
@@ -142,7 +167,7 @@ for (i in 1:ncol(PC_nums)) {
   dfOut[i,7] <- Ratio
 
   # Get CI
-  result <- bootstrap_ratio_ci(FGr_scale, PC_nums[,1:i], signal, n_boot = 1000, conf = 0.95)
+  result <- bootstrap_ratio_ci(FGr_raw, PC_nums[,1:i], n_boot = 1000, conf = 0.95)
   dfOut[i,10] <- result$se
   dfOut[i,8] <- as.numeric(result$ci[1])
   dfOut[i,9] <- as.numeric(result$ci[2])
