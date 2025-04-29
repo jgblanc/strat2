@@ -2,11 +2,15 @@
 
 args=commandArgs(TRUE)
 
-if(length(args)<3){stop("Rscript calc_FGr.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
+if(length(args)<4){stop("Rscript calc_R2_EO.R")}
+
 
 suppressWarnings(suppressMessages({
   library(data.table)
   library(tidyverse)
+  library(matrixStats)
+  library(future.apply)  # parallel bootstrap
+  plan(multisession)
 }))
 
 pca_file = args[1]
@@ -14,171 +18,105 @@ fgr_file = args[2]
 snp_file = args[3]
 out_file = args[4]
 
-
-# Read PCA
+# Read inputs
 PCs <- fread(pca_file)
-PC_IDs <- PCs[,1:2]
-PC_nums <- PCs[,3:ncol(PCs)]
-
-# Scale the PCs to have variance 1
-PC_nums <- scale(PC_nums)
-
-# Figure out number of FGr Chrs
-chrFGr <- seq(2, 22, 2)
-
-# Read in SNP num files
+PC_nums <- scale(as.matrix(PCs[, 3:ncol(PCs)]))
 dfSNP <- fread(snp_file)
 
-# Extract only block nums with correct chr
-blockIndex <- which(dfSNP$CHR %in% chrFGr)
+# Get even chr
+chrFGr <- seq(2, 22, 2)
 dfSNP_filter <- dfSNP %>% filter(CHR %in% chrFGr)
+blockIndex <- which(dfSNP$CHR %in% chrFGr)
 L <- sum(dfSNP_filter$nSNP)
 numBlocks <- length(blockIndex)
 
 # Read in and compute FGr
-dfFGr <- as.matrix(fread(fgr_file))
-dfF_select <- dfFGr[,blockIndex]
-FGr_raw <- apply(dfF_select, 1, sum)
-FGr <- FGr_raw * (1/(sqrt(L-1)))
+dfFGr <- as.matrix(fread(fgr_file))[, blockIndex]
+FGr_raw <- rowSums(dfFGr)
+FGr <- FGr_raw / sqrt(L - 1)
 M <- length(FGr)
 
 # Calculate H
-H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
+H <- (1 / (M * (L - 1))) * sum(FGr^2)
 
-# Compute SE for H
-allHs <- rep(NA, numBlocks)
-allHi <- rep(NA, numBlocks)
-for (i in 1:numBlocks) {
-
-  mi <- as.numeric(dfSNP_filter[i,2])
-  FGri <- (FGr_raw - dfF_select[,i]) * (1/sqrt(L-mi-1))
-  Hi <- sum(FGri^2) * (1/M) * (1/(L-mi-1))
-  allHs[i] <- ((L - mi)/mi) * (H - Hi)^2
-  allHi[i] <- Hi
-
-}
+# Compute jackknife estimates
+mi_vec <- dfSNP_filter$nSNP
+FGri_mat <- sweep(dfFGr, 2, FGr_raw, FUN = function(block, total) total - block)
+scale_factors <- 1 / sqrt(L - mi_vec - 1)
+FGri_scaled <- sweep(FGri_mat, 2, scale_factors, `*`)
+Hi_vec <- colSums(FGri_scaled^2) / (L - mi_vec - 1) / M
+allHs <- ((L - mi_vec) / mi_vec) * (H - Hi_vec)^2
 varH <- mean(allHs)
 
-# Compute Jacknife of each FGR
-jckFGr <- matrix(NA, nrow = M, ncol = numBlocks)
-for (i in 1:numBlocks) {
-
-  mi <- as.numeric(dfSNP_filter[i,2])
-  FGri <- (FGr_raw - dfF_select[,i]) * (1/sqrt(L-mi-1))
-  jckFGr[,i] <- (FGr - FGri)^2  * ((L - mi)/mi)
-}
-
-# Compute Numerator for error
+# Jackknife variance of each FGr element
+FGr_mat <- matrix(rep(FGr, numBlocks), nrow = M)
+FGri_mat2 <- FGri_scaled
+jckFGr <- ((FGr_mat - FGri_mat2)^2) * matrix((L - mi_vec) / mi_vec, M, numBlocks, byrow = TRUE)
 meanJCK <- rowMeans(jckFGr)
 numerator <- mean(meanJCK)
-print(paste0("The numerator is ",numerator))
-
-# Compute Denominator
 varFGr <- var(FGr)
-
-# Find Error
 error <- numerator / varFGr
-
-# Final signal
 signal <- 1 - error
 
 
-# Find R2 for each PC
-
-# Compute R2 function
+# Bootstrap helper
 compute_Ratio <- function(Fmat, PC) {
-
-
-  FGr_raw <- apply(Fmat, 1, sum)
-  FGr <- FGr_raw * (1/(sqrt(L-1)))
-
-  # Compute Jacknife of each FGR
-  jckFGr <- matrix(NA, nrow = M, ncol = numBlocks)
-  for (i in 1:numBlocks) {
-
-    mi <- as.numeric(dfSNP_filter[i,2])
-    FGri <- (FGr_raw - Fmat[,i]) * (1/sqrt(L-mi-1))
-    jckFGr[,i] <- (FGr - FGri)^2  * ((L - mi)/mi)
-  }
-
-  # Compute Numerator for error
-  meanJCK <- rowMeans(jckFGr)
-  numerator <- mean(meanJCK)
-
-  # Compute Denominator
-  varFGr <- var(FGr)
-
-  # Find Error
-  error <- numerator / varFGr
-
-  # Final signal
-  signal <- 1 - error
-
-  # Get final Fvec
+  FGr_raw <- rowSums(Fmat)
+  FGr <- FGr_raw / sqrt(L - 1)
   Fvec <- scale(FGr)
   mod <- lm(Fvec ~ PC)
   R2 <- summary(mod)$r.squared
-  Ratio <- R2/signal
 
-  return(Ratio)
+  # Jackknife error for this Fmat
+  FGri_mat <- sweep(Fmat, 2, FGr_raw, FUN = function(block, total) total - block)
+  FGri_scaled <- sweep(FGri_mat, 2, scale_factors, `*`)
+  jckFGr <- ((FGr - FGri_scaled)^2) * matrix((L - mi_vec) / mi_vec, nrow(Fmat), numBlocks, byrow = TRUE)
+  numerator <- mean(rowMeans(jckFGr))
+  signal <- 1 - numerator / var(FGr)
+
+  R2 / signal
 }
 
-# Bootstrap function
-bootstrap_ratio_ci <- function(Fmat, PC, n_boot = 1000, conf = 0.95){
-
-  PC <- as.matrix(PC)
-  Fmat <- as.matrix(Fmat)
+bootstrap_ratio_ci <- function(Fmat, PC, n_boot = 1000, conf = 0.95) {
   n <- nrow(Fmat)
-
-  boot_ratios <- replicate(n_boot, {
+  boot_ratios <- future_replicate(n_boot, {
     idx <- sample(n, replace = TRUE)
     compute_Ratio(Fmat[idx, , drop = FALSE], PC[idx, , drop = FALSE])
   })
 
   alpha <- 1 - conf
-  ci <- quantile(boot_ratios, probs = c(alpha / 2, 1 - alpha / 2))
-  return(list(
+  ci <- quantile(boot_ratios, probs = c(alpha/2, 1 - alpha/2))
+  list(
     estimate = compute_Ratio(Fmat, PC),
     se = sd(boot_ratios),
     ci = ci
-  ))
+  )
 }
 
 # Construct output
-dfOut <- matrix(NA, nrow=ncol(PC_nums), ncol = 10)
+dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 10)
 colnames(dfOut) <- c("H","varH", "Signal","PC", "B2", "R2", "Ratio", "lc", "uc", "se")
 FGr_scale <- scale(FGr)
 
-
 # Loop through PCs
-for (i in 1:ncol(PC_nums)) {
+R2_cum <- 0
+for (i in seq_len(ncol(PC_nums))) {
 
-  print(i)
-  # Calc cov
-  B <- cov(FGr_scale, PC_nums[,i])
-  B2 <- B^2
+  B2 <- cov(FGr_scale, PC_nums[,i])^2
+  R2_cum <- R2_cum + B2
+  Ratio <- R2_cum / signal
 
-  # Collect output
-  dfOut[i, 1] <- H
-  dfOut[i, 2] <- varH
-  dfOut[i,3] <- signal
-  dfOut[i, 4] <- i
-  dfOut[i,5] <- B2
-  R2 <- sum(dfOut[1:i, 5])
-  dfOut[i,6] <- R2
-  Ratio <- R2/signal
-  dfOut[i,7] <- Ratio
+  ci_result <- bootstrap_ratio_ci(dfFGr, PC_nums[,1:i], n_boot = 10, conf = 0.95)
 
-  # Get CI
-  result <- bootstrap_ratio_ci(dfF_select, PC_nums[,1:i], n_boot = 1000, conf = 0.95)
-  dfOut[i,10] <- result$se
-  dfOut[i,8] <- as.numeric(result$ci[1])
-  dfOut[i,9] <- as.numeric(result$ci[2])
-
+  dfOut[i,] <- c(H, varH, signal, i, B2, R2_cum, Ratio, ci_result$ci[1], ci_result$ci[2], ci_result$se)
+  cat("Finished PC", i, "\n")
 }
 
-# Save output file
-fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
+# Write output
+fwrite(as.data.table(dfOut), out_file, sep = "\t", quote = FALSE)
+
+
+
 
 
 
