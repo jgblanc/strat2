@@ -86,8 +86,10 @@ signal <- 1 - error
 # Find R2 for each PC
 
 # Compute R2 function
-compute_Ratio <- function(FGr_raw, PC) {
+compute_Ratio <- function(Fmat, PC) {
 
+
+  FGr_raw <- apply(Fmat, 1, sum)
   FGr <- FGr_raw * (1/(sqrt(L-1)))
 
   # Compute Jacknife of each FGR
@@ -95,7 +97,7 @@ compute_Ratio <- function(FGr_raw, PC) {
   for (i in 1:numBlocks) {
 
     mi <- as.numeric(dfSNP_filter[i,2])
-    FGri <- (FGr_raw - dfF_select[,i]) * (1/sqrt(L-mi-1))
+    FGri <- (FGr_raw - Fmat[,i]) * (1/sqrt(L-mi-1))
     jckFGr[,i] <- (FGr - FGri)^2  * ((L - mi)/mi)
   }
 
@@ -122,20 +124,21 @@ compute_Ratio <- function(FGr_raw, PC) {
 }
 
 # Bootstrap function
-bootstrap_ratio_ci <- function(FGr_raw, PC, n_boot = 1000, conf = 0.95) {
+bootstrap_ratio_ci <- function(Fmat, PC, n_boot = 1000, conf = 0.95){
 
   PC <- as.matrix(PC)
-  n <- nrow(FGr_raw)
+  Fmat <- as.matrix(Fmat)
+  n <- nrow(Fmat)
 
   boot_ratios <- replicate(n_boot, {
     idx <- sample(n, replace = TRUE)
-    compute_Ratio(FGr_raw[idx, , drop = FALSE], PC[idx, , drop = FALSE])
+    compute_Ratio(Fmat[idx, , drop = FALSE], PC[idx, , drop = FALSE])
   })
 
   alpha <- 1 - conf
   ci <- quantile(boot_ratios, probs = c(alpha / 2, 1 - alpha / 2))
   return(list(
-    estimate = compute_Ratio(Fvec, PC, signal),
+    estimate = compute_Ratio(Fmat, PC),
     se = sd(boot_ratios),
     ci = ci
   ))
@@ -167,7 +170,7 @@ for (i in 1:ncol(PC_nums)) {
   dfOut[i,7] <- Ratio
 
   # Get CI
-  result <- bootstrap_ratio_ci(FGr_raw, PC_nums[,1:i], n_boot = 1000, conf = 0.95)
+  result <- bootstrap_ratio_ci(dfF_select, PC_nums[,1:i], n_boot = 1000, conf = 0.95)
   dfOut[i,10] <- result$se
   dfOut[i,8] <- as.numeric(result$ci[1])
   dfOut[i,9] <- as.numeric(result$ci[2])

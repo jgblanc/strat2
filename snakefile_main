@@ -2,12 +2,12 @@
 CHR = []
 for i in range(1, 22):
   CHR.append(str(i))
-#GWAS= ["e5", "e10", "e50", "e200"]
-GWAS = ["e10"]
-#DATASET = ["HGDP1KG"]
-#CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+GWAS= ["e5", "e10", "e50", "e200"]
+#GWAS = ["e10"]
+DATASET = ["HGDP1KG"]
+CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 #CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
-CONTRASTS = ["nfe-afr"]
+#CONTRASTS = ["nfe-afr"]
 
 def get_chr_range(x):
   if x == "1":
@@ -19,7 +19,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("plots/error/rare_R2EO_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_FGr/{dataset}/{gwas}/rare_R2_EO/{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
