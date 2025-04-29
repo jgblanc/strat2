@@ -222,7 +222,7 @@ rule calc_odd_PCA:
         out_prefix="output/calculate_PCA/{gwas}/odd_PCA"
     threads: 16
     resources:
-        mem_mb=400000,
+        mem_mb=120000,
         time="36:00:00"
     shell:
         """
@@ -231,7 +231,7 @@ rule calc_odd_PCA:
         --chr 1,3,5,7,9,11,13,15,17,19,21 \
         --threads 16 \
         --pca 40 approx \
-        --memory 60000 \
+        --memory 120000 \
         --out {params.out_prefix}
 	      """
 
