@@ -5,13 +5,12 @@ args=commandArgs(TRUE)
 if(length(args)<4){stop("Rscript calc_R2_EO.R")}
 
 
-suppressWarnings(suppressMessages({
-  library(data.table)
-  library(tidyverse)
-  library(matrixStats)
-  library(future.apply)  # parallel bootstrap
-  plan(multisession)
-}))
+library(data.table)
+library(tidyverse)
+library(matrixStats)
+library(future.apply)  # parallel bootstrap
+plan(multisession)
+options(future.globals.maxSize = 2 * 1024^3)  
 
 pca_file = args[1]
 fgr_file = args[2]
@@ -29,6 +28,7 @@ dfSNP_filter <- dfSNP %>% filter(CHR %in% chrFGr)
 blockIndex <- which(dfSNP$CHR %in% chrFGr)
 L <- sum(dfSNP_filter$nSNP)
 numBlocks <- length(blockIndex)
+print(numBlocks)
 
 # Read in and compute FGr
 dfFGr <- as.matrix(fread(fgr_file))[, blockIndex]
@@ -38,10 +38,11 @@ M <- length(FGr)
 
 # Calculate H
 H <- (1 / (M * (L - 1))) * sum(FGr^2)
+print(H)
 
 # Compute jackknife estimates
 mi_vec <- dfSNP_filter$nSNP
-FGri_mat <- sweep(dfFGr, 2, FGr_raw, FUN = function(block, total) total - block)
+FGri_mat <- FGr_raw - dfFGr
 scale_factors <- 1 / sqrt(L - mi_vec - 1)
 FGri_scaled <- sweep(FGri_mat, 2, scale_factors, `*`)
 Hi_vec <- colSums(FGri_scaled^2) / (L - mi_vec - 1) / M
@@ -58,9 +59,9 @@ varFGr <- var(FGr)
 error <- numerator / varFGr
 signal <- 1 - error
 
-
 # Bootstrap helper
 compute_Ratio <- function(Fmat, PC) {
+
   FGr_raw <- rowSums(Fmat)
   FGr <- FGr_raw / sqrt(L - 1)
   Fvec <- scale(FGr)
@@ -68,7 +69,7 @@ compute_Ratio <- function(Fmat, PC) {
   R2 <- summary(mod)$r.squared
 
   # Jackknife error for this Fmat
-  FGri_mat <- sweep(Fmat, 2, FGr_raw, FUN = function(block, total) total - block)
+  FGri_mat <- FGr_raw - Fmat
   FGri_scaled <- sweep(FGri_mat, 2, scale_factors, `*`)
   jckFGr <- ((FGr - FGri_scaled)^2) * matrix((L - mi_vec) / mi_vec, nrow(Fmat), numBlocks, byrow = TRUE)
   numerator <- mean(rowMeans(jckFGr))
@@ -78,6 +79,7 @@ compute_Ratio <- function(Fmat, PC) {
 }
 
 bootstrap_ratio_ci <- function(Fmat, PC, n_boot = 1000, conf = 0.95) {
+  PC <- as.matrix(PC)
   n <- nrow(Fmat)
   boot_ratios <- future_replicate(n_boot, {
     idx <- sample(n, replace = TRUE)
@@ -106,7 +108,7 @@ for (i in seq_len(ncol(PC_nums))) {
   R2_cum <- R2_cum + B2
   Ratio <- R2_cum / signal
 
-  ci_result <- bootstrap_ratio_ci(dfFGr, PC_nums[,1:i], n_boot = 10, conf = 0.95)
+  ci_result <- bootstrap_ratio_ci(dfFGr, PC_nums[,1:i], n_boot = 1000, conf = 0.95)
 
   dfOut[i,] <- c(H, varH, signal, i, B2, R2_cum, Ratio, ci_result$ci[1], ci_result$ci[2], ci_result$se)
   cat("Finished PC", i, "\n")
