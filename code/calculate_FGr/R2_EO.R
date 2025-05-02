@@ -10,7 +10,7 @@ library(tidyverse)
 library(matrixStats)
 library(future.apply)  # parallel bootstrap
 plan(multisession)
-options(future.globals.maxSize = 2 * 1024^3)  
+options(future.globals.maxSize = 2 * 1024^3)
 
 pca_file = args[1]
 fgr_file = args[2]
@@ -62,6 +62,7 @@ signal <- 1 - error
 # Bootstrap helper
 compute_Ratio <- function(Fmat, PC) {
 
+  PC <- scale(PC)
   FGr_raw <- rowSums(Fmat)
   FGr <- FGr_raw / sqrt(L - 1)
   Fvec <- scale(FGr)
@@ -108,9 +109,9 @@ for (i in seq_len(ncol(PC_nums))) {
   R2_cum <- R2_cum + B2
   Ratio <- R2_cum / signal
 
-  ci_result <- bootstrap_ratio_ci(dfFGr, PC_nums[,1:i], n_boot = 1000, conf = 0.95)
+  ci_result <- bootstrap_ratio_ci(dfFGr, PC_nums[,1:i], n_boot = 100, conf = 0.95)
 
-  dfOut[i,] <- c(H, varH, signal, i, B2, R2_cum, Ratio, ci_result$ci[1], ci_result$ci[2], ci_result$se)
+  dfOut[i,] <- c(H, varH, signal, i, B2, R2_cum, Ratio, ci_result$ci[1], ci_result$ci[2], ci_result$se, ci_result$estimate)
   cat("Finished PC", i, "\n")
 }
 

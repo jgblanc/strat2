@@ -1,0 +1,24 @@
+# Snakefile to prep UKBB for analysis
+CHR =[]
+for i in range(1, 8):
+  CHR.append(str(i))
+GWAS = ["e5"]
+
+rule all:
+    input:
+        expand("finished_{chr}.txt" ,chr=CHR, gwas=GWAS)
+
+
+rule chrom_freqs_AFR:
+    output:
+        "finished_{chr}.txt"
+    params:
+        plink = "ukb22828_c{chr}_b0_v3"
+    shell:
+        """
+        dx run app-swiss-army-knife -y --wait \
+            -iin="strat2:/Bulk/Imputation/UKB imputation from genotype/ukb22828_c{wildcards.chr}_b0_v3.bgen" \
+            -iin="strat2:/Bulk/Imputation/UKB imputation from genotype/ukb22828_c{wildcards.chr}_b0_v3.sample" \
+            -icmd="plink2 --bgen ukb22828_c{wildcards.chr}_b0_v3.bgen ref-first --sample ukb22828_c{wildcards.chr}_b0_v3.sample --mind 0.1 --geno 0.1 --maf 0.01 --rm-dup exclude-all --snps-only --max-alleles 2 --make-pgen --set-all-var-ids @:#  --threads 16 --memory 38000 --out {params.plink}"
+        touch {output}
+        """
