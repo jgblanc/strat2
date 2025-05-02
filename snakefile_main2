@@ -274,7 +274,7 @@ rule calc_odd_PCA_rare:
     threads: 16
     resources:
         mem_mb=100000,
-        time="180:00:00"
+        time="5-00:00:00"
     shell:
         """
         plink2 --pfile {params.plink_prefix} \

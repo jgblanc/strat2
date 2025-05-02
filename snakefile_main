@@ -19,7 +19,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_FGr/{dataset}/{gwas}/rare_R2_EO/{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("plots/error/rare_R2EO_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
