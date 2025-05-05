@@ -1,6 +1,6 @@
 # Snakefile to prep UKBB for analysis
 CHR =[]
-for i in range(1, 8):
+for i in range(7, 8):
   CHR.append(str(i))
 GWAS = ["e5"]
 
