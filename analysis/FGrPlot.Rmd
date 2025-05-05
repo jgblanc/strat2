@@ -13,6 +13,7 @@ library(latex2exp)
 library("gridExtra")
 library(grid)
 library(scales)
+library(ggtext)
 ```
 
 
@@ -296,6 +297,138 @@ row_c <- arrangeGrob(plInUKBB, top = label_c)
 pl <- grid.arrange( row_a, row_b, row_c, ncol = 1, heights = c(1, 1, 1.3))
 ggsave("~/Desktop/Ratio_rare.png", pl, height = 10, width = 12)
 ```
+
+## Plot R2 + Ratio Even/Odd Common+Rare PCA
+
+```{r}
+tmp1 <- fread("../plots/error/common_rare_R2EO_HGDP1KG.txt")
+tmp2 <- fread("../plots/error/common_rare_R2EO_InUKBB.txt")
+df <- rbind(tmp1, tmp2)
+
+# Format Data
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
+df <- rbind(tmp1, tmp2, tmp3)
+df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+df$contrasts <- str_replace_all(df$contrasts, rep_str)
+
+# Restructure PC names 
+
+# Custom x-axis breaks and labels
+breaks <- 1:80
+labels <- c(1:40, paste0("<span style='color:red;'>", 1:40, "</span>"))
+```
+
+Plot R2 for each set of contrasts
+
+HGDP - continental 
+```{r}
+dfPlot <- df %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
+
+# Your plot with the updated scale_x_continuous
+dfPlot %>% 
+  ggplot(aes(x = PC, y = R2, color = gwas)) + 
+  geom_point() + 
+  geom_line() + 
+  facet_wrap(~contrasts, nrow = 1) + 
+  geom_hline(aes(yintercept = Signal, color = gwas), linetype = "dashed") + 
+  theme_bw(base_size = 10) + 
+  scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen"), 
+                     name= TeX("Sampling distance ($\\epsilon$)")) + 
+  scale_x_continuous(breaks = breaks, labels = labels) + 
+  theme(
+    legend.position = "none", 
+    strip.background = element_rect(colour = "black", fill = "white"),
+    axis.text.x = element_markdown(size = 10)  # This allows colored text
+  ) + 
+  xlab("PC") + 
+  ylab(TeX("Variance captured by PCs ($R^2_{k}$)"))
+```
+
+HGDP - lat/long 
+```{r}
+dfPlot <- df %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-long","eur-lat", "eur-long", "sdi-eur"))
+
+plLat <- dfPlot %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = Signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{k}$)"))
+plLat
+```
+
+InUKBB 
+```{r}
+dfPlot <- df %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
+
+plInUKBB <- dfPlot %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = Signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen"), name= TeX("GWAS"),  labels = c(expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon)))+ theme( legend.position = "bottom", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{k}$)")) + ylim(0,1) +
+  guides(color = guide_legend(nrow = 1))
+
+plInUKBB
+```
+
+Combine R2 Figures 
+```{r}
+# Define label grobs
+label_a <- textGrob("a", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_b <- textGrob("b", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_c <- textGrob("c", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+
+
+# Wrap other plots with labels
+row_a <- arrangeGrob(plCont, top = label_a)
+row_b <- arrangeGrob(plLat, top = label_b)
+row_c <- arrangeGrob(plInUKBB, top = label_c)
+
+# Final arrangement
+pl <- grid.arrange( row_a, row_b, row_c, ncol = 1, heights = c(1, 1, 1.3))
+ggsave("~/Desktop/SupR2_rare.png", pl, height = 10, width = 12)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
