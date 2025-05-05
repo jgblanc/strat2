@@ -87,18 +87,21 @@ bootstrap_ratio_ci <- function(Fmat, PC, n_boot = 1000, conf = 0.95) {
     compute_Ratio(Fmat[idx, , drop = FALSE], PC[idx, , drop = FALSE])
   })
 
-  alpha <- 1 - conf
-  ci <- quantile(boot_ratios, probs = c(alpha/2, 1 - alpha/2))
+  se <- sd(boot_ratios)
+  estimate <- compute_Ratio(Fmat, PC)
+  z <- qnorm(1 - (1 - conf)/2)
+  ci <- estimate + c(-1, 1) * z * se
+
   list(
-    estimate = compute_Ratio(Fmat, PC),
-    se = sd(boot_ratios),
+    estimate = estimate,
+    se = se,
     ci = ci
   )
 }
 
 # Construct output
-dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 10)
-colnames(dfOut) <- c("H","varH", "Signal","PC", "B2", "R2", "Ratio", "lc", "uc", "se")
+dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 11)
+colnames(dfOut) <- c("H","varH", "Signal","PC", "B2", "R2", "Ratio", "lc", "uc", "se", "estimate")
 FGr_scale <- scale(FGr)
 
 # Loop through PCs
@@ -109,7 +112,7 @@ for (i in seq_len(ncol(PC_nums))) {
   R2_cum <- R2_cum + B2
   Ratio <- R2_cum / signal
 
-  ci_result <- bootstrap_ratio_ci(dfFGr, PC_nums[,1:i], n_boot = 100, conf = 0.95)
+  ci_result <- bootstrap_ratio_ci(dfFGr, PC_nums[,1:i], n_boot = 1000, conf = 0.95)
 
   dfOut[i,] <- c(H, varH, signal, i, B2, R2_cum, Ratio, ci_result$ci[1], ci_result$ci[2], ci_result$se, ci_result$estimate)
   cat("Finished PC", i, "\n")
