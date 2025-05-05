@@ -64,14 +64,14 @@ signal <- 1 - error
 
 
 # Construct output
+PC_nums <- cbind(cPC_nums, rPC_nums)
+print(dim(PC_nums))
 dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 11)
 colnames(dfOut) <- c("H","varH", "Signal","PC", "B2", "R2", "Ratio", "lc", "uc", "se", "estimate")
 FGr_scale <- scale(FGr)
 
 # Loop through PCs
-PC_nums <- cbind(cPC_nums, rPC_nums)
-print(dim(PC_nums))
-for (i in 1:3) {
+for (i in 1:ncol(PC_nums)) {
 
   B2 <- cov(FGr_scale, PC_nums[,i])^2
   mod <- lm(FGr_scale ~ PC_nums[,1:i])
