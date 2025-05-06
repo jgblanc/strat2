@@ -79,25 +79,25 @@ compute_Ratio <- function(Fmat, PC) {
   R2 / signal
 }
 
-bootstrap_ratio_ci <- function(Fmat, PC, n_boot = 1000, conf = 0.95) {
-  PC <- as.matrix(PC)
-  n <- nrow(Fmat)
-  boot_ratios <- future_replicate(n_boot, {
-    idx <- sample(n, replace = TRUE)
-    compute_Ratio(Fmat[idx, , drop = FALSE], PC[idx, , drop = FALSE])
-  })
-
-  se <- sd(boot_ratios)
-  estimate <- compute_Ratio(Fmat, PC)
-  z <- qnorm(1 - (1 - conf)/2)
-  ci <- estimate + c(-1, 1) * z * se
-
-  list(
-    estimate = estimate,
-    se = se,
-    ci = ci
-  )
-}
+#bootstrap_ratio_ci <- function(Fmat, PC, n_boot = 1000, conf = 0.95) {
+#  PC <- as.matrix(PC)
+#  n <- nrow(Fmat)
+#  boot_ratios <- future_replicate(n_boot, {
+#    idx <- sample(n, replace = TRUE)
+#    compute_Ratio(Fmat[idx, , drop = FALSE], PC[idx, , drop = FALSE])
+#  })
+#
+#  se <- sd(boot_ratios)
+#  estimate <- compute_Ratio(Fmat, PC)
+#  z <- qnorm(1 - (1 - conf)/2)
+#  ci <- estimate + c(-1, 1) * z * se
+#
+#  list(
+#    estimate = estimate,
+#    se = se,
+#    ci = ci
+#  )
+#}
 
 # Construct output
 dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 11)
@@ -112,9 +112,9 @@ for (i in seq_len(ncol(PC_nums))) {
   R2_cum <- R2_cum + B2
   Ratio <- R2_cum / signal
 
-  ci_result <- bootstrap_ratio_ci(dfFGr, PC_nums[,1:i], n_boot = 1000, conf = 0.95)
+  #ci_result <- bootstrap_ratio_ci(dfFGr, PC_nums[,1:i], n_boot = 1000, conf = 0.95)
 
-  dfOut[i,] <- c(H, varH, signal, i, B2, R2_cum, Ratio, ci_result$ci[1], ci_result$ci[2], ci_result$se, ci_result$estimate)
+  dfOut[i,] <- c(H, varH, signal, i, B2, R2_cum, Ratio, NA, NA, NA, NA)
   cat("Finished PC", i, "\n")
 }
 
