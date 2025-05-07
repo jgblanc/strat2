@@ -7,10 +7,10 @@ if(length(args)<4){stop("Rscript calc_R2_EO.R")}
 
 library(data.table)
 library(tidyverse)
-library(matrixStats)
-library(future.apply)  # parallel bootstrap
-plan(multisession)
-options(future.globals.maxSize = 2 * 1024^3)
+#library(matrixStats)
+#library(future.apply)  # parallel bootstrap
+#plan(multisession)
+#options(future.globals.maxSize = 2 * 1024^3)
 
 pca_file = args[1]
 fgr_file = args[2]
