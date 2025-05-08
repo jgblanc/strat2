@@ -7,10 +7,11 @@ if(length(args)<4){stop("Rscript calc_R2_EO.R")}
 
 library(data.table)
 library(tidyverse)
-#library(matrixStats)
-#library(future.apply)  # parallel bootstrap
-#plan(multisession)
-#options(future.globals.maxSize = 2 * 1024^3)
+library(matrixStats)
+library(future.apply)  # parallel bootstrap
+plan(multisession)
+plan(multicore, workers = 8)
+options(future.globals.maxSize = 2 * 1024^3)
 
 pca_file = args[1]
 fgr_file = args[2]
@@ -28,7 +29,6 @@ dfSNP_filter <- dfSNP %>% filter(CHR %in% chrFGr)
 blockIndex <- which(dfSNP$CHR %in% chrFGr)
 L <- sum(dfSNP_filter$nSNP)
 numBlocks <- length(blockIndex)
-print(numBlocks)
 
 # Read in and compute FGr
 dfFGr <- as.matrix(fread(fgr_file))[, blockIndex]
@@ -59,14 +59,13 @@ varFGr <- var(FGr)
 error <- numerator / varFGr
 signal <- 1 - error
 
+
 # Bootstrap helper
 compute_Ratio <- function(Fmat, PC) {
 
-  PC <- scale(PC)
   FGr_raw <- rowSums(Fmat)
   FGr <- FGr_raw / sqrt(L - 1)
-  Fvec <- scale(FGr)
-  mod <- lm(Fvec ~ PC)
+  mod <- lm(scale(FGr) ~ PC)
   R2 <- summary(mod)$r.squared
 
   # Jackknife error for this Fmat
@@ -74,49 +73,58 @@ compute_Ratio <- function(Fmat, PC) {
   FGri_scaled <- sweep(FGri_mat, 2, scale_factors, `*`)
   jckFGr <- ((FGr - FGri_scaled)^2) * matrix((L - mi_vec) / mi_vec, nrow(Fmat), numBlocks, byrow = TRUE)
   numerator <- mean(rowMeans(jckFGr))
-  signal <- 1 - numerator / var(FGr)
+  signal <- 1 - (numerator / var(FGr))
 
-  R2 / signal
+  # Ratio
+  ratio <- R2/signal
+
+  return(list(R2 = R2, Ratio = ratio))
 }
-
-#bootstrap_ratio_ci <- function(Fmat, PC, n_boot = 1000, conf = 0.95) {
-#  PC <- as.matrix(PC)
-#  n <- nrow(Fmat)
-#  boot_ratios <- future_replicate(n_boot, {
-#    idx <- sample(n, replace = TRUE)
-#    compute_Ratio(Fmat[idx, , drop = FALSE], PC[idx, , drop = FALSE])
-#  })
-#
-#  se <- sd(boot_ratios)
-#  estimate <- compute_Ratio(Fmat, PC)
-#  z <- qnorm(1 - (1 - conf)/2)
-#  ci <- estimate + c(-1, 1) * z * se
-#
-#  list(
-#    estimate = estimate,
-#    se = se,
-#    ci = ci
-#  )
-#}
 
 # Construct output
-dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 11)
-colnames(dfOut) <- c("H","varH", "Signal","PC", "B2", "R2", "Ratio", "lc", "uc", "se", "estimate")
-FGr_scale <- scale(FGr)
+dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 14)
+colnames(dfOut) <- c("PC","H", "varH","signal", "B", "lcB", "ucB", "B2", "R2", "lcR2", "ucR2", "Ratio", "lcRatio", "ucRatio")
 
 # Loop through PCs
-R2_cum <- 0
 for (i in seq_len(ncol(PC_nums))) {
 
-  B2 <- cov(FGr_scale, PC_nums[,i])^2
-  R2_cum <- R2_cum + B2
-  Ratio <- R2_cum / signal
+  # Get Single PC stats
+  mod <- lm(scale(FGr)~ PC_nums[,i])
+  B <- mod$coefficients[2]
+  lcB <- confint(mod)[-1, ][1]
+  ucB <- confint(mod)[-1, ][2]
+  B2 <- B^2
 
-  #ci_result <- bootstrap_ratio_ci(dfFGr, PC_nums[,1:i], n_boot = 1000, conf = 0.95)
+  # Get Combined R^2 stats
+  tmp <- compute_Ratio(Fmat = dfFGr, PC = PC_nums[,1:i])
+  R2 <- tmp$R2
 
-  dfOut[i,] <- c(H, varH, signal, i, B2, R2_cum, Ratio, NA, NA, NA, NA)
+  # Run bootstrappin
+  boot_ratios <- future_replicate(100, {
+    idx <- sample(M, replace = TRUE)
+    compute_Ratio(dfFGr[idx,], tmpPC <- PC_nums[idx,1:i])
+  })
+  boot_ratios_matrix <- matrix(unlist(boot_ratios), ncol = 2, byrow = TRUE)
+
+  # Get CI's for R2
+  boot_R2_values <- boot_ratios_matrix[,1]
+  ci <- quantile(boot_R2_values, probs = c(0.025, 0.975))
+  lcR2 <- ci[1]
+  ucR2 <- ci[2]
+
+  # Get Ratio
+  Ratio <- tmp$Ratio
+
+  # Get CI's for Ratio
+  boot_ratio_values <- boot_ratios_matrix[,2]
+  ci <- quantile(boot_ratio_values, probs = c(0.025, 0.975))
+  lcRatio <- ci[1]
+  ucRatio <- ci[2]
+
+  dfOut[i,] <- c(i, H, varH, signal, B, lcB, ucB, B2, R2, lcR2, ucR2, Ratio, lcRatio, ucRatio)
   cat("Finished PC", i, "\n")
 }
+
 
 # Write output
 fwrite(as.data.table(dfOut), out_file, sep = "\t", quote = FALSE)
