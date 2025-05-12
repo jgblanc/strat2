@@ -122,7 +122,6 @@ for (i in seq_len(ncol(PC_nums))) {
   #ucRatio <- ci[2]
 
   dfOut[i,] <- c(i, H, varH, signal, B, lcB, ucB, B2, R2, NA, NA, Ratio, NA, NA)
-  print(dfOut)
   cat("Finished PC", i, "\n")
 }
 

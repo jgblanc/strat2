@@ -13,7 +13,7 @@ suppressWarnings(suppressMessages({
 
 outfile = args[1]
 
-dfOut <- matrix(NA, nrow = 1, ncol = 13)
+dfOut <- matrix(NA, nrow = 1, ncol = 17)
 
 for (i in 2:length(args)) {
 
@@ -34,7 +34,6 @@ for (i in 2:length(args)) {
 
   # Read in results
   df <- fread(filename)
-  df <- df[,1:10]
   print(df)
   names_from_file <- colnames(df)
   df$dataset <- dataset
