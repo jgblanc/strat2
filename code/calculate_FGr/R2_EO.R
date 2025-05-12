@@ -100,28 +100,28 @@ for (i in seq_len(ncol(PC_nums))) {
   R2 <- tmp$R2
 
   # Run bootstrappin
-  boot_ratios <- future_replicate(100, {
-    idx <- sample(M, replace = TRUE)
-    compute_Ratio(dfFGr[idx,], tmpPC <- PC_nums[idx,1:i])
-  })
-  boot_ratios_matrix <- matrix(unlist(boot_ratios), ncol = 2, byrow = TRUE)
+  #boot_ratios <- future_replicate(100, {
+  #  idx <- sample(M, replace = TRUE)
+  #  compute_Ratio(dfFGr[idx,], tmpPC <- PC_nums[idx,1:i])
+  #})
+  #boot_ratios_matrix <- matrix(unlist(boot_ratios), ncol = 2, byrow = TRUE)
 
   # Get CI's for R2
-  boot_R2_values <- boot_ratios_matrix[,1]
-  ci <- quantile(boot_R2_values, probs = c(0.025, 0.975))
-  lcR2 <- ci[1]
-  ucR2 <- ci[2]
+  #boot_R2_values <- boot_ratios_matrix[,1]
+  #ci <- quantile(boot_R2_values, probs = c(0.025, 0.975))
+  #lcR2 <- ci[1]
+  #ucR2 <- ci[2]
 
   # Get Ratio
   Ratio <- tmp$Ratio
 
   # Get CI's for Ratio
-  boot_ratio_values <- boot_ratios_matrix[,2]
-  ci <- quantile(boot_ratio_values, probs = c(0.025, 0.975))
-  lcRatio <- ci[1]
-  ucRatio <- ci[2]
+  #boot_ratio_values <- boot_ratios_matrix[,2]
+  #ci <- quantile(boot_ratio_values, probs = c(0.025, 0.975))
+  #lcRatio <- ci[1]
+  #ucRatio <- ci[2]
 
-  dfOut[i,] <- c(i, H, varH, signal, B, lcB, ucB, B2, R2, lcR2, ucR2, Ratio, lcRatio, ucRatio)
+  dfOut[i,] <- c(i, H, varH, signal, B, lcB, ucB, B2, R2, NA, NA, Ratio, NA, NA)
   print(dfOut)
   cat("Finished PC", i, "\n")
 }
