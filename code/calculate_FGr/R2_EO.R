@@ -67,6 +67,8 @@ compute_Ratio <- function(Fmat, PC) {
   FGr <- FGr_raw / sqrt(L - 1)
   mod <- lm(scale(FGr) ~ PC)
   R2 <- summary(mod)$r.squared
+  f <- summary(mod)$fstatistic
+  p <- pf(f[1],f[2],f[3],lower.tail=F)
 
   # Jackknife error for this Fmat
   FGri_mat <- FGr_raw - Fmat
@@ -78,12 +80,12 @@ compute_Ratio <- function(Fmat, PC) {
   # Ratio
   ratio <- R2/signal
 
-  return(list(R2 = R2, Ratio = ratio))
+  return(list(R2 = R2, p=p, Ratio = ratio))
 }
 
 # Construct output
-dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 14)
-colnames(dfOut) <- c("PC","H", "varH","signal", "B", "lcB", "ucB", "B2", "R2", "lcR2", "ucR2", "Ratio", "lcRatio", "ucRatio")
+dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 16)
+colnames(dfOut) <- c("PC","H", "varH","signal", "B","pvalB", "lcB", "ucB", "B2", "R2","pvalR2", "lcR2", "ucR2", "Ratio", "lcRatio", "ucRatio")
 
 # Loop through PCs
 for (i in seq_len(ncol(PC_nums))) {
@@ -93,10 +95,12 @@ for (i in seq_len(ncol(PC_nums))) {
   B <- mod$coefficients[2]
   lcB <- confint(mod)[-1, ][1]
   ucB <- confint(mod)[-1, ][2]
+  pvalB <- summary(mod)$coefficients[2,4]
   B2 <- B^2
 
   # Get Combined R^2 stats
   tmp <- compute_Ratio(Fmat = dfFGr, PC = PC_nums[,1:i])
+  pvalR2 <- tmp$p
   R2 <- tmp$R2
 
   # Run bootstrappin
@@ -121,7 +125,7 @@ for (i in seq_len(ncol(PC_nums))) {
   #lcRatio <- ci[1]
   #ucRatio <- ci[2]
 
-  dfOut[i,] <- c(i, H, varH, signal, B, lcB, ucB, B2, R2, NA, NA, Ratio, NA, NA)
+  dfOut[i,] <- c(i, H, varH, signal, B,pvalB, lcB, ucB, B2, R2, pvalR2, NA, NA, Ratio, NA, NA)
   cat("Finished PC", i, "\n")
 }
 

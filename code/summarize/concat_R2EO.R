@@ -13,7 +13,7 @@ suppressWarnings(suppressMessages({
 
 outfile = args[1]
 
-dfOut <- matrix(NA, nrow = 1, ncol = 17)
+dfOut <- matrix(NA, nrow = 1, ncol = 19)
 
 for (i in 2:length(args)) {
 
