@@ -215,6 +215,34 @@ dfBJ %>% ggplot(aes(x = gwas, y = H, color = gwas, shape = Sig)) + geom_point() 
 
 
 
+```{r}
+dfF <- fread("~/Downloads/FGrMat_nfe-afr.txt")
+FGr <- scale(rowSums(dfF))
+dfAll$Fhat <- FGr
+dfPlot <- inner_join(df, dfAll)
+
+dfPlot$POP <- factor(dfPlot$POP, levels = c("Africa", "Europe", "Asia", "Mixed", NA))
+
+# Replace NA with a string label for color mapping
+dfPlot$POP_color <- as.character(dfPlot$POP)
+dfPlot$POP_color[is.na(dfPlot$POP_color)] <- "NA"
+
+dfPlot$POP_color <- factor(dfPlot$POP_color, levels = c("Africa", "Europe", "Asia", "Mixed", "NA"))
+dfPlot <- dfPlot[order(dfPlot$POP_color), ]
+
+pl <- ggplot(data = dfPlot, aes(x = Fhat, y = 1, color = POP_color)) +
+  geom_point(position = position_jitter(height = 0.1)) +
+  theme_classic2() + 
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line.y = element_blank()) +
+  xlab(TeX("$\\hat{f}$")) + 
+  scale_color_manual(values = c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "gray70"),
+                     name = "POP")
+
+ggsave("~/Desktop/nfe-afr.png", pl, width = 7, height = 4)
+```
 
 
 

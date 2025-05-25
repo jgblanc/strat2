@@ -19,7 +19,36 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("plots/error/rare_R2EO_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_PCA/{gwas}/PCA_common.eigenvec", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+
+
+
+rule calc_PCA:
+    input:
+        IDs="data/ids/gwas_ids/{gwas}.txt"
+    output:
+        "output/calculate_PCA/{gwas}/PCA_common.eigenvec",
+        "output/calculate_PCA/{gwas}/PCA_common.eigenval"
+    params:
+        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3",
+        out_prefix="output/calculate_PCA/{gwas}/PCA"
+    threads: 16
+    resources:
+        mem_mb=60000,
+        time="24:00:00"
+    shell:
+        """
+        plink2 --pfile {params.plink_prefix} \
+        --keep {input.IDs} \
+        --threads 16 \
+        --pca 40 approx \
+        --memory 60000 \
+        --out {params.out_prefix}
+	      """
+
+
+
+
 
 
 

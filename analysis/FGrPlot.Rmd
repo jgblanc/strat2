@@ -43,7 +43,8 @@ df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
 ```
 
 ```{r}
-pl <- df %>% ggplot(aes(x = H, y = error, color = gwas)) + geom_point(size = 2) + scale_x_log10() + scale_y_log10() + xlab(TeX("proportion of variance in the GWAS panel explained by the target axis ($\\hat{H}$)")) + ylab(TeX("fraction of variance in direct estimator due to error ($\\hat{e}_{f}$)")) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL")))  + theme(panel.grid.minor = element_line(linetype = "dashed")) +  guides(color = guide_legend(title = "GWAS", label = scales::label_parse()))
+pl <- df %>% ggplot(aes(x = H, y = error, color = gwas)) + geom_point(size = 2) + scale_x_log10() + scale_y_log10() + xlab(TeX("proportion of variance in the GWAS panel explained by the target axis ($\\hat{H}$)")) + ylab(TeX("fraction of variance in direct estimator due to error ($1 - \\hat{gamma}_{f}$)")) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL")))  + theme(panel.grid.minor = element_line(linetype = "dashed")) +  guides(color = guide_legend(title = "GWAS", label = scales::label_parse()))
+pl
 #ggsave("~/Desktop/Error.png", pl, height = 4, width = 6)
 ```
 
@@ -55,21 +56,27 @@ table(df$error > 0.1)
 ## Common Variants 
 
 ```{r}
-tmp1 <- fread("../plots/error/R2EO_HGDP1KG.txt")
-tmp2 <- fread("../plots/error/R2EO_InUKBB.txt")
+tmp1 <- fread("../plots/error/R2EO_HGDP1KG.txt") %>% mutate(type = "HGDP1KG")
+tmp2 <- fread("../plots/error/R2EO_InUKBB.txt") %>% mutate(type = "CoB")
 df <- rbind(tmp1, tmp2)
 
 # Format Data
-tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp) 
 tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
 tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
-tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL")) 
 df <- rbind(tmp1, tmp2, tmp3)
 df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
 
 # Shorten Names
 rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
 df$contrasts <- str_replace_all(df$contrasts, rep_str)
+
+# Find significant PCs
+df <- df %>% mutate(adjuB = p.adjust(pvalB)) %>% mutate(sigB = case_when(adjuB < 0.05  ~ TRUE, adjuB >= 0.05 ~ F))
+
+# Find significant R2
+df <- df %>% mutate(adjuR2 = p.adjust(pvalR2)) %>% mutate(sigR2 = case_when(adjuR2 < 0.05  ~ TRUE, adjuR2 >= 0.05 ~ F))
 ```
 
 ### Signal 
@@ -79,16 +86,62 @@ pl <- df %>% ggplot(aes(x = Signal,y = Ratio, color = gwas)) + geom_point() + sc
 #ggsave("~/Desktop/SignalRatio.png", pl, height = 6, width = 10)
 ```
 
-### Summary Plot
+### Summary Table 
 
+Number of significant R2 
+```{r}
+tmp <- df %>% filter(PC == 40) %>% mutate(adjuR2 = p.adjust(pvalR2)) %>% mutate(sigR2 = case_when(adjuR2 < 0.05  ~ TRUE, adjuR2 >= 0.05 ~ F)) 
+table(tmp$sigR2)
+```
+
+
+Table of significant PCs
 ```{r}
 df %>%
-  filter(PC == 40) %>%
-  ggplot(aes(x = H, y = Ratio, color = gwas)) +
-  geom_point() +
-  scale_x_log10(breaks = c(1e-5, 1e-4, 1e-3, 1e-2), limits = c(1e-5, 1.1e-2)) +
-  ylim(0, 1) 
+  filter(gwas %in% c("WBS", "ALL")) %>%
+  group_by(PC, gwas, type) %>%
+  summarise(numSig = sum(sigB) / n(), tot = n(), .groups = "drop") %>%
+  ggplot(aes(x = PC, y = numSig, color = type, group = type)) +
+  geom_line() +
+  geom_point()+ 
+  facet_wrap(~gwas)
 ```
+```{r}
+df %>%
+  filter(gwas %in% c("WBS", "ALL")) %>%
+  group_by(PC, gwas, type) %>%
+  summarise(numSig = sum(sigB) / n(), tot = n(), meanB = mean(abs(B)), .groups = "drop") %>%
+  ggplot(aes(x = PC, y = numSig, color = type, group = type)) +
+  geom_line() +
+  geom_point()+ 
+  facet_wrap(~gwas)
+```
+
+
+```{r}
+# Step 1: Get order of contrasts based on H in "ALL"
+ordered_contrasts <- df %>%
+  filter(gwas == "ALL") %>%
+  arrange(desc(H)) %>%  # or use `arrange(H)` depending on desired direction
+  pull(contrasts) %>%
+  unique()
+
+# Step 2: Apply this order to the whole dataframe
+df <- df %>%
+  mutate(contrasts = factor(contrasts, levels = ordered_contrasts))
+
+# Step 3: Plot
+pl <- df %>%
+  filter(gwas == "WBS" | gwas == "ALL") %>%
+  ggplot(aes(x = PC, y = B, color = sigB)) +
+  geom_point() +
+  facet_grid(vars(contrasts), vars(gwas))
+
+pl
+
+ggsave("~/Desktop/tmp.png", pl, height = 15, width = 15)
+```
+
 
 
 ### R^2 
@@ -214,11 +267,23 @@ df$contrasts <- str_replace_all(df$contrasts, rep_str)
 Rare <- df
 ```
 
+
 ### Signal 
 
 ```{r}
 pl <- df  %>%  ggplot(aes(x = Signal,y = Ratio, color = gwas)) + geom_point() + scale_color_manual(values = c("purple1", "darkorange", "skyblue2", "seagreen"), labels = c(expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon))) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + geom_hline(yintercept = 0, color = "red", linetype = "dashed") + geom_vline(xintercept = 0, color = "red", linetype = "dashed") +  geom_vline(xintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 12) + theme(panel.grid.minor = element_line(linetype = "dashed")) +  guides(color = guide_legend(title = "GWAS", label = scales::label_parse())) +  xlab(TeX("Signal ($\\hat{\\gamma}_{f}$)")) + ylab(TeX("Signal captured by PCs ($V_{k}$)"))
 #ggsave("~/Desktop/SignalRatio_Rare.png", pl, height = 6, width = 10)
+```
+
+### Summary Plot
+
+```{r}
+df %>%
+  filter(PC == 40) %>%
+  ggplot(aes(x = H, y = Ratio, color = gwas)) +
+  geom_point() +
+  scale_x_log10(breaks = c(1e-5, 1e-4, 1e-3, 1e-2), limits = c(1e-5, 1.1e-2)) +
+  ylim(0, 1) 
 ```
 
 ### R^2
@@ -645,6 +710,9 @@ plInUKBB <- df %>% filter(PC == "40") %>% filter(contrasts %in%c("ENG-NI", "ENG-
 
 Combine Ratio Chromosome Figures 
 ```{r}
+library(gridExtra)
+library(grid)
+
 # Define label grobs
 label_a <- textGrob("a", x = unit(0, "npc"), y = unit(1, "npc"),
                     just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
@@ -652,14 +720,28 @@ label_b <- textGrob("b", x = unit(0, "npc"), y = unit(1, "npc"),
                     just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
 label_c <- textGrob("c", x = unit(0, "npc"), y = unit(1, "npc"),
                     just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_d <- textGrob("d", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_e <- textGrob("e", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
 
+# Wrap plots with labels
+row_a <- arrangeGrob(plH, top = label_a)
+row_b <- arrangeGrob(pl, top = label_b)
+row_c <- arrangeGrob(plCont, top = label_c)
+row_d <- arrangeGrob(plLat, top = label_d)
+row_e <- arrangeGrob(plInUKBB, top = label_e)
 
-# Wrap other plots with labels
-row_a <- arrangeGrob(plCont, top = label_a)
-row_b <- arrangeGrob(plLat, top = label_b)
-row_c <- arrangeGrob(plInUKBB, top = label_c)
+# Combine row_a and row_b side by side
+top_row <- arrangeGrob(row_a, row_b, ncol = 2)
 
-# Final arrangement
-pl <- grid.arrange( row_a, row_b, row_c, ncol = 1, heights = c(1, 1, 1.3))
-ggsave("~/Desktop/ChrRatio_supp.png", pl, height = 10, width = 12)
+# Final arrangement: top_row + c, d, e stacked below
+final_plot <- grid.arrange(top_row, row_c, row_d, row_e,
+                           ncol = 1,
+                           heights = c(3, 1, 1, 1))
+
+# Save
+ggsave("~/Desktop/test.png", final_plot, height = 12, width = 12)
+
 ```
+

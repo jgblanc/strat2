@@ -1,0 +1,286 @@
+---
+title: "FGr_MainFigs"
+output: html_document
+date: "2025-05-19"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(data.table)
+library(tidyverse)
+library(latex2exp)
+library("gridExtra")
+library(grid)
+library(scales)
+library(ggtext)
+```
+
+## Common Variants 
+
+```{r}
+tmp1 <- fread("../plots/error/R2EO_HGDP1KG.txt") %>% mutate(type = "HGDP1KG")
+tmp2 <- fread("../plots/error/R2EO_InUKBB.txt") %>% mutate(type = "CoB")
+df <- rbind(tmp1, tmp2)
+
+# Format Data
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp) 
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL")) 
+df <- rbind(tmp1, tmp2, tmp3)
+df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+df$contrasts <- str_replace_all(df$contrasts, rep_str)
+
+# Find significant PCs
+df <- df %>% mutate(adjuB = p.adjust(pvalB)) %>% mutate(sigB = case_when(adjuB < 0.05  ~ TRUE, adjuB >= 0.05 ~ F))
+
+# Denotes type of PCs
+df <- df %>% mutate(pc_type = "40 common")
+dfCommon <- df
+```
+
+
+## Rare variants  
+
+```{r}
+tmp1 <- fread("../plots/error/rare_R2EO_HGDP1KG.txt") %>% mutate(type = "HGDP1KG")
+tmp2 <- fread("../plots/error/rare_R2EO_InUKBB.txt") %>% mutate(type = "CoB")
+df <- rbind(tmp1, tmp2)
+
+# Format Data
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp) 
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL")) 
+df <- rbind(tmp1, tmp2, tmp3)
+df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+df$contrasts <- str_replace_all(df$contrasts, rep_str)
+
+# Find significant PCs
+df <- df %>% mutate(adjuB = p.adjust(pvalB)) %>% mutate(sigB = case_when(adjuB < 0.05  ~ TRUE, adjuB >= 0.05 ~ F))
+
+# Denotes type of PCs
+df <- df %>% mutate(pc_type = "40 rare")
+dfRare <- df
+```
+
+## Rare + Common Variants 
+
+```{r}
+tmp1 <- fread("../plots/error/common_rare_R2EO_HGDP1KG.txt") %>% mutate(type = "HGDP1KG")
+tmp2 <- fread("../plots/error/common_rare_R2EO_InUKBB.txt") %>% mutate(type = "CoB")
+df <- rbind(tmp1, tmp2)
+
+# Format Data
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp) 
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL")) 
+df <- rbind(tmp1, tmp2, tmp3)
+df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+df$contrasts <- str_replace_all(df$contrasts, rep_str)
+
+# Denotes type of PCs
+df <- df %>% mutate(pc_type = "40 common + 40 rare")
+dfBoth <- df
+```
+
+### Plot \hat{H} vs V_{k}
+
+```{r}
+tmp1 <- dfCommon %>% filter(PC == 40) %>% select(H, PC, pc_type, Ratio, gwas)
+tmp2 <- dfRare %>% filter(PC == 40) %>% select(H, PC, pc_type, Ratio, gwas)
+tmp3 <- dfBoth  %>% filter(PC == 80) %>% select(H, PC, pc_type, Ratio, gwas)
+
+dfPlot <- rbind(tmp1, tmp2, tmp3)
+dfPlot$pc_type = factor(dfPlot$pc_type, levels=c("40 common","40 rare","40 common + 40 rare"))
+```
+
+```{r}
+plH <- dfPlot %>% ggplot(aes(x = H, y = Ratio, color = gwas)) + geom_point() + facet_wrap(~pc_type, ncol = 1) + scale_x_log10() + theme_bw() + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("GWAS"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL"))) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + guides(color = guide_legend(nrow = 1)) + ylim(0,1) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)")) + ylab(TeX("fraction of signal captured by PCs ($V_{k}$)")) + geom_hline(yintercept = 1, color = "red", linetype = "dashed")
+```
+
+### Summary bar plot 
+
+```{r}
+tmp1 <- dfCommon %>% filter(PC == 40) %>% select(H, PC, pc_type, Ratio, gwas, contrasts) %>% mutate(percent = Ratio)
+tmp3 <- dfBoth  %>% filter(PC == 80) %>% select(H, PC, pc_type, Ratio, gwas, contrasts) %>% mutate(percent = (Ratio - tmp1$percent))
+
+dfPlot <- rbind(tmp1, tmp3)
+dfPlot$pc_type = factor(dfPlot$pc_type, levels=c("40 common","40 common + 40 rare"))
+
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr","eurasia-lat", "eurasia-long","eur-lat", "eur-long", "sdi-eur","ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
+
+# Define the desired order from the subset
+#ordered_levels <- dfPlot %>%
+#  filter(gwas == "ALL") %>%
+#  arrange(desc(H)) %>%
+#  pull(contrasts) %>% unique() 
+
+# Apply that order to the full dataset
+#dfPlot <- dfPlot %>%
+#  mutate(contrasts = factor(contrasts, levels = ordered_levels))
+
+dfPlot$pc_type <- factor(dfPlot$pc_type, levels = c("40 common + 40 rare", "40 common"))
+levels(dfPlot$gwas) <- c("WBS" = "WBS", "5" = TeX("$5\\epsilon$"), "10" = TeX("$10\\epsilon$"), "50" = TeX("$50\\epsilon$"), "200" = TeX("$200\\epsilon$"), "ALL" = "ALL")
+```
+
+```{r}
+plBar <- dfPlot  %>%
+  ggplot(aes(x = contrasts, y = percent, fill = pc_type)) + 
+  geom_bar(position="stack", stat="identity") + 
+  facet_wrap(~gwas, ncol = 1, labeller = labeller(gwas = label_parsed)) + 
+  theme_bw() +
+  theme(
+  strip.background = element_rect(colour = "black", fill = "white"),
+  axis.text.x = element_text(size = 8, angle = 90, hjust = 1),
+  axis.text.y = element_text(size = 8),
+  legend.position = "bottom",
+  legend.margin = margin(t = -5, unit = "pt"),          # Reduce internal legend space
+  legend.box.margin = margin(t = -10, unit = "pt"),     # Reduce space between plot and legend
+  plot.margin = margin(t = 5, r = 5, b = 5, l = 5)       # Keep plot margins reasonable
+) + 
+  ylab(TeX("fraction of signal captured by PCs ($V_{k}$)")) + 
+  xlab("") + 
+  scale_fill_manual(values = c( "#f68060", "slateblue2"), name = " ") + 
+  geom_hline(yintercept = 1, color = "red", linetype = "dashed")
+
+plBar
+#ggsave("~/Desktop/summary_barplot.png", pl, height = 7, width = 9)
+```
+
+### Ratio plots
+
+HGDP - continental 
+```{r}
+dfPlot <- dfBoth %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
+
+plCont <- dfPlot %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1", "purple1", "darkorange", "skyblue2", "seagreen","seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("$V_{k}$"))  + 
+  scale_x_continuous(breaks = c(0,20,40,60,80), labels = c("0", "20", "40", "20", "40")) +
+  geom_vline(xintercept = 40, color = "red", linetype = "solid")
+```
+
+HGDP - lat/long 
+```{r}
+dfPlot <- df %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-long","eur-lat", "eur-long", "sdi-eur"))
+
+plLat <- dfPlot %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("$V_{k}$"))  + 
+  scale_x_continuous(breaks = c(0,20,40,60,80), labels = c("0", "20", "40", "20", "40")) +
+  geom_vline(xintercept = 40, color = "red", linetype = "solid")
+```
+
+InUKBB 
+```{r}
+dfPlot <- df %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
+
+plInUKBB <- dfPlot %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name = TeX("GWAS"), labels = c("WBS",expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), "ALL")) + theme( legend.position = "bottom", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("$V_{k}$")) +
+  guides(color = guide_legend(nrow = 1)) + ylim(0,1)  + 
+  scale_x_continuous(breaks = c(0,20,40,60,80), labels = c("0", "20", "40", "20", "40")) +
+  geom_vline(xintercept = 40, color = "red", linetype = "solid")
+```
+
+
+### Combine Everything for Figure 3
+
+
+```{r}
+library(gridExtra)
+library(grid)
+
+# Define label grobs
+label_a <- textGrob("a", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_b <- textGrob("b", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_c <- textGrob("c", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_d <- textGrob("d", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_e <- textGrob("e", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+
+# Wrap plots with labels
+row_a <- arrangeGrob(plH, top = label_a)
+row_b <- arrangeGrob(plBar, top = label_b)
+row_c <- arrangeGrob(plCont, top = label_c)
+row_d <- arrangeGrob(plLat, top = label_d)
+row_e <- arrangeGrob(plInUKBB, top = label_e)
+
+# Combine row_a and row_b side by side
+top_row <- arrangeGrob(row_a, row_b, ncol = 2, widths = c(1, 1.2))
+
+# Final arrangement: top_row + c, d, e stacked below
+final_plot <- grid.arrange(top_row, row_c, row_d, row_e,
+                           ncol = 1,
+                           heights = c(2.7, 1, 1, 1.25))
+
+# Save
+ggsave("~/Desktop/PCFig.png", final_plot, height = 14, width = 12)
+
+```
+
+## Supplemental Figures 
+
+Number of Significant PCs Common
+```{r}
+# Find significant PCs
+dfPlot <- dfCommon %>% mutate(adjuB = p.adjust(pvalB)) %>% mutate(sigB = case_when(adjuB < 0.05  ~ TRUE, adjuB >= 0.05 ~ F))
+
+plCommon <- dfPlot %>%
+  group_by(PC) %>%
+  summarise(numSig = sum(sigB) / n(), tot = n()) %>%
+  ggplot(aes(x = PC, y = numSig)) +
+  geom_point(size =2) + 
+  ylab("fraction of significant contrast/GWAS panel pairs") + 
+  theme_bw(base_size = 10) +
+  theme(panel.grid.minor = element_line(linetype = "dashed")) + 
+  ylim(c(0,1))
+```
+
+Number of Significant PCs Rare
+```{r}
+# Find significant PCs
+dfPlot <- dfRare %>% mutate(adjuB = p.adjust(pvalB)) %>% mutate(sigB = case_when(adjuB < 0.05  ~ TRUE, adjuB >= 0.05 ~ F))
+
+plRare <- dfPlot %>%
+  group_by(PC) %>%
+  summarise(numSig = sum(sigB) / n(), tot = n()) %>%
+  ggplot(aes(x = PC, y = numSig)) +
+  geom_point(size =2) + 
+  ylab("fraction of significant contrast/GWAS panel pairs") + 
+  theme_bw(base_size = 10) +
+  theme(panel.grid.minor = element_line(linetype = "dashed")) + 
+  ylim(c(0,1))
+```
+
+Combine figures
+```{r}
+# Define label grobs
+label_a <- textGrob("a", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_b <- textGrob("b", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+
+# Wrap plots with labels
+row_a <- arrangeGrob(plCommon, top = label_a)
+row_b <- arrangeGrob(plRare, top = label_b)
+
+# Final arrangement: top_row + c, d, e stacked below
+final_plot <- grid.arrange(row_a, row_b,
+                           ncol = 1)
+# Save
+ggsave("~/Desktop/SupNumSigPCs.png", final_plot, height = 8, width = 7)
+```
+

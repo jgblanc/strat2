@@ -1,15 +1,15 @@
 # Snakefile to prep UKBB for analysis
-CHR =[]
-for i in range(7, 8):
-  CHR.append(str(i))
+CHR =["17", "7", "8"]
+#for i in range(7, 8):
+#  CHR.append(str(i))
 GWAS = ["e5"]
 
 rule all:
     input:
-        expand("finished_{chr}.txt" ,chr=CHR, gwas=GWAS)
+        expand("qc_pass.txt" ,chr=CHR, gwas=GWAS)
 
 
-rule chrom_freqs_AFR:
+rule make_plink2_files:
     output:
         "finished_{chr}.txt"
     params:
@@ -17,8 +17,105 @@ rule chrom_freqs_AFR:
     shell:
         """
         dx run app-swiss-army-knife -y --wait \
+            --instance-type mem3_ssd1_v2_x16 \
             -iin="strat2:/Bulk/Imputation/UKB imputation from genotype/ukb22828_c{wildcards.chr}_b0_v3.bgen" \
             -iin="strat2:/Bulk/Imputation/UKB imputation from genotype/ukb22828_c{wildcards.chr}_b0_v3.sample" \
-            -icmd="plink2 --bgen ukb22828_c{wildcards.chr}_b0_v3.bgen ref-first --sample ukb22828_c{wildcards.chr}_b0_v3.sample --mind 0.1 --geno 0.1 --maf 0.01 --rm-dup exclude-all --snps-only --max-alleles 2 --make-pgen --set-all-var-ids @:#  --threads 16 --memory 38000 --out {params.plink}"
+            -icmd="plink2 --bgen ukb22828_c{wildcards.chr}_b0_v3.bgen ref-first --sample ukb22828_c{wildcards.chr}_b0_v3.sample --mind 0.1 --geno 0.1 --maf 0.01 --rm-dup exclude-all --snps-only --max-alleles 2 --make-pgen --set-all-var-ids @:#  --threads 16 --memory 38000 --out {params.plink} \"
+            --name plink_chr{wildcards.chr}
         touch {output}
         """
+
+
+rule combine_direct_genotype_calls:
+    output:
+        "done.txt"
+    shell:
+        """
+        dx run app-swiss-army-knife -y --wait \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c1_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c1_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c1_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c2_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c2_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c2_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c3_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c3_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c3_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c4_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c4_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c4_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c5_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c5_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c5_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c6_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c6_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c6_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c7_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c7_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c7_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c8_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c8_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c8_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c9_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c9_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c9_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c10_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c10_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c10_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c11_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c11_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c11_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c12_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c12_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c12_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c13_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c13_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c13_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c14_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c14_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c14_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c15_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c15_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c15_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c16_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c16_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c16_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c17_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c17_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c17_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c18_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c18_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c18_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c19_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c19_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c19_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c20_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c20_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c20_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c21_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c21_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c21_b0_v2.fam" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c22_b0_v2.bed" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c22_b0_v2.bim" \
+            -iin="strat2:/Bulk/Genotype Results/Genotype calls/ukb22418_c22_b0_v2.fam" \
+            -iin="strat2:merge_list_genotypes.txt" \
+            -icmd="plink --bed ukb22418_c1_b0_v2.bed --bim ukb22418_c1_b0_v2.bim --fam ukb22418_c1_b0_v2.fam --merge-list merge_list_genotypes.txt --make-bed --out ukb_cal_allChrs"
+        touch {output}
+        """
+
+
+rule run_qc_pass:
+    output:
+        "qc_pass.txt"
+    shell:
+        """
+        dx run app-swiss-army-knife -y --wait \
+            -iin="strat2:ukb_cal_allChrs.bed" \
+            -iin="strat2:ukb_cal_allChrs.bim" \
+            -iin="strat2:ukb_cal_allChrs.fam" \
+            -icmd="plink2 --bfile ukb_cal_allChrs --maf 0.01 --mac 100 --geno 0.1 --hwe 1e-15 --write-snplist --no-id-header --out qc_pass"
+        touch {output}
+        """
+
+
+
