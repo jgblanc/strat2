@@ -6,7 +6,7 @@ GWAS = ["WBS", "WBS-R", "ALL", "ALL-R"]
 
 rule all:
     input:
-        expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/pcSNPs_ALL.pgen" ,chr=CHR, gwas=GWAS)
+        expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam" ,chr=CHR, gwas=GWAS)
 
 
 ## UKBB Genotype data processing

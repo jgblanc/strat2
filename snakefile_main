@@ -2,8 +2,8 @@
 CHR = []
 for i in range(1, 22):
   CHR.append(str(i))
-GWAS= ["e5", "e10", "e50", "e200", "ALL-R", "WBS-R"]
-#GWAS = ["e10"]
+#GWAS= ["e5", "e10", "e50", "e200", "ALL-R", "WBS-R"]
+GWAS = ["ALL", "WBS", "ALL-R", "WBS-R"]
 DATASET = ["InUKBB"]
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
@@ -19,7 +19,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_PCA/{gwas}/PCA_common.eigenvec", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
+        expand("output/calculate_PCA/{gwas}/commonPCA.eigenvec", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS)
 
 
 
@@ -27,11 +27,11 @@ rule calc_PCA:
     input:
         IDs="data/ids/gwas_ids/{gwas}.txt"
     output:
-        "output/calculate_PCA/{gwas}/PCA_common.eigenvec",
-        "output/calculate_PCA/{gwas}/PCA_common.eigenval"
+        "output/calculate_PCA/{gwas}/commonPCA.eigenvec",
+        "output/calculate_PCA/{gwas}/commonPCA.eigenval"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3",
-        out_prefix="output/calculate_PCA/{gwas}/PCA"
+        out_prefix="output/calculate_PCA/{gwas}/commonPCA"
     threads: 16
     resources:
         mem_mb=60000,
