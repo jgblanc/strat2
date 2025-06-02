@@ -25,12 +25,12 @@ dfSNPs <- inner_join(dfSNPs, dfPvar)
 
 # Read in SS
 dfSS <- fread(ss_file)
-dfSS %>% select("CHROM", "GENPOS", "ID", "ALLELE0", "ALLELE1", "BETA", "LOG10P")
+dfSS <- dfSS %>% select("CHROM", "GENPOS", "ID", "ALLELE0", "ALLELE1", "BETA", "LOG10P")
 colnames(dfSS) <- c("#CHROM", "POS", "rsID", "REF", "ALT", "BETA", "LOG10_P")
 
 # Join DFs
 dfOut <- inner_join(dfSNPs, dfSS)
-dfOut <- dfOut %>% select("#CHROM", "POS", "REF", "ALT", "BETA", "P")
+dfOut <- dfOut %>% select("#CHROM", "POS","ID", "REF", "ALT", "BETA", "LOG10_P")
 
 
 # Write output
