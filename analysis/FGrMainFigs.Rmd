@@ -106,7 +106,8 @@ dfPlot$pc_type = factor(dfPlot$pc_type, levels=c("40 common","40 rare","40 commo
 ```
 
 ```{r}
-plH <- dfPlot %>% ggplot(aes(x = H, y = Ratio, color = gwas)) + geom_point() + facet_wrap(~pc_type, ncol = 1) + scale_x_log10() + theme_bw() + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("GWAS"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL"))) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + guides(color = guide_legend(nrow = 1)) + ylim(0,1) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)")) + ylab(TeX("fraction of signal captured by PCs ($V_{k}$)")) + geom_hline(yintercept = 1, color = "red", linetype = "dashed")
+plH <- dfPlot %>% ggplot(aes(x = H, y = H * (1- Ratio), color = gwas)) + geom_point() + facet_wrap(~pc_type, ncol = 1) + scale_x_log10() + theme_bw() + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("GWAS"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL"))) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + guides(color = guide_legend(nrow = 1)) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)")) + ylab(TeX("fraction of signal captured by PCs ($V_{k}$)")) 
+plH
 ```
 
 ### Summary bar plot 
@@ -233,7 +234,8 @@ ggsave("~/Desktop/PCFig.png", final_plot, height = 14, width = 12)
 
 ## Supplemental Figures 
 
-Number of Significant PCs Common
+### Number of Significant PCs Common
+
 ```{r}
 # Find significant PCs
 dfPlot <- dfCommon %>% mutate(adjuB = p.adjust(pvalB)) %>% mutate(sigB = case_when(adjuB < 0.05  ~ TRUE, adjuB >= 0.05 ~ F))
@@ -283,4 +285,70 @@ final_plot <- grid.arrange(row_a, row_b,
 # Save
 ggsave("~/Desktop/SupNumSigPCs.png", final_plot, height = 8, width = 7)
 ```
+### Association with each PC 
 
+Common
+```{r}
+dfPlot <- dfCommon %>% mutate(adjuB = p.adjust(pvalB)) %>% mutate(sigB = case_when(adjuB < 0.05  ~ TRUE, adjuB >= 0.05 ~ F))
+
+# Step 1: Get order of contrasts based on H in "ALL"
+ordered_contrasts <- dfPlot %>%
+  filter(gwas == "ALL") %>%
+  arrange(desc(H)) %>%  # or use `arrange(H)` depending on desired direction
+  pull(contrasts) %>%
+  unique()
+
+# Step 2: Apply this order to the whole dataframe
+df <- df %>%
+  mutate(contrasts = factor(contrasts, levels = ordered_contrasts))
+
+# Step 3: Plot
+pl <- dfPlot %>%
+  filter(gwas == "WBS" | gwas == "ALL") %>%
+  ggplot(aes(x = PC, y = B, color = sigB)) +
+  geom_point() +
+  facet_grid(vars(contrasts), vars(gwas)) + 
+  scale_color_manual(values = c("skyblue", "orange"), name = "Significant") + 
+  theme_bw() +
+  theme( legend.position = "right", strip.background=element_rect(colour="black",fill="white"), axis.text = element_text(size = 10), axis.title = element_text(size = 20), strip.text.y = element_text(size = 6), strip.text.x = element_text(size = 16)) + 
+  xlab("PC") + 
+  ylab(TeX("$\\hat{\\omega}_{k}$")) 
+  
+
+pl
+
+ggsave("~/Desktop/SupOmgegaCommon.png", pl, height = 16, width = 15)
+```
+
+Rare
+```{r}
+dfPlot <- dfRare %>% mutate(adjuB = p.adjust(pvalB)) %>% mutate(sigB = case_when(adjuB < 0.05  ~ TRUE, adjuB >= 0.05 ~ F))
+
+# Step 1: Get order of contrasts based on H in "ALL"
+ordered_contrasts <- dfPlot %>%
+  filter(gwas == "ALL") %>%
+  arrange(desc(H)) %>%  # or use `arrange(H)` depending on desired direction
+  pull(contrasts) %>%
+  unique()
+
+# Step 2: Apply this order to the whole dataframe
+df <- df %>%
+  mutate(contrasts = factor(contrasts, levels = ordered_contrasts))
+
+# Step 3: Plot
+pl <- dfPlot %>%
+  filter(gwas == "WBS" | gwas == "ALL") %>%
+  ggplot(aes(x = PC, y = B, color = sigB)) +
+  geom_point() +
+  facet_grid(vars(contrasts), vars(gwas)) + 
+  scale_color_manual(values = c("skyblue", "orange"), name = "Significant") + 
+  theme_bw() +
+  theme( legend.position = "right", strip.background=element_rect(colour="black",fill="white"), axis.text = element_text(size = 10), axis.title = element_text(size = 20), strip.text.y = element_text(size = 6), strip.text.x = element_text(size = 16)) + 
+  xlab("PC") + 
+  ylab(TeX("$\\hat{\\omega}_{k}$")) 
+  
+
+pl
+
+ggsave("~/Desktop/SupOmgegaRare.png", pl, height = 16, width = 15)
+```
