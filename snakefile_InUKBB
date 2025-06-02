@@ -1,16 +1,34 @@
 # Snakefile to do the pre-data processing for the Test Example
-CHR =[]
-for i in range(1, 23):
-  CHR.append(str(i))
+CHR =["1"]
+#for i in range(1, 23):
+#  CHR.append(str(i))
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
-GWAS=["ALL-R", "WBS-R"]
-#GWAS=["q1"]
-
-
+GWAS=["WBS-R"]
+COVARS = ["nopcs"]
+#PHENO = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Coun", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
+PHENO = ["Alkaline_Phosphate"]
 
 rule all:
     input:
-        expand("data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS)
+        expand("data/step2-results/{gwas}/{covars}/LR/formatted/chr{chr}_{pheno}.regenie", chr=CHR, gwas=GWAS, contrasts=CONTRASTS)
+
+
+## Clump Regenie Results
+
+rule format_regenie_results_LR:
+    input:
+        ss="data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_{pheno}.regenie",
+        snps ="data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt",
+        pvar = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar"
+    output:
+        "data/step2-results/{gwas}/{covars}/LR/formatted/chr{chr}_{pheno}.regenie"
+    shell:
+        """
+        Rscript code/run_GWAS/format_regenie_SS.R {input.ss} {input.snps} {input.pvar} {output}
+	      """
+
+
+
 
 
 ## Get overlapping SNPs for each subdataset
