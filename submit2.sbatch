@@ -13,6 +13,7 @@ module load python/3.10.5
 module load plink/2.0
 module load gcta/1.94.1
 module load R
+module load regenie
 #source ../myVilma/bin/activate 
 
 echo "SLURM_JOBID="$SLURM_JOBID
