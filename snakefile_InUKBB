@@ -32,18 +32,18 @@ rule clump_regenie_results:
     threads: 8
     resources:
         mem_mb=38000,
-        time="06:00:00"	
+        time="06:00:00"
     shell:
         """
         plink2 --pfile {params.plink_prefix} \
         --keep {input.IDs} \
 	--clump {input.ss} \
 	--clump-p1 0.05 \
-        --clump-p2 1 \
         --clump-r2 0.1 \
         --clump-kb 1000 \
 	--clump-log10 \
 	--clump-p-field LOG10P \
+	--clump-report-only index \
 	--threads 8 \
 	--memory 38000 \
 	--extract {input.SNPs} \
