@@ -1,5 +1,5 @@
 # Snakefile to do the pre-data processing for the Test Example
-CHR =["1"]
+CHR =["22"]
 #for i in range(1, 23):
 #  CHR.append(str(i))
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
@@ -7,7 +7,7 @@ GWAS=["WBS-R"]
 COVARS = ["nopcs"]
 #PHENO = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Coun", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 PHENO = ["Alkaline_Phosphate"]
-GTYPE = ["LR"]
+GTYPE = ["LMM"]
 
 rule all:
     input:
@@ -16,25 +16,14 @@ rule all:
 
 ## Clump Regenie Results
 
-rule format_regenie_results:
-    input:
-        ss="data/step2-results/{gwas}/{covars}/{gtype}/raw/chr{chr}_{pheno}.regenie",
-        snps ="data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt",
-        pvar = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar"
-    output:
-        "data/step2-results/{gwas}/{covars}/{gtype}/formatted/{pheno}_chr{chr}.regenie"
-    shell:
-        """
-        Rscript code/run_gwas/format_regenie_SS.R {input.ss} {input.snps} {input.pvar} {output}
-	      """
-
 rule clump_regenie_results:
     input:
-        ss="data/step2-results/{gwas}/{covars}/{gtype}/formatted/{pheno}_chr{chr}.regenie",
+        ss="data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_{phenotype}.regenie",
         pvar = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
         psam = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
         pgen = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen",
-        IDs = "data/ids/gwas_ids/{gwas}.txt"
+        IDs = "data/ids/gwas_ids/{gwas}.txt",
+        SNPs = "data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt"
     output:
         "data/step2-results/{gwas}/{covars}/{gtype}/clumped/{pheno}_chr{chr}.clumps"
     params:
@@ -48,10 +37,48 @@ rule clump_regenie_results:
         --clump-p1 0.05 \
         --clump-p2 1 \
         --clump-r2 0.1 \
-        --clump-kb 250 \
+        --clump-kb 1000 \
 	--clump-log10 \
+	      --clump-p-field LOG10P \
         --out {params.out_prefix}
 	      """
+
+#rule format_regenie_results:
+#    input:
+#        ss="data/step2-results/{gwas}/{covars}/{gtype}/raw/chr{chr}_{pheno}.regenie",
+#        snps ="data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt",
+#        pvar = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar"
+#    output:
+#        "data/step2-results/{gwas}/{covars}/{gtype}/formatted/{pheno}_chr{chr}.regenie"
+#    shell:
+#        """
+#        Rscript code/run_gwas/format_regenie_SS.R {input.ss} {input.snps} {input.pvar} {output}
+#	      """
+
+#rule clump_regenie_results:
+#    input:
+#        ss="data/step2-results/{gwas}/{covars}/{gtype}/formatted/{pheno}_chr{chr}.regenie",
+#        pvar = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
+#        psam = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
+#        pgen = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen",
+#        IDs = "data/ids/gwas_ids/{gwas}.txt"
+#    output:
+#        "data/step2-results/{gwas}/{covars}/{gtype}/clumped/{pheno}_chr{chr}.clumps"
+#    params:
+#        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
+#        out_prefix="data/step2-results/{gwas}/{covars}/{gtype}/clumped/{pheno}_chr{chr}"
+#    shell:
+#        """
+#        plink2 --pfile {params.plink_prefix} \
+#        --keep {input.IDs} \
+#	      --clump {input.ss} \
+#        --clump-p1 0.05 \
+#        --clump-p2 1 \
+#        --clump-r2 0.1 \
+#        --clump-kb 250 \
+#	--clump-log10 \
+#        --out {params.out_prefix}
+#	      """
 
 
 
@@ -176,3 +203,5 @@ rule rename_overlap_snps_all:
         cp {input} {output.p10}
 	rm {input}
         """
+
+

@@ -499,3 +499,9 @@ rule run_step_two_LMM:
 		   --threads 8\
                    --out {params.regenie_prefix}
 	      """
+
+
+
+
+
+
