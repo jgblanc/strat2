@@ -11,7 +11,7 @@ GTYPE = ["LR"]
 
 rule all:
     input:
-        expand("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{pheno}_chr{chr}.clumps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, pheno=PHENO)
+        expand("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{pheno}_chr{chr}.clumps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, pheno=PHENO,gtype=GTYPE)
 
 
 ## Clump Regenie Results
@@ -49,6 +49,7 @@ rule clump_regenie_results:
         --clump-p2 1 \
         --clump-r2 0.1 \
         --clump-kb 250 \
+	--clump-log10 \
         --out {params.out_prefix}
 	      """
 
