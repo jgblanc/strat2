@@ -1,7 +1,7 @@
 # Snakefile to run main pipeline
-CHR = []
-for i in range(1, 23):
-  CHR.append(str(i))
+CHR = ["22"]
+#for i in range(1, 23):
+#  CHR.append(str(i))
 GWAS= ["WBS-R"]
 DATASET = ["InUKBB"]
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
@@ -405,11 +405,13 @@ rule format_covariates_PCs:
 
 rule run_step_two_LR:
     input:
-        sample = "data/ukbb/ukb22828_c22_b0_v3_s487192.sample",
-        bgen = "/gpfs/data/xhe-lab/uk-biobank-genotypes/ukb_imp_chr{chr}_v3.bgen",
+        pvar = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
+        pgen = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen",
+        psam = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
         covar = "data/regenie_files/ukb_covariates_{gwas}_{covars}.txt",
         phenotype = "data/regenie_files/ukb_phenotypes_QT.txt",
-        pred_list = "data/step1-results/{gwas}/{covars}/ukb_step1_QT_pred.list"
+        pred_list = "data/step1-results/{gwas}/{covars}/ukb_step1_QT_pred.list",
+        snp_list =
     output:
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Alkaline_Phosphate.regenie",
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Aspartate_Aminotransferase.regenie",
@@ -429,7 +431,8 @@ rule run_step_two_LR:
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Total_Protein.regenie",
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Triglycerides.regenie"
     params:
-        regenie_prefix = "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}"
+        regenie_prefix = "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}",
+        plink_prefix = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3"
     resources:
         mem_mb=38000,
         time="24:00:00",
@@ -437,9 +440,59 @@ rule run_step_two_LR:
     shell:
         """
         regenie --step 2 \
-                   --bgen {input.bgen} \
+                   --pgen {params.plink_prefix} \
                    --ref-first \
                    --ignore-pred \
+                   --sample {input.sample} \
+                   --phenoFile {input.phenotype} \
+                   --covarFile {input.covar} \
+                   --pThresh 0.01 \
+                   --pred {input.pred_list} \
+                   --bsize 400 \
+		   --threads {threads} \
+                   --out {params.regenie_prefix}
+	      """
+
+
+rule run_step_two_LMM:
+    input:
+        pvar = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
+        pgen = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen",
+        psam = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
+        covar = "data/regenie_files/ukb_covariates_{gwas}_{covars}.txt",
+        phenotype = "data/regenie_files/ukb_phenotypes_QT.txt",
+        pred_list = "data/step1-results/{gwas}/{covars}/ukb_step1_QT_pred.list",
+        snp_list =
+    output:
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Alkaline_Phosphate.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Aspartate_Aminotransferase.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Basophill_Percentage.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Body_Weight.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Cholesterol.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Eosinophill_Percentage.regenie"
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Glucose.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_HDL.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_HbA1c.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_LDL.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_MCHC.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_MCV.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Platelet_Count.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_SBP.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Standing_Height.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Total_Protein.regenie",
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Triglycerides.regenie"
+    params:
+        regenie_prefix = "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}",
+        plink_prefix = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3"
+    resources:
+        mem_mb=38000,
+        time="24:00:00",
+	threads=8
+    shell:
+        """
+        regenie --step 2 \
+                   --pgen {params.plink_prefix} \
+                   --ref-first \
                    --sample {input.sample} \
                    --phenoFile {input.phenotype} \
                    --covarFile {input.covar} \
