@@ -21,7 +21,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Alkaline_Phosphate.regenie", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR)
+        expand("data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Alkaline_Phosphate.regenie", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR)
 
 
 ##### Calculate H #####
@@ -410,15 +410,14 @@ rule run_step_two_LR:
         psam = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
         covar = "data/regenie_files/ukb_covariates_{gwas}_{covars}.txt",
         phenotype = "data/regenie_files/ukb_phenotypes_QT.txt",
-        pred_list = "data/step1-results/{gwas}/{covars}/ukb_step1_QT_pred.list",
-        snp_list =
+        pred_list = "data/step1-results/{gwas}/{covars}/ukb_step1_QT_pred.list"
     output:
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Alkaline_Phosphate.regenie",
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Aspartate_Aminotransferase.regenie",
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Basophill_Percentage.regenie",
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Body_Weight.regenie",
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Cholesterol.regenie",
-        "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Eosinophill_Percentage.regenie"
+        "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Eosinophill_Percentage.regenie",
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Glucose.regenie",
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_HDL.regenie",
         "data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_HbA1c.regenie",
@@ -443,13 +442,12 @@ rule run_step_two_LR:
                    --pgen {params.plink_prefix} \
                    --ref-first \
                    --ignore-pred \
-                   --sample {input.sample} \
                    --phenoFile {input.phenotype} \
                    --covarFile {input.covar} \
                    --pThresh 0.01 \
                    --pred {input.pred_list} \
                    --bsize 400 \
-		   --threads {threads} \
+		   --threads 8 \
                    --out {params.regenie_prefix}
 	      """
 
@@ -461,15 +459,14 @@ rule run_step_two_LMM:
         psam = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
         covar = "data/regenie_files/ukb_covariates_{gwas}_{covars}.txt",
         phenotype = "data/regenie_files/ukb_phenotypes_QT.txt",
-        pred_list = "data/step1-results/{gwas}/{covars}/ukb_step1_QT_pred.list",
-        snp_list =
+        pred_list = "data/step1-results/{gwas}/{covars}/ukb_step1_QT_pred.list"
     output:
         "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Alkaline_Phosphate.regenie",
         "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Aspartate_Aminotransferase.regenie",
         "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Basophill_Percentage.regenie",
         "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Body_Weight.regenie",
         "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Cholesterol.regenie",
-        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Eosinophill_Percentage.regenie"
+        "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Eosinophill_Percentage.regenie",
         "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Glucose.regenie",
         "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_HDL.regenie",
         "data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_HbA1c.regenie",
@@ -493,12 +490,11 @@ rule run_step_two_LMM:
         regenie --step 2 \
                    --pgen {params.plink_prefix} \
                    --ref-first \
-                   --sample {input.sample} \
                    --phenoFile {input.phenotype} \
                    --covarFile {input.covar} \
                    --pThresh 0.01 \
                    --pred {input.pred_list} \
                    --bsize 400 \
-		   --threads {threads} \
+		   --threads 8\
                    --out {params.regenie_prefix}
 	      """
