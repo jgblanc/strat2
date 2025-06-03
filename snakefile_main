@@ -1,7 +1,7 @@
 # Snakefile to run main pipeline
-CHR = ["22"]
-#for i in range(1, 23):
-#  CHR.append(str(i))
+CHR = []
+for i in range(1, 23):
+  CHR.append(str(i))
 GWAS= ["WBS-R"]
 DATASET = ["InUKBB"]
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
@@ -21,7 +21,8 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Alkaline_Phosphate.regenie", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR)
+        expand("data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_Alkaline_Phosphate.regenie", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR),
+	expand("data/step2-results/{gwas}/{covars}/LR/raw/chr{chr}_Alkaline_Phosphate.regenie", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR)
 
 
 ##### Calculate H #####
