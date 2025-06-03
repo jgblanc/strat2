@@ -40,10 +40,10 @@ rule clump_regenie_results:
 	--clump {input.ss} \
 	--clump-p1 0.05 \
         --clump-r2 0.1 \
+	--clump-p2 0.05 \
         --clump-kb 1000 \
 	--clump-log10 \
 	--clump-p-field LOG10P \
-	--clump-report-only index \
 	--threads 8 \
 	--memory 38000 \
 	--extract {input.SNPs} \
