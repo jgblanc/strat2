@@ -16,9 +16,20 @@ rule all:
 
 ## Clump Regenie Results
 
+rule format_regenie_results:
+    input:
+        ss="data/step2-results/{gwas}/{covars}/{gtype}/raw/chr{chr}_{phenotype}.regenie",
+    output:
+        "data/step2-results/{gwas}/{covars}/{gtype}/formatted/{phenotype}_chr{chr}.regenie"
+    shell:
+        """
+        awk 'NR==1 || $13 >= 1.30103' {input.ss} > {output}
+	      """
+
+
 rule clump_regenie_results:
     input:
-        ss="data/step2-results/{gwas}/{covars}/LMM/raw/chr{chr}_{phenotype}.regenie",
+        ss="data/step2-results/{gwas}/{covars}/LMM/formatted/chr{chr}_{phenotype}.regenie",
         pvar = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
         psam = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
         pgen = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen",
