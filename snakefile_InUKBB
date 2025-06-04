@@ -12,7 +12,7 @@ THRESHOLD = ["loose", "strict"]
 
 rule all:
     input:
-        expand("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE)
+        expand("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
 
 
 ## Clump Regenie Results
@@ -24,14 +24,14 @@ rule format_regenie_results_loose:
         "data/step2-results/{gwas}/{covars}/{gtype}/formatted/loose/chr{chr}_{phenotype}.regenie"
     shell:
         """
-        awk 'NR==1 || $13 >= 1.30103' {input.ss} > {output}
+        awk 'NR==1 || $13 >= 2.30103' {input.ss} > {output}
 	      """
 
 rule format_regenie_results_strict:
     input:
         ss="data/step2-results/{gwas}/{covars}/{gtype}/raw/chr{chr}_{phenotype}.regenie",
     output:
-        "data/step2-results/{gwas}/{covars}/{gtype}/formatted/strict/chr{chr}_{phenotype}.regenie"
+        temp("data/step2-results/{gwas}/{covars}/{gtype}/formatted/strict/chr{chr}_{phenotype}.regenie")
     shell:
         """
         awk 'NR==1 || $13 >= 7.30103' {input.ss} > {output}
@@ -39,7 +39,7 @@ rule format_regenie_results_strict:
 
 rule clump_regenie_results:
     input:
-        ss="data/step2-results/{gwas}/{covars}/LMM/formatted/{threshold}/chr{chr}_{phenotype}.regenie",
+        ss="data/step2-results/{gwas}/{covars}/{gtype}/formatted/{threshold}/chr{chr}_{phenotype}.regenie",
         pvar = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pvar",
         psam = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam",
         pgen = "/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.pgen",
