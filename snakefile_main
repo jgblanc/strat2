@@ -2,12 +2,12 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-GWAS= ["WBS-R"]
+GWAS= ["ALL-R", "ALL", "WBS"]
 DATASET = ["InUKBB"]
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 #CONTRASTS = ["nfe-afr"]
-COVARS = ["pcs"]
+COVARS = ["pcs","nopcs"]
 PHENO = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Coun", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 
 

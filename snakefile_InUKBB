@@ -20,7 +20,7 @@ rule format_regenie_results:
     input:
         ss="data/step2-results/{gwas}/{covars}/{gtype}/raw/chr{chr}_{phenotype}.regenie",
     output:
-        "data/step2-results/{gwas}/{covars}/{gtype}/formatted/{phenotype}_chr{chr}.regenie"
+        "data/step2-results/{gwas}/{covars}/{gtype}/formatted/chr{chr}_{phenotype}.regenie"
     shell:
         """
         awk 'NR==1 || $13 >= 1.30103' {input.ss} > {output}
