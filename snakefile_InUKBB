@@ -46,7 +46,7 @@ rule clump_regenie_results:
         IDs = "data/ids/gwas_ids/{gwas}.txt",
         SNPs = "data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt"
     output:
-        "data/step2-results/InUKBB/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps"
+        "data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
         out_prefix="data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}"
@@ -69,6 +69,7 @@ rule clump_regenie_results:
 	--memory 38000 \
 	--extract {input.SNPs} \
         --out {params.out_prefix}
+	touch {output}
 	"""
 
 rule combine_clumps:
@@ -78,7 +79,7 @@ rule combine_clumps:
         "data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{phenotype}.snps"
     shell:
         """
-        awk 'FNR==1 && NR!=1 { next } { print $1, $2, $3, $4 }' OFS='\t' {input} > {output}
+        awk 'FNR==1 && NR!=1 {{ next }} {{ print $1, $2, $3, $4 }}' OFS='\\t' {input} > {output}
         """
 
 
