@@ -1,18 +1,18 @@
 # Snakefile to do the pre-data processing for the Test Example
-CHR =["22"]
-#for i in range(1, 23):
-#  CHR.append(str(i))
+CHR =[]
+for i in range(1, 23):
+  CHR.append(str(i))
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 GWAS=["WBS-R"]
-COVARS = ["pcs", "nopcs"]
+COVARS = ["pcs"]
 #PHENO = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Coun", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 PHENOTYPE = ["Alkaline_Phosphate"]
-GTYPE = ["LMM", "LR"]
-THRESHOLD = ["loose", "strict"]
+GTYPE = ["LR"]
+THRESHOLD = ["strict"]
 
 rule all:
     input:
-        expand("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
+        expand("data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{phenotype}.snps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
 
 
 ## Clump Regenie Results
@@ -31,7 +31,7 @@ rule format_regenie_results_strict:
     input:
         ss="data/step2-results/{gwas}/{covars}/{gtype}/raw/chr{chr}_{phenotype}.regenie",
     output:
-        temp("data/step2-results/{gwas}/{covars}/{gtype}/formatted/strict/chr{chr}_{phenotype}.regenie")
+        "data/step2-results/{gwas}/{covars}/{gtype}/formatted/strict/chr{chr}_{phenotype}.regenie"
     shell:
         """
         awk 'NR==1 || $13 >= 7.30103' {input.ss} > {output}
@@ -46,7 +46,7 @@ rule clump_regenie_results:
         IDs = "data/ids/gwas_ids/{gwas}.txt",
         SNPs = "data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt"
     output:
-        "data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps"
+        "data/step2-results/InUKBB/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps"
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
         out_prefix="data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}"
@@ -70,6 +70,26 @@ rule clump_regenie_results:
 	--extract {input.SNPs} \
         --out {params.out_prefix}
 	"""
+
+rule combine_clumps:
+    input:
+        expand("data/step2-results/{{gwas}}/{{covars}}/{{gtype}}/clumped/{{threshold}}/{{phenotype}}_chr{chr}.clumps", chr=CHR)
+    output:
+        "data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{phenotype}.snps"
+    shell:
+        """
+        awk 'FNR==1 && NR!=1 { next } { print $1, $2, $3, $4 }' OFS='\t' {input} > {output}
+        """
+
+
+
+
+
+
+
+
+
+
 
 #rule format_regenie_results:
 #    input:
