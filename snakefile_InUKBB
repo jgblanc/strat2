@@ -6,7 +6,7 @@ CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Sc
 GWAS=["WBS-R"]
 COVARS = ["pcs"]
 #PHENO = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Coun", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
-PHENOTYPE = ["Alkaline_Phosphate"]
+PHENOTYPE = ["Standing_Height"]
 GTYPE = ["LR"]
 THRESHOLD = ["strict"]
 
@@ -21,7 +21,7 @@ rule format_regenie_results_loose:
     input:
         ss="data/step2-results/{gwas}/{covars}/{gtype}/raw/chr{chr}_{phenotype}.regenie",
     output:
-        "data/step2-results/{gwas}/{covars}/{gtype}/formatted/loose/chr{chr}_{phenotype}.regenie"
+        temp("data/step2-results/{gwas}/{covars}/{gtype}/formatted/loose/chr{chr}_{phenotype}.regenie")
     shell:
         """
         awk 'NR==1 || $13 >= 2.30103' {input.ss} > {output}
@@ -31,7 +31,7 @@ rule format_regenie_results_strict:
     input:
         ss="data/step2-results/{gwas}/{covars}/{gtype}/raw/chr{chr}_{phenotype}.regenie",
     output:
-        "data/step2-results/{gwas}/{covars}/{gtype}/formatted/strict/chr{chr}_{phenotype}.regenie"
+        temp("data/step2-results/{gwas}/{covars}/{gtype}/formatted/strict/chr{chr}_{phenotype}.regenie")
     shell:
         """
         awk 'NR==1 || $13 >= 7.30103' {input.ss} > {output}
@@ -46,7 +46,7 @@ rule clump_regenie_results:
         IDs = "data/ids/gwas_ids/{gwas}.txt",
         SNPs = "data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt"
     output:
-        "data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps"
+        temp("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps")
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
         out_prefix="data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}"
@@ -78,7 +78,7 @@ rule combine_clumps_betas:
         clumps = "data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps",
         betas = "data/step2-results/{gwas}/{covars}/{gtype}/formatted/strict/chr{chr}_{phenotype}.regenie"
     output:
-        "data/step2-results/{gwas}/{covars}/{gtype}/betas/{threshold}/{phenotype}_chr{chr}.betas"
+        temp("data/step2-results/{gwas}/{covars}/{gtype}/betas/{threshold}/{phenotype}_chr{chr}.betas")
     shell:
         """
         Rscript code/run_gwas/format_clumps.R {input.clumps} {input.betas} {output}
