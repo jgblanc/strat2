@@ -12,7 +12,7 @@ THRESHOLD = ["strict"]
 
 rule all:
     input:
-        expand("data/step2-results/{gwas}/{covars}/{gtype}/betas/{threshold}/{phenotype}_chr{chr}.betas", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
+        expand("data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{phenotype}.snps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
 
 
 ## Clump Regenie Results
@@ -82,19 +82,18 @@ rule combine_clumps_betas:
     shell:
         """
         Rscript code/run_gwas/format_clumps.R {input.clumps} {input.betas} {output}
+	touch {output}
 	"""
 
-
-
-#rule combine_clumps:
-#    input:
-#        expand("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.betas", chr=CHR)
-#    output:
-#        "data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{phenotype}.snps"
-#    shell:
-#        """
-#        awk 'FNR==1 && NR!=1 {{ next }} {{ print $1, $2, $3, $4 }}' OFS='\\t' {input} > {output}
-#        """
+rule combine_clumps:
+    input:
+        expand("data/step2-results/{{gwas}}/{{covars}}/{{gtype}}/betas/{{threshold}}/{{phenotype}}_chr{chr}.betas", chr=CHR)
+    output:
+        "data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{phenotype}.snps"
+    shell:
+        """
+        awk 'FNR == 1 && NR != 1 {{ next }} {{ print }}' {input} > {output}
+        """
 
 
 
