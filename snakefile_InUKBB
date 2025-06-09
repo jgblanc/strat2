@@ -4,11 +4,11 @@ for i in range(1, 23):
   CHR.append(str(i))
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 GWAS=["WBS-R"]
-COVARS = ["pcs"]
-#PHENO = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Coun", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
-PHENOTYPE = ["Standing_Height"]
-GTYPE = ["LR"]
-THRESHOLD = ["strict"]
+COVARS = ["pcs", "nopcs"]
+PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
+#PHENOTYPE = ["Standing_Height"]
+GTYPE = ["LR", "LMM"]
+THRESHOLD = ["strict", "loose"]
 
 rule all:
     input:

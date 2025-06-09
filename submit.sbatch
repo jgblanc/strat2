@@ -6,7 +6,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem-per-cpu=40000
-#SBATCH --partition=tier2q
+#SBATCH --partition=tier1q
 
 module load gcc/12.1.0
 module load python/3.10.5
@@ -18,6 +18,6 @@ module load regenie
 
 echo "SLURM_JOBID="$SLURM_JOBID
 rm -r .snakemake/
-cat snakefile_main
-snakemake --unlock -s snakefile_main
-snakemake --profile cluster-setup/ -s snakefile_main --rerun-incomplete
+cat snakefile_InUKBB
+snakemake --unlock -s snakefile_InUKBB
+snakemake --profile cluster-setup/ -s snakefile_InUKBB --rerun-incomplete
