@@ -27,7 +27,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
+        expand("output/pga_test/{dataset}/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.results", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
 
 
 
@@ -522,16 +522,15 @@ rule block_snps_for_q:
         """
 
 
-#rule pga_test:
-#    input:
-#        betas="data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.snps",
-#        r = "data/{dataset}/r/{gwas}/{contrasts}_chr{chr}.rvec",
-#        block =
-#    output:
-#        results="output/pga_test/{dataset}/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.results"
-#    shell:
-#        """
-#        Rscript code/pga_test/run_test_jacknife_LR.R {input} {output.results}
-#        """
+rule pga_test:
+    input:
+        betas="data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.snps",
+        r = "data/{dataset}/r/{gwas}/{contrasts}_chr{chr}.rvec",
+    output:
+        results="output/pga_test/{dataset}/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.results"
+    shell:
+        """
+        Rscript code/pga_test/run_test_jacknife_LR.R {input.betas} {input.r} {output.results}
+        """
 
 

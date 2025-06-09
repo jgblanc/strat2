@@ -9,14 +9,21 @@ suppressWarnings(suppressMessages({
   library(tidyverse)
 }))
 
-infile=args[1]
-outfile = args[2]
+infile_ss=args[1]
+infile_rvec=args[2]
+outfile = args[3]
 
 
-# Read in
-df <- fread(infile)
-colnames(df) <- c("CHR", "ID", "POS", "REF", "ALT", "r", "BETA","block", "P")
-df <- df %>% drop_na()
+# Read in betas
+dfBeta <- fread(infile_ss)
+
+# Read in rs
+dfR <- fread(infile_rvec)
+
+# Combine files
+df <- inner_join(dfBeta,dfR)
+print(head(df))
+print(nrow(df))
 
 # Function to calculate \hat{q}
 calc_q <- function(df) {
@@ -69,22 +76,20 @@ main <- function(df) {
   # Divide q by var
   q <- calc_q(df) / sqrt(sigma2)
   print(q)
-  
+
   x <- c(q, pval)
   print(x)
-  
+
   return(x)
 }
 
 
 # Set up output table
-out <- as.data.frame(matrix(nrow = 1, ncol =5))
-colnames(out) <- c("q", "pval", "q_NoSign", "pval_NoSign", "nsnp")
+out <- as.data.frame(matrix(nrow = 1, ncol =3))
+colnames(out) <- c("q", "pval", "nsnp")
 out[1,1:2] <- main(df)
-df$BETA <- sign(df$BETA)
-out[1,3:4] <- main(df)
-out[1,5] <- nrow(df)
-
+out[1,3] <- nrow(df)
+print(out)
 
 # Save output
 fwrite(out, outfile,col.names=T,row.names=F,quote=F,sep="\t")
