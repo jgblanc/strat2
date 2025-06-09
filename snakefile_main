@@ -14,7 +14,8 @@ GWAS = ["WBS-R"]
 CONTRASTS = ["England-NorthernIreland"]
 COVARS = ["pcs"]
 PHENOTYPE = ["Alkaline_Phosphate"]
-
+GTYPE = ["LR"]
+THRESHOLD = ["strict"]
 
 def get_chr_range(x):
   if x == "1":
@@ -26,7 +27,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR),
+        expand("data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
 
 
 
@@ -511,7 +512,7 @@ rule run_step_two_LMM:
 
 rule block_snps_for_q:
     input:
-        snps="ata/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.snps",
+        snps="data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.snps",
         blocks="data/LD_blocks/big_blocks.bed"
     output:
         "data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps"
