@@ -8,7 +8,7 @@ COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 #PHENOTYPE = ["Standing_Height"]
 GTYPE = ["LR", "LMM"]
-THRESHOLD = ["strict", "loose"]
+THRESHOLD = ["loose"]
 
 rule all:
     input:
@@ -46,7 +46,9 @@ rule clump_regenie_results:
         IDs = "data/ids/gwas_ids/{gwas}.txt",
         SNPs = "data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt"
     output:
-        temp("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps")
+        temp("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps"),
+	temp("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps.missing_id"),
+	temp("data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.log")
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3",
         out_prefix="data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}"
@@ -76,7 +78,7 @@ rule clump_regenie_results:
 rule combine_clumps_betas:
     input:
         clumps = "data/step2-results/{gwas}/{covars}/{gtype}/clumped/{threshold}/{phenotype}_chr{chr}.clumps",
-        betas = "data/step2-results/{gwas}/{covars}/{gtype}/formatted/strict/chr{chr}_{phenotype}.regenie"
+        betas = "data/step2-results/{gwas}/{covars}/{gtype}/formatted/{threshold}/chr{chr}_{phenotype}.regenie"
     output:
         temp("data/step2-results/{gwas}/{covars}/{gtype}/betas/{threshold}/{phenotype}_chr{chr}.betas")
     shell:
