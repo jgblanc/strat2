@@ -19,12 +19,12 @@ dfBeta <- fread(infile_ss)
 nChr = length(args) - 2
 print(nChr)
 dfR <- fread(args[3])
-for (i in 1:nChr) {
-  tmp <- fread(args[3+i])
+for (i in 1:(nChr-1)) {
+  idx <- 3+i  
+  tmp <- fread(args[idx])
   dfR <- rbind(dfR, tmp)
 }
-print(head(dfR))
-print(tail(dfR))
+
 
 # Combine files
 df <- inner_join(dfBeta,dfR)
