@@ -10,15 +10,21 @@ suppressWarnings(suppressMessages({
 }))
 
 infile_ss=args[1]
-infile_rvec=args[2]
-outfile = args[3]
-
+outfile=args[2]
 
 # Read in betas
 dfBeta <- fread(infile_ss)
 
 # Read in rs
-dfR <- fread(infile_rvec)
+nChr = length(args) - 2
+print(nChr)
+dfR <- fread(args[3])
+for (i in 1:nChr) {
+  tmp <- fread(args[3+i])
+  dfR <- rbind(dfR, tmp)
+}
+print(head(dfR))
+print(tail(dfR))
 
 # Combine files
 df <- inner_join(dfBeta,dfR)
