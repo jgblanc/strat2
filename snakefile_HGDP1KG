@@ -5,22 +5,22 @@ for i in range(1, 23):
 CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 SUBDATASET = ["eurasia", "all", "nfe", "nfe_no_ceu"]
 GWAS=["WBS"]
-COVARS = ["pcs"]
-#PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
-PHENOTYPE = ["Alkaline_Phosphate"]
-GTYPE = ["LR"]
-THRESHOLD = ["strict"]
+COVARS = ["pcs", "nopcs"]
+PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
+#PHENOTYPE = ["Alkaline_Phosphate"]
+GTYPE = ["LR","LMM"]
+THRESHOLD = ["strict", "loose"]
 
 ## Wildcard constraints
 wildcard_constraints:
   constrasts="^[a-zA-Z]{3}-[a-zA-Z]{3}$",
-  subdataset="^(?!.*-).*$|^nfe_no_ceu$",
+ #subdataset="^(?!.*-).*$|^nfe_no_ceu$"
 
 
 rule all:
     input:
-        expand("data/HGDP1KG/prs/{gwas}/{subdataset}/{covars}/{gtype}/{threshold}/{phenotype}.snps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, nsnp=NSNP, phenotype=PHENOTYPE, covar=COVAR, pc=PC)
-
+        expand("data/HGDP1KG/prs/{gwas}/{subdataset}/{covars}/{gtype}/{threshold}/{phenotype}.snps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
+localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps
 
 ## Clump Regenie Results
 

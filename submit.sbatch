@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=main
-#SBATCH --output=logs/main.out
-#SBATCH --error=logs/main.err
+#SBATCH --job-name=HGDP
+#SBATCH --output=logs/HGDP.out
+#SBATCH --error=logs/HGDP.err
 #SBATCH --time=10:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
@@ -17,7 +17,7 @@ module load regenie
 #source ../myVilma/bin/activate 
 
 echo "SLURM_JOBID="$SLURM_JOBID
-rm -r .snakemake/
-cat snakefile_main
-snakemake --unlock -s snakefile_main
-snakemake --profile cluster-setup/ -s snakefile_main --rerun-incomplete
+#rm -r .snakemake/
+cat snakefile_HGDP1KG
+snakemake --unlock -s snakefile_HGDP1KG
+snakemake --profile cluster-setup/ -s snakefile_HGDP1KG --rerun-incomplete
