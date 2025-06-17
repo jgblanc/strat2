@@ -106,9 +106,28 @@ dfPlot$pc_type = factor(dfPlot$pc_type, levels=c("40 common","40 rare","40 commo
 ```
 
 ```{r}
-plH <- dfPlot %>% ggplot(aes(x = H, y = H * (1- Ratio), color = gwas)) + geom_point() + facet_wrap(~pc_type, ncol = 1) + scale_x_log10() + theme_bw() + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("GWAS"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL"))) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + guides(color = guide_legend(nrow = 1)) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)")) + ylab(TeX("fraction of signal captured by PCs ($V_{k}$)")) 
+plH <- dfPlot %>% ggplot(aes(x = H, y = Ratio, color = gwas)) + geom_point() + facet_wrap(~pc_type, ncol = 1) + scale_x_log10() + theme_bw() + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("GWAS"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL"))) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + guides(color = guide_legend(nrow = 1)) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)")) + ylab(TeX("fraction of signal captured by PCs ($V_{K}$)")) 
 plH
 ```
+
+### H' plot
+
+```{r}
+tmp1 <- fread("../plots/overlap_stats/H_HGDP1KG.txt")
+tmp2 <- fread("../plots/overlap_stats/H_InUKBB.txt")
+tmp <- rbind(tmp1, tmp2)
+avgL <- mean(tmp$L)
+minL <- min(tmp$L)
+maxL <- max(tmp$L)
+
+plHprime <- dfPlot %>% ggplot(aes(x = H, y = H * (1- Ratio), color = gwas)) + geom_point() + facet_wrap(~pc_type, ncol = 1) + scale_x_log10(breaks = c(1e-5,1e-4, 1e-3, 1e-2),limits = c(1e-5, 1.1e-2)) + theme_bw() + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("GWAS"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL"))) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + guides(color = guide_legend(nrow = 1)) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)")) + ylab(TeX("proportion of variance explained after correction ($\\hat{H}'$)")) + geom_hline(yintercept = 1/minL,color = "red", linetype = "dashed") + geom_hline(yintercept = 1/maxL, color = "red", linetype = "dashed") + scale_y_log10(breaks = c(1e-5,1e-4, 1e-3, 1e-2),limits = c(1e-6, 1e-2)) 
+plHprime
+
+ggsave("~/Desktop/Hprime.png", plHprime, height = 8, width = 8)
+```
+
+
+
 
 ### Summary bar plot 
 
@@ -150,7 +169,7 @@ plBar <- dfPlot  %>%
   legend.box.margin = margin(t = -10, unit = "pt"),     # Reduce space between plot and legend
   plot.margin = margin(t = 5, r = 5, b = 5, l = 5)       # Keep plot margins reasonable
 ) + 
-  ylab(TeX("fraction of signal captured by PCs ($V_{k}$)")) + 
+  ylab(TeX("fraction of signal captured by PCs ($V_{K}$)")) + 
   xlab("") + 
   scale_fill_manual(values = c( "#f68060", "slateblue2"), name = " ") + 
   geom_hline(yintercept = 1, color = "red", linetype = "dashed")
@@ -166,7 +185,7 @@ HGDP - continental
 dfPlot <- dfBoth %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
 
-plCont <- dfPlot %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1", "purple1", "darkorange", "skyblue2", "seagreen","seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("$V_{k}$"))  + 
+plCont <- dfPlot %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1", "purple1", "darkorange", "skyblue2", "seagreen","seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("$V_{K}$"))  + 
   scale_x_continuous(breaks = c(0,20,40,60,80), labels = c("0", "20", "40", "20", "40")) +
   geom_vline(xintercept = 40, color = "red", linetype = "solid")
 ```
@@ -176,7 +195,7 @@ HGDP - lat/long
 dfPlot <- df %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-long","eur-lat", "eur-long", "sdi-eur"))
 
-plLat <- dfPlot %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("$V_{k}$"))  + 
+plLat <- dfPlot %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("$V_{K}$"))  + 
   scale_x_continuous(breaks = c(0,20,40,60,80), labels = c("0", "20", "40", "20", "40")) +
   geom_vline(xintercept = 40, color = "red", linetype = "solid")
 ```
@@ -186,7 +205,7 @@ InUKBB
 dfPlot <- df %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
 
-plInUKBB <- dfPlot %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name = TeX("GWAS"), labels = c("WBS",expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), "ALL")) + theme( legend.position = "bottom", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("$V_{k}$")) +
+plInUKBB <- dfPlot %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name = TeX("GWAS"), labels = c("WBS",expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), "ALL")) + theme( legend.position = "bottom", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("$V_{K}$")) +
   guides(color = guide_legend(nrow = 1)) + ylim(0,1)  + 
   scale_x_continuous(breaks = c(0,20,40,60,80), labels = c("0", "20", "40", "20", "40")) +
   geom_vline(xintercept = 40, color = "red", linetype = "solid")

@@ -19,7 +19,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("data/HGDP1KG/prs/{gwas}/{subdataset}/{covars}/{gtype}/{threshold}/{phenotype}.snps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
+        expand("data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/eas-nfe/{phenotype}.snps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps,combine_clumps_betas
 
 ## Clump Regenie Results
@@ -102,6 +102,74 @@ rule combine_clumps:
         """
         awk 'FNR == 1 && NR != 1 {{ next }} {{ print }}' {input} > {output}
         """
+
+
+## Rename clumps
+
+rule rename_clumps_all:
+    input:
+        "data/HGDP1KG/prs/{gwas}/all/{covars}/{gtype}/{threshold}/{phenotype}.snps"
+    output:
+        p1="data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/eas-nfe/{phenotype}.snps",
+        p2="data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/eas-sas/{phenotype}.snps",
+        p3="data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/eas-afr/{phenotype}.snps",
+        p4="data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/eas-amr/{phenotype}.snps",
+        p5="data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/nfe-sas/{phenotype}.snps",
+        p6="data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/nfe-afr/{phenotype}.snps",
+        p7="data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/nfe-amr/{phenotype}.snps",
+        p8="data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/sas-afr/{phenotype}.snps",
+        p9="data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/sas-amr/{phenotype}.snps",
+        p10="data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/afr-amr/{phenotype}.snps",
+    shell:
+        """
+        cp {input} {output.p1}
+        cp {input} {output.p2}
+        cp {input} {output.p3}
+        cp {input} {output.p4}
+        cp {input} {output.p5}
+        cp {input} {output.p6}
+        cp {input} {output.p7}
+        cp {input} {output.p8}
+        cp {input} {output.p9}
+        cp {input} {output.p10}
+        """
+
+rule rename_clumps_sdi:
+    input:
+        "data/HGDP1KG/prs/{gwas}/nfe/{covars}/{gtype}/{threshold}/{phenotype}.snps"
+    output:
+        "data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/sdi-eur/{phenotype}.snps"
+    shell:
+        """
+        cp {input} {output}
+        """
+
+rule rename_clumps_eurasia:
+    input:
+        "data/HGDP1KG/prs/{gwas}/eurasia/{covars}/{gtype}/{threshold}/{phenotype}.snps"
+    output:
+        p1 = "data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/eurasia-lat/{phenotype}.snps",
+        p2 = "data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/eurasia-long/{phenotype}.snps"
+    shell:
+        """
+        cp {input} {output.p1}
+        cp {input} {output.p2}
+        """
+
+rule rename_clumps_eur:
+    input:
+        "data/HGDP1KG/prs/{gwas}/nfe_no_ceu/{covars}/{gtype}/{threshold}/{phenotype}.snps"
+    output:
+        p1 = "data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/eur-lat/{phenotype}.snps",
+        p2 = "data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/eur-long/{phenotype}.snps"
+    shell:
+        """
+        cp {input} {output.p1}
+        cp {input} {output.p2}
+        """
+
+
+
 
 ## Recode SNPs to match UKBB
 

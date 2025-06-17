@@ -151,7 +151,8 @@ HGDP - continental
 dfPlot <- df %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
 
-plCont <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = Signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{k}$)"))
+plCont <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{K}$)"))
+plCont
 ```
 
 HGDP - lat/long 
@@ -159,7 +160,7 @@ HGDP - lat/long
 dfPlot <- df %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-long","eur-lat", "eur-long", "sdi-eur"))
 
-plLat <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = Signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{k}$)"))
+plLat <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{K}$)"))
 ```
 
 InUKBB 
@@ -167,7 +168,7 @@ InUKBB
 dfPlot <- df %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
 
-plInUKBB <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = Signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("GWAS"),  labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL"))) + theme( legend.position = "bottom", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{k}$)")) + ylim(0,1) +
+plInUKBB <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("GWAS"),  labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL"))) + theme( legend.position = "bottom", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{K}$)")) + ylim(0,1) +
   guides(color = guide_legend(nrow = 1))
 ```
 
@@ -293,7 +294,7 @@ HGDP - continental
 dfPlot <- df %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
 
-plCont <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = Signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1", "purple1", "darkorange", "skyblue2", "seagreen",  "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{k}$)"))
+plCont <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1", "purple1", "darkorange", "skyblue2", "seagreen",  "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{K}$)"))
 ```
 
 HGDP - lat/long 
@@ -301,7 +302,7 @@ HGDP - lat/long
 dfPlot <- df %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-long","eur-lat", "eur-long", "sdi-eur"))
 
-plLat <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = Signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen",  "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{k}$)"))
+plLat <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen",  "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{K}$)"))
 ```
 
 InUKBB 
@@ -309,7 +310,7 @@ InUKBB
 dfPlot <- df %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
 
-plInUKBB <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = Signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen",  "seagreen1"), name= TeX("GWAS"),  labels = c("WBS", expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), "ALL"))+ theme( legend.position = "bottom", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{k}$)")) + ylim(0,1) +
+plInUKBB <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = R2, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(aes(yintercept = signal, color = gwas), linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen",  "seagreen1"), name= TeX("GWAS"),  labels = c("WBS", expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), "ALL"))+ theme( legend.position = "bottom", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Variance captured by PCs ($R^2_{K}$)")) + ylim(0,1) +
   guides(color = guide_legend(nrow = 1))
 
 plInUKBB
@@ -344,7 +345,7 @@ HGDP - continental
 dfPlot <- df %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
 
-plCont <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Fraction of signal captured by PCs ($V_{k}$)")) 
+plCont <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Fraction of signal captured by PCs ($V_{K}$)")) 
 #+ geom_errorbar(aes(x = PC, ymin = lc, ymax = uc), width = 0.6)
 ```
 
@@ -353,7 +354,7 @@ HGDP - lat/long
 dfPlot <- df %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-long","eur-lat", "eur-long", "sdi-eur"))
 
-plLat <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Fraction of signal by captured PCs ($V_{k}$)"))
+plLat <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Fraction of signal by captured PCs ($V_{K}$)"))
 #+ geom_errorbar(aes(x = PC, ymin = lc, ymax = uc), width = 0.6)
 ```
 
@@ -362,7 +363,7 @@ InUKBB
 dfPlot <- df %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
 
-plInUKBB <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("GWAS"), labels = c("WBS",expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), "ALL")) + theme( legend.position = "bottom", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Fraction of signal captured by PCs ($V_{k}$)")) +
+plInUKBB <- dfPlot %>% filter(PC <= 40) %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("GWAS"), labels = c("WBS",expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), "ALL")) + theme( legend.position = "bottom", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("Fraction of signal captured by PCs ($V_{K}$)")) +
   guides(color = guide_legend(nrow = 1)) + ylim(0,1) 
 #+ geom_errorbar(aes(x = PC, ymin = lc, ymax = uc), width = 0.6)
 ```

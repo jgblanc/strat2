@@ -1,0 +1,66 @@
+---
+title: "QPlot"
+output: html_document
+date: "2025-06-11"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(data.table)
+library(tidyverse)
+library(latex2exp)
+library("gridExtra")
+library(grid)
+library(scales)
+library(ggtext)
+```
+
+
+## CoB in WBS 
+
+```{r}
+df <- fread("../plots/pga_test/InUKBB/WBS-R/q_results.txt")
+tmp2 <- fread("../plots/overlap_stats/H_InUKBB.txt")
+tmp3 <- fread("../plots/error/common_rare_R2EO_InUKBB.txt") %>% mutate(type = "CoB") %>% filter(PC == 80) %>% select(contrasts, Ratio, gwas)
+
+df <- left_join(df, tmp2) %>% mutate(adjuP = p.adjust(pval)) %>% mutate(sigP = case_when(adjuP < 0.05  ~ TRUE, adjuP >= 0.05 ~ F))
+df <- left_join(df, tmp3)
+```
+
+
+### Q^2 vs H
+
+Strict threshold
+```{r}
+df %>% filter(threshold == "strict") %>% ggplot(aes(x = H, y = q^2, color = sigP)) + geom_point() + facet_grid(vars(covar), vars(gtype)) + scale_x_log10() + ggtitle("Strict Threshold")
+```
+
+Loose threshold
+```{r}
+df %>% filter(threshold == "loose") %>% ggplot(aes(x = H, y = q^2, color = sigP)) + geom_point() + facet_grid(vars(covar), vars(gtype)) + scale_x_log10() + ggtitle("Loose Threshold")
+```
+
+
+### Q^2 vs Number of SNPs 
+
+Strict threshold
+```{r}
+df %>% filter(threshold == "strict") %>% ggplot(aes(x = nsnp, y = q^2, color = sigP)) + geom_point() + facet_grid(vars(covar), vars(gtype)) + ggtitle("Strict Threshold")
+```
+
+Loose threshold
+```{r}
+df %>% filter(threshold == "loose") %>% ggplot(aes(x = nsnp, y = q^2, color = sigP)) + geom_point() + facet_grid(vars(covar), vars(gtype)) + ggtitle("Loose Threshold")
+```
+
+### Q^2 vs H'
+
+Strict threshold
+```{r}
+df %>% filter(threshold == "strict") %>% ggplot(aes(x = (1-Ratio) * H, y = q^2, color = sigP)) + geom_point() + facet_grid(vars(covar), vars(gtype)) + ggtitle("Strict Threshold") + xlab("H'")
+```
+
+Loose threshold
+```{r}
+df %>% filter(threshold == "loose") %>% ggplot(aes(x = (1-Ratio) * H, y = q^2, color = sigP)) + geom_point() + facet_grid(vars(covar), vars(gtype)) + ggtitle("Loose Threshold") + xlab("H'")
+```
