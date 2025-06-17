@@ -10,12 +10,11 @@ for i in range(1, 23):
 #PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Coun", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 
 DATASET = ["InUKBB"]
-GWAS = ["WBS-R"]
+GWAS = ["ALL-R"]
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOf\
 Irelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 COVARS = ["pcs", "nopcs"]
-PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count\
-", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
+PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 GTYPE = ["LR", "LMM"]
 THRESHOLD = ["strict", "loose"]
 
@@ -31,7 +30,7 @@ rule all:
     input:
         expand("plots/pga_test/{dataset}/{gwas}/q_results.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
 
-
+localrules: pga_test, concat_pga_test
 
 ##### Calculate H #####
 

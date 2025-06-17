@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=InUKBB
-#SBATCH --output=logs/InUKBB.out
-#SBATCH --error=logs/InUKBB.err
-#SBATCH --time=16:00:00
+#SBATCH --job-name=HGDP1KG2
+#SBATCH --output=logs/HGDP1KG2.out
+#SBATCH --error=logs/HGDP1KG2.err
+#SBATCH --time=10:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem-per-cpu=40000
@@ -18,6 +18,6 @@ module load regenie
 
 echo "SLURM_JOBID="$SLURM_JOBID
 #rm -r .snakemake/
-cat snakefile_InUKBB
-snakemake --unlock -s snakefile_InUKBB
-snakemake --profile cluster-setup2/ -s snakefile_InUKBB --rerun-incomplete
+cat snakefile_HGDP1KG2
+snakemake --unlock -s snakefile_HGDP1KG2
+snakemake --profile cluster-setup2/ -s snakefile_HGDP1KG2 --rerun-incomplete
