@@ -9,7 +9,7 @@ for i in range(1, 23):
 DATASET = ["HGDP1KG"]
 GWAS = ["WBS"]
 COVARS = ["pcs", "nopcs"]
-
+CONTRASTS = ["eurasia-lat"]
 PHENOTYPE = ["Standing_Height"]
 GTYPE = ["LMM"]
 THRESHOLD = ["strict"]
@@ -31,6 +31,44 @@ rule all:
         expand("data/{dataset}/prs_resampled/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
 
 localrules: concat_pga_test
+
+
+
+rule resample_snps_for_q:
+    input:
+        target_snps = "data/{dataset}/prs/{gwas}/pcs/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps",
+        regenie_files = expand(
+            "data/step2-results/{{gwas}}/{{covars}}/{{gtype}}/raw/chr{chr}_{{phenotype}}.regenie",
+            chr=CHR
+        )
+    output:
+        "data/{dataset}/prs_resampled/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps"
+    shell:
+        r"""
+        awk '
+        BEGIN {{
+            FS = OFS = "\t"
+            target_file = ARGV[ARGC-1]
+        }}
+        FILENAME != target_file {{
+            if (FNR == 1) next  # skip header line in regenie files
+            beta[$3] = $10
+            next
+        }}
+        FILENAME == target_file {{
+            if (FNR == 1) {{
+                print
+                next
+            }}
+            id = $2
+            if (id in beta) {{
+                $5 = beta[id]
+            }}
+            print
+        }}
+        ' {input.regenie_files} {input.target_snps} > {output}
+        """
+	
 
 ##### Calculate H #####
 
@@ -511,71 +549,41 @@ rule run_step_two_LMM:
 ##### Calc Q ########
 
 
-rule block_snps_for_q:
-    input:
-        snps="data/{dataset}/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.snps",
-        blocks="data/LD_blocks/big_blocks.bed"
-    output:
-        "data/{dataset}/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps"
-    resources:
-        time="02:00:00"
-    shell:
-        """
-        Rscript code/blocks/add_block_info_gwas.R {input.snps} {input.blocks} {output}
-        """
+#rule block_snps_for_q:
+#    input:
+#        snps="data/{dataset}/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.snps",
+#        blocks="data/LD_blocks/big_blocks.bed"
+#    output:
+#        "data/{dataset}/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps"
+#    resources:
+#        time="02:00:00"
+#    shell:
+#        """
+#        Rscript code/blocks/add_block_info_gwas.R {input.snps} {input.blocks} {output}
+#        """
 
-rule pga_test:
-    input:
-        betas="data/{dataset}/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps",
-        r = expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr =CHR),
-    output:
-        results="output/pga_test/{dataset}/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.results"
-    shell:
-        """
-        Rscript code/pga_test/run_test_jacknife.R {input.betas} {output.results} {input.r}
-        """
+#rule pga_test:
+#    input:
+#        betas="data/{dataset}/prs/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps",
+#        r = expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr =CHR),
+#    output:
+#        results="output/pga_test/{dataset}/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.results"
+#    shell:
+#        """
+#        Rscript code/pga_test/run_test_jacknife.R {input.betas} {output.results} {input.r}
+#        """
 
-rule concat_pga_test:
-    input:
-        expand("output/pga_test/{{dataset}}/{{gwas}}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.results", covars=COVARS, gtype=GTYPE, threshold=THRESHOLD, phenotype=PHENOTYPE, contrasts=CONTRASTS)
-    output:
-        "plots/pga_test/{dataset}/{gwas}/q_results.txt"
-    shell:
-        """
-        Rscript code/summarize/concat_q.R {output} {input}
-	      """
+#rule concat_pga_test:
+#    input:
+#        expand("output/pga_test/{{dataset}}/{{gwas}}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.results", covars=COVARS, gtype=GTYPE, threshold=THRESHOLD, phenotype=PHENOTYPE, contrasts=CONTRASTS)
+#    output:
+#        "plots/pga_test/{dataset}/{gwas}/q_results.txt"
+#    shell:
+#        """
+#        Rscript code/summarize/concat_q.R {output} {input}
+#	      """
 
 
 ##### Downsampling to ascertained SNPs ########
-
-
-rule resample_snps_for_q:
-    input:
-        target_snps = "data/{dataset}/prs/{gwas}/pcs/{gtype}/{gtype}/{contrasts}/{phenotype}_block.snps",
-        regenie_files = expand(
-            "data/step2-results/{{gwas}}/{{covars}}/{{gtype}}/raw/chr{chr}_{{phenotype}}.regenie",
-            chr=CHR
-        )
-    output:
-        "data/{dataset}/prs_resampled/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps"
-    shell:
-        """
-        awk '
-        BEGIN {{ FS=OFS="\\t" }}
-        FNR == 1 {{ next }}  # skip header line in regenie files
-        {{ beta[$3] = $10 }}
-        END {{
-            while ((getline line < "{input.target_snps}") > 0) {{
-                if (NR == 1) {{ print line; next }}  # keep the header
-                split(line, fields, "\\t")
-                id = fields[2]
-                if (id in beta) {{
-                    fields[5] = beta[id]
-                }}
-                print fields[1], fields[2], fields[3], fields[4], fields[5], fields[6]
-            }}
-        }}
-        ' {input.regenie_files} > {output}
-        """
 
 
