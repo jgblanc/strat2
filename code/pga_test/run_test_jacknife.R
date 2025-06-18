@@ -28,17 +28,16 @@ for (i in 1:(nChr-1)) {
 
 # Combine files
 df <- inner_join(dfBeta,dfR)
-print(head(df))
-print(nrow(df))
+df[is.na(df)] <- 0
 
 # Function to calculate \hat{q}
 calc_q <- function(df) {
 
   B <-df$BETA
   r <- df$r
-
   # compute q
   q <- t(B) %*%  r
+
   return(q)
 }
 

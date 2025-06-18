@@ -29,7 +29,7 @@ rule all:
     input:
         expand("plots/pga_test/{dataset}/{gwas}/q_results.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
 
-localrules: pga_test, concat_pga_test
+localrules: concat_pga_test
 
 ##### Calculate H #####
 

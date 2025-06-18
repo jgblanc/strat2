@@ -79,16 +79,16 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.94541574221788	0.0517249615953227	1010	HGDP1KG	WBS	eur-lat	pcs	LR	strict	Eosinophill_Percentage
 -0.646135752063924	0.518191443354342	1010	HGDP1KG	WBS	eur-long	pcs	LR	strict	Eosinophill_Percentage
 -1.51776429221797	0.129073829807359	1016	HGDP1KG	WBS	sdi-eur	pcs	LR	strict	Eosinophill_Percentage
-		949	HGDP1KG	WBS	eas-nfe	pcs	LR	strict	Eosinophill_Percentage
+-0.416916646157197	0.6767393773671	949	HGDP1KG	WBS	eas-nfe	pcs	LR	strict	Eosinophill_Percentage
 -0.447738905062139	0.65434164029202	949	HGDP1KG	WBS	eas-sas	pcs	LR	strict	Eosinophill_Percentage
-		949	HGDP1KG	WBS	eas-afr	pcs	LR	strict	Eosinophill_Percentage
+0.816188707086845	0.414392214693492	949	HGDP1KG	WBS	eas-afr	pcs	LR	strict	Eosinophill_Percentage
 -1.18500068613782	0.236017175621352	949	HGDP1KG	WBS	eas-amr	pcs	LR	strict	Eosinophill_Percentage
-		949	HGDP1KG	WBS	nfe-sas	pcs	LR	strict	Eosinophill_Percentage
-		949	HGDP1KG	WBS	nfe-afr	pcs	LR	strict	Eosinophill_Percentage
-		949	HGDP1KG	WBS	nfe-amr	pcs	LR	strict	Eosinophill_Percentage
-		949	HGDP1KG	WBS	sas-afr	pcs	LR	strict	Eosinophill_Percentage
+0.163788259323463	0.869897834561894	949	HGDP1KG	WBS	nfe-sas	pcs	LR	strict	Eosinophill_Percentage
+1.14739380837091	0.251218899006603	949	HGDP1KG	WBS	nfe-afr	pcs	LR	strict	Eosinophill_Percentage
+-0.740757864502056	0.458840267360696	949	HGDP1KG	WBS	nfe-amr	pcs	LR	strict	Eosinophill_Percentage
+1.31996808138943	0.186845675008295	949	HGDP1KG	WBS	sas-afr	pcs	LR	strict	Eosinophill_Percentage
 -1.06696267371448	0.285988691522691	949	HGDP1KG	WBS	sas-amr	pcs	LR	strict	Eosinophill_Percentage
-		949	HGDP1KG	WBS	afr-amr	pcs	LR	strict	Eosinophill_Percentage
+-1.66594521133545	0.0957243274880499	949	HGDP1KG	WBS	afr-amr	pcs	LR	strict	Eosinophill_Percentage
 -1.46973941317786	0.141632343826526	76	HGDP1KG	WBS	eurasia-lat	pcs	LR	strict	Glucose
 0.609760215113706	0.54202065973062	76	HGDP1KG	WBS	eurasia-long	pcs	LR	strict	Glucose
 -0.87271859679528	0.382816478734776	80	HGDP1KG	WBS	eur-lat	pcs	LR	strict	Glucose
@@ -183,7 +183,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.457992223557924	0.646958028183316	1709	HGDP1KG	WBS	eurasia-long	pcs	LR	strict	Platelet_Count
 0.448162400532515	0.65403599612695	1828	HGDP1KG	WBS	eur-lat	pcs	LR	strict	Platelet_Count
 0.0796202319990757	0.93653930349217	1828	HGDP1KG	WBS	eur-long	pcs	LR	strict	Platelet_Count
-		1835	HGDP1KG	WBS	sdi-eur	pcs	LR	strict	Platelet_Count
+-0.53139350476491	0.595146121556084	1835	HGDP1KG	WBS	sdi-eur	pcs	LR	strict	Platelet_Count
 0.234018211967315	0.814970840080219	1682	HGDP1KG	WBS	eas-nfe	pcs	LR	strict	Platelet_Count
 0.691152224528068	0.489469883735147	1682	HGDP1KG	WBS	eas-sas	pcs	LR	strict	Platelet_Count
 0.830752126120148	0.40611367259299	1682	HGDP1KG	WBS	eas-afr	pcs	LR	strict	Platelet_Count
@@ -213,7 +213,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.552764608826797	0.580424605669269	3613	HGDP1KG	WBS	eurasia-long	pcs	LR	strict	Standing_Height
 3.9985286895393	6.37374562607931e-05	3822	HGDP1KG	WBS	eur-lat	pcs	LR	strict	Standing_Height
 0.85452755156247	0.392812750386849	3822	HGDP1KG	WBS	eur-long	pcs	LR	strict	Standing_Height
-		3843	HGDP1KG	WBS	sdi-eur	pcs	LR	strict	Standing_Height
+-6.6313910895341	3.32537858683186e-11	3843	HGDP1KG	WBS	sdi-eur	pcs	LR	strict	Standing_Height
 0.286979697215556	0.774127865949965	3568	HGDP1KG	WBS	eas-nfe	pcs	LR	strict	Standing_Height
 0.133777879222718	0.893578219766079	3568	HGDP1KG	WBS	eas-sas	pcs	LR	strict	Standing_Height
 -0.118632939450492	0.905566167716266	3568	HGDP1KG	WBS	eas-afr	pcs	LR	strict	Standing_Height
@@ -258,7 +258,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.53825882850608	0.123985342124075	12309	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Alkaline_Phosphate
 1.23575839780789	0.216548383201393	14443	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Alkaline_Phosphate
 -0.13103550452352	0.895747220992018	14443	HGDP1KG	WBS	eur-long	pcs	LR	loose	Alkaline_Phosphate
-		14686	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Alkaline_Phosphate
+-1.48487836456506	0.137576048212311	14686	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Alkaline_Phosphate
 1.14528912013792	0.252089411365258	12023	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Alkaline_Phosphate
 0.501439916100443	0.616061553628536	12023	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Alkaline_Phosphate
 1.79353293927101	0.0728877485720539	12023	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Alkaline_Phosphate
@@ -273,11 +273,11 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.979219850992653	0.327471362223907	8314	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Aspartate_Aminotransferase
 -0.239953599027018	0.810366228380862	9903	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Aspartate_Aminotransferase
 0.916722883409316	0.359287871694271	9903	HGDP1KG	WBS	eur-long	pcs	LR	loose	Aspartate_Aminotransferase
-		10072	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Aspartate_Aminotransferase
-		8152	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Aspartate_Aminotransferase
-		8152	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Aspartate_Aminotransferase
-		8152	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Aspartate_Aminotransferase
-		8152	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Aspartate_Aminotransferase
+0.286792279058879	0.774271375145468	10072	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Aspartate_Aminotransferase
+1.45268735341956	0.146310579881332	8152	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Aspartate_Aminotransferase
+1.3830414842202	0.166652146235689	8152	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Aspartate_Aminotransferase
+-0.656040917248318	0.511797797643751	8152	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Aspartate_Aminotransferase
+0.545013238956919	0.585744412314861	8152	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Aspartate_Aminotransferase
 -1.09283727457943	0.274465252564338	8152	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	Aspartate_Aminotransferase
 -2.08346397456981	0.03720895216241	8152	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	Aspartate_Aminotransferase
 -1.69993902230611	0.0891423959032922	8152	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Aspartate_Aminotransferase
@@ -288,11 +288,11 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 -0.0337437226379035	0.973081513185783	6931	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Basophill_Percentage
 0.579888665099539	0.561989700012102	8405	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Basophill_Percentage
 0.651359801923198	0.514814253073459	8405	HGDP1KG	WBS	eur-long	pcs	LR	loose	Basophill_Percentage
-		8592	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Basophill_Percentage
-		6730	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Basophill_Percentage
-		6730	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Basophill_Percentage
-		6730	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Basophill_Percentage
-		6730	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Basophill_Percentage
+-1.10235434309179	0.270307652450245	8592	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Basophill_Percentage
+0.271177536479925	0.786254489175639	6730	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Basophill_Percentage
+-1.79044202965999	0.0733828787206221	6730	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Basophill_Percentage
+-1.83061322039102	0.0671582938829719	6730	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Basophill_Percentage
+-0.164884115664692	0.869035195134487	6730	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Basophill_Percentage
 -2.5642719732981	0.0103392491756478	6730	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	Basophill_Percentage
 -2.16207146176059	0.0306126683558785	6730	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	Basophill_Percentage
 -0.65805983197313	0.510499685443337	6730	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Basophill_Percentage
@@ -303,22 +303,22 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.35404325765659	0.175722577343462	21147	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Body_Weight
 3.25467353873301	0.00113522779196398	24156	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Body_Weight
 0.324777386960378	0.745349560165053	24156	HGDP1KG	WBS	eur-long	pcs	LR	loose	Body_Weight
-		24538	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Body_Weight
-		20683	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Body_Weight
-		20683	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Body_Weight
+-3.60063288960564	0.00031744352930317	24538	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Body_Weight
+1.12388469096037	0.261061946677157	20683	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Body_Weight
+1.03862454204328	0.298979387263548	20683	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Body_Weight
 -0.0406272039374803	0.967593096450346	20683	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Body_Weight
 1.16395758811383	0.244441199815461	20683	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Body_Weight
-		20683	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	Body_Weight
-		20683	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	Body_Weight
-		20683	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Body_Weight
-		20683	HGDP1KG	WBS	sas-afr	pcs	LR	loose	Body_Weight
-		20683	HGDP1KG	WBS	sas-amr	pcs	LR	loose	Body_Weight
+-0.671982539170521	0.501594812287247	20683	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	Body_Weight
+-0.979662621679777	0.327252682528962	20683	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	Body_Weight
+-0.468447446809845	0.639464644554153	20683	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Body_Weight
+-0.718155861700545	0.472661189655381	20683	HGDP1KG	WBS	sas-afr	pcs	LR	loose	Body_Weight
+0.189263981970795	0.849885923325215	20683	HGDP1KG	WBS	sas-amr	pcs	LR	loose	Body_Weight
 0.781206305030216	0.434681166009324	20683	HGDP1KG	WBS	afr-amr	pcs	LR	loose	Body_Weight
 -0.142858488999172	0.886401943205353	9538	HGDP1KG	WBS	eurasia-lat	pcs	LR	loose	Cholesterol
 0.345421452329918	0.729777551902691	9538	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Cholesterol
 -0.907256924263627	0.364270947551157	11225	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Cholesterol
 1.59580013546163	0.110533423057945	11225	HGDP1KG	WBS	eur-long	pcs	LR	loose	Cholesterol
-		11440	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Cholesterol
+0.911427390184508	0.362070227278036	11440	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Cholesterol
 -0.11072585223002	0.911833744915972	9294	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Cholesterol
 -0.348848545161789	0.727203016236157	9294	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Cholesterol
 2.32711002540205	0.0199594100652155	9294	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Cholesterol
@@ -333,26 +333,26 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.13945715552616	0.254512528572239	13181	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Eosinophill_Percentage
 2.34401104820965	0.0190776062702666	15419	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Eosinophill_Percentage
 0.751739977265494	0.452207444188078	15419	HGDP1KG	WBS	eur-long	pcs	LR	loose	Eosinophill_Percentage
-		15675	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Eosinophill_Percentage
-		12888	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Eosinophill_Percentage
+-1.44099954854118	0.149584810332797	15675	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Eosinophill_Percentage
+1.23763205966822	0.215852521323368	12888	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Eosinophill_Percentage
 0.0187318958766901	0.98505498348487	12888	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Eosinophill_Percentage
-		12888	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Eosinophill_Percentage
+2.13519474327826	0.0327451061250985	12888	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Eosinophill_Percentage
 0.810605371739613	0.417592331036273	12888	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Eosinophill_Percentage
-		12888	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	Eosinophill_Percentage
-		12888	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	Eosinophill_Percentage
-		12888	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Eosinophill_Percentage
-		12888	HGDP1KG	WBS	sas-afr	pcs	LR	loose	Eosinophill_Percentage
+-2.15751852708173	0.0309652851478289	12888	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	Eosinophill_Percentage
+0.950806389975664	0.341702668213926	12888	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	Eosinophill_Percentage
+-1.11090348952986	0.266609893310151	12888	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Eosinophill_Percentage
+2.40557962179641	0.0161468329275183	12888	HGDP1KG	WBS	sas-afr	pcs	LR	loose	Eosinophill_Percentage
 1.05383045858528	0.291960545835372	12888	HGDP1KG	WBS	sas-amr	pcs	LR	loose	Eosinophill_Percentage
-		12888	HGDP1KG	WBS	afr-amr	pcs	LR	loose	Eosinophill_Percentage
+-1.72252024943281	0.0849753178448966	12888	HGDP1KG	WBS	afr-amr	pcs	LR	loose	Eosinophill_Percentage
 -0.488401536725941	0.625265453598894	3496	HGDP1KG	WBS	eurasia-lat	pcs	LR	loose	Glucose
 0.588575358151371	0.556146168207143	3496	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Glucose
 -1.31988509093608	0.186873386055018	4101	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Glucose
 -0.0985025420911971	0.921533253481161	4101	HGDP1KG	WBS	eur-long	pcs	LR	loose	Glucose
-		4178	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Glucose
-		3418	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Glucose
-		3418	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Glucose
-		3418	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Glucose
-		3418	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Glucose
+0.895157556515948	0.370702869876764	4178	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Glucose
+1.17783649651439	0.23886179565409	3418	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Glucose
+1.04211584030727	0.29735797540989	3418	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Glucose
+0.44355142627688	0.657366930689137	3418	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Glucose
+0.513605168561951	0.607528065242063	3418	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Glucose
 -0.677201397423556	0.498278181251023	3418	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	Glucose
 -0.468409871039364	0.639491510388578	3418	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	Glucose
 -1.381213706551	0.167213261613292	3418	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Glucose
@@ -363,7 +363,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 3.35761144653216	0.000786190429468438	10518	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	HbA1c
 -0.272074967664512	0.785564376661177	12196	HGDP1KG	WBS	eur-lat	pcs	LR	loose	HbA1c
 0.599781419270722	0.548651918005222	12196	HGDP1KG	WBS	eur-long	pcs	LR	loose	HbA1c
-		12401	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	HbA1c
+1.08524932638466	0.277811242729366	12401	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	HbA1c
 3.63214981772937	0.000281069852807555	10254	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	HbA1c
 2.09671148800028	0.0360191229410229	10254	HGDP1KG	WBS	eas-sas	pcs	LR	loose	HbA1c
 0.831419939920885	0.405736438459758	10254	HGDP1KG	WBS	eas-afr	pcs	LR	loose	HbA1c
@@ -378,37 +378,37 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.00131045022035	0.316676742215701	9243	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	HDL
 -1.5568707964204	0.119501164278615	10540	HGDP1KG	WBS	eur-lat	pcs	LR	loose	HDL
 1.15584062903005	0.247746350983252	10540	HGDP1KG	WBS	eur-long	pcs	LR	loose	HDL
-		10709	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	HDL
-		9084	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	HDL
-		9084	HGDP1KG	WBS	eas-sas	pcs	LR	loose	HDL
-		9084	HGDP1KG	WBS	eas-afr	pcs	LR	loose	HDL
-		9084	HGDP1KG	WBS	eas-amr	pcs	LR	loose	HDL
-		9084	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	HDL
-		9084	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	HDL
-		9084	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	HDL
-		9084	HGDP1KG	WBS	sas-afr	pcs	LR	loose	HDL
-		9084	HGDP1KG	WBS	sas-amr	pcs	LR	loose	HDL
+1.56295916134994	0.118062200794558	10709	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	HDL
+0.97100416772139	0.331546203174308	9084	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	HDL
+0.56158923035645	0.574395919734008	9084	HGDP1KG	WBS	eas-sas	pcs	LR	loose	HDL
+1.41630474236969	0.156686299951184	9084	HGDP1KG	WBS	eas-afr	pcs	LR	loose	HDL
+1.10580890948201	0.26880923789683	9084	HGDP1KG	WBS	eas-amr	pcs	LR	loose	HDL
+-0.889571681751059	0.373695917450116	9084	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	HDL
+0.621938609469193	0.533982236170204	9084	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	HDL
+-0.315916969165069	0.752065531515963	9084	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	HDL
+1.21218407596349	0.225441925676383	9084	HGDP1KG	WBS	sas-afr	pcs	LR	loose	HDL
+0.483232485680822	0.628930671668109	9084	HGDP1KG	WBS	sas-amr	pcs	LR	loose	HDL
 -0.796474625350733	0.425756218440098	9084	HGDP1KG	WBS	afr-amr	pcs	LR	loose	HDL
 -0.249898259033995	0.802666029610101	9220	HGDP1KG	WBS	eurasia-lat	pcs	LR	loose	LDL
 0.243440868954821	0.807663887019161	9220	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	LDL
 -1.53497721321799	0.124789425393821	10902	HGDP1KG	WBS	eur-lat	pcs	LR	loose	LDL
 0.268264122102336	0.788496020760692	10902	HGDP1KG	WBS	eur-long	pcs	LR	loose	LDL
-		11115	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	LDL
-		8985	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	LDL
-		8985	HGDP1KG	WBS	eas-sas	pcs	LR	loose	LDL
-		8985	HGDP1KG	WBS	eas-afr	pcs	LR	loose	LDL
-		8985	HGDP1KG	WBS	eas-amr	pcs	LR	loose	LDL
-		8985	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	LDL
-		8985	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	LDL
-		8985	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	LDL
+1.44567428364565	0.14826858057456	11115	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	LDL
+-0.305425073208041	0.760042427865914	8985	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	LDL
+-0.335122841752454	0.737532422914131	8985	HGDP1KG	WBS	eas-sas	pcs	LR	loose	LDL
+2.22754221749477	0.0259110575521181	8985	HGDP1KG	WBS	eas-afr	pcs	LR	loose	LDL
+-0.0581468835327364	0.953631629882265	8985	HGDP1KG	WBS	eas-amr	pcs	LR	loose	LDL
+0.12298837916632	0.902116300183417	8985	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	LDL
+2.52245803661118	0.0116537853671493	8985	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	LDL
+0.421558556718867	0.673347261539658	8985	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	LDL
 2.78063079269182	0.00542534002140803	8985	HGDP1KG	WBS	sas-afr	pcs	LR	loose	LDL
-		8985	HGDP1KG	WBS	sas-amr	pcs	LR	loose	LDL
-		8985	HGDP1KG	WBS	afr-amr	pcs	LR	loose	LDL
+0.231827224340267	0.816672211043931	8985	HGDP1KG	WBS	sas-amr	pcs	LR	loose	LDL
+-2.38974903169929	0.0168598893494618	8985	HGDP1KG	WBS	afr-amr	pcs	LR	loose	LDL
 1.56588179159613	0.117376293343281	857	HGDP1KG	WBS	eurasia-lat	pcs	LR	loose	MCHC
 -1.13075842995127	0.258156780950427	857	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	MCHC
 0.103311597597077	0.917715671322442	947	HGDP1KG	WBS	eur-lat	pcs	LR	loose	MCHC
 -2.07043320629883	0.0384117949190956	947	HGDP1KG	WBS	eur-long	pcs	LR	loose	MCHC
-		966	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	MCHC
+-2.17160532475814	0.0298854450461298	966	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	MCHC
 -1.12170688563854	0.261987087922329	843	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	MCHC
 0.381119139361165	0.703114846115983	843	HGDP1KG	WBS	eas-sas	pcs	LR	loose	MCHC
 -0.412089739822204	0.6802736486935	843	HGDP1KG	WBS	eas-afr	pcs	LR	loose	MCHC
@@ -423,11 +423,11 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 -1.30694626859863	0.191230960604172	7680	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	MCV
 -1.40432702670962	0.160221489813412	8727	HGDP1KG	WBS	eur-lat	pcs	LR	loose	MCV
 -2.83648444895803	0.00456131996293604	8727	HGDP1KG	WBS	eur-long	pcs	LR	loose	MCV
-		8868	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	MCV
-		7536	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	MCV
-		7536	HGDP1KG	WBS	eas-sas	pcs	LR	loose	MCV
-		7536	HGDP1KG	WBS	eas-afr	pcs	LR	loose	MCV
-		7536	HGDP1KG	WBS	eas-amr	pcs	LR	loose	MCV
+-1.36324007405286	0.172806861328959	8868	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	MCV
+-1.08074334980215	0.279811294177882	7536	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	MCV
+0.725132603321563	0.468370684544087	7536	HGDP1KG	WBS	eas-sas	pcs	LR	loose	MCV
+-1.67570948165366	0.0937951117032917	7536	HGDP1KG	WBS	eas-afr	pcs	LR	loose	MCV
+-1.31515742947572	0.188456998938059	7536	HGDP1KG	WBS	eas-amr	pcs	LR	loose	MCV
 2.44107930699761	0.0146434385759166	7536	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	MCV
 -0.776683414113938	0.437345574658333	7536	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	MCV
 0.103084660083375	0.917895779638878	7536	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	MCV
@@ -438,7 +438,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.200508979946315	0.84108253562027	16936	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Platelet_Count
 -0.204932540434941	0.83762483113802	19717	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Platelet_Count
 -0.683872632004229	0.494055597200288	19717	HGDP1KG	WBS	eur-long	pcs	LR	loose	Platelet_Count
-		20046	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Platelet_Count
+0.145769769129622	0.884103141683982	20046	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Platelet_Count
 0.131104960140287	0.895692277409566	16519	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Platelet_Count
 0.0164999028625221	0.9868355795825	16519	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Platelet_Count
 0.841913014051984	0.39983664521403	16519	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Platelet_Count
@@ -453,7 +453,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.661100391014977	0.508547934553673	6081	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	SBP
 0.442938510732868	0.657810211181511	6815	HGDP1KG	WBS	eur-lat	pcs	LR	loose	SBP
 -0.63272272453308	0.526914727412427	6815	HGDP1KG	WBS	eur-long	pcs	LR	loose	SBP
-		6918	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	SBP
+0.329154827042569	0.742038664938093	6918	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	SBP
 0.312603368604282	0.754582018535459	5997	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	SBP
 0.631810140284331	0.527510946749354	5997	HGDP1KG	WBS	eas-sas	pcs	LR	loose	SBP
 0.249607758308791	0.802890698211568	5997	HGDP1KG	WBS	eas-afr	pcs	LR	loose	SBP
@@ -468,17 +468,17 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.78169652371516	0.0747987341018639	29778	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Standing_Height
 4.75942657462358	1.94143734510315e-06	34417	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Standing_Height
 1.51028272364365	0.130971298142344	34417	HGDP1KG	WBS	eur-long	pcs	LR	loose	Standing_Height
-		34988	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Standing_Height
-		29053	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Standing_Height
-		29053	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Standing_Height
-		29053	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Standing_Height
-		29053	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Standing_Height
+-6.94602679934667	3.75717426262784e-12	34988	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Standing_Height
+1.28192495494777	0.199868972920103	29053	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Standing_Height
+0.333793015398075	0.738535754353093	29053	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Standing_Height
+0.212131856085138	0.832004167647526	29053	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Standing_Height
+2.18456896733126	0.0289204653610099	29053	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Standing_Height
 -1.8062678763	0.0708765070458161	29053	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	Standing_Height
 -0.886030314478546	0.375601191998909	29053	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	Standing_Height
-		29053	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Standing_Height
+0.264578762008398	0.79133398270391	29053	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Standing_Height
 0.0260790195385546	0.979194311353763	29053	HGDP1KG	WBS	sas-afr	pcs	LR	loose	Standing_Height
-		29053	HGDP1KG	WBS	sas-amr	pcs	LR	loose	Standing_Height
-		29053	HGDP1KG	WBS	afr-amr	pcs	LR	loose	Standing_Height
+2.25489427190769	0.0241399659543496	29053	HGDP1KG	WBS	sas-amr	pcs	LR	loose	Standing_Height
+1.09262085554198	0.274560301964623	29053	HGDP1KG	WBS	afr-amr	pcs	LR	loose	Standing_Height
 -0.80191610398623	0.422601490004167	347	HGDP1KG	WBS	eurasia-lat	pcs	LR	loose	Total_Protein
 1.06967576277239	0.284765279647912	347	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Total_Protein
 0.339719823381542	0.734067531792596	355	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Total_Protein
@@ -498,17 +498,17 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.882009610970257	0.377771609926362	12945	HGDP1KG	WBS	eurasia-long	pcs	LR	loose	Triglycerides
 0.857604399086077	0.391110945124856	15078	HGDP1KG	WBS	eur-lat	pcs	LR	loose	Triglycerides
 1.45543913441157	0.145547728939049	15078	HGDP1KG	WBS	eur-long	pcs	LR	loose	Triglycerides
-		15342	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Triglycerides
+-2.07312777932899	0.0381603893423702	15342	HGDP1KG	WBS	sdi-eur	pcs	LR	loose	Triglycerides
 0.817539975668391	0.413619913928456	12634	HGDP1KG	WBS	eas-nfe	pcs	LR	loose	Triglycerides
 0.0707847287828435	0.943569086000885	12634	HGDP1KG	WBS	eas-sas	pcs	LR	loose	Triglycerides
 0.0585271260062223	0.953328756094822	12634	HGDP1KG	WBS	eas-afr	pcs	LR	loose	Triglycerides
-		12634	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Triglycerides
+-0.06126606795551	0.951147313866536	12634	HGDP1KG	WBS	eas-amr	pcs	LR	loose	Triglycerides
 -1.24902381365883	0.211656364017283	12634	HGDP1KG	WBS	nfe-sas	pcs	LR	loose	Triglycerides
 -0.685732488592829	0.492881815593321	12634	HGDP1KG	WBS	nfe-afr	pcs	LR	loose	Triglycerides
-		12634	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Triglycerides
+-1.20680605006232	0.227506845553901	12634	HGDP1KG	WBS	nfe-amr	pcs	LR	loose	Triglycerides
 0.0227097772871149	0.98188177670064	12634	HGDP1KG	WBS	sas-afr	pcs	LR	loose	Triglycerides
-		12634	HGDP1KG	WBS	sas-amr	pcs	LR	loose	Triglycerides
-		12634	HGDP1KG	WBS	afr-amr	pcs	LR	loose	Triglycerides
+-0.127729903502718	0.898362724346558	12634	HGDP1KG	WBS	sas-amr	pcs	LR	loose	Triglycerides
+-0.0900658677975463	0.928234872503028	12634	HGDP1KG	WBS	afr-amr	pcs	LR	loose	Triglycerides
 -1.20613203181588	0.227766585796585	1053	HGDP1KG	WBS	eurasia-lat	pcs	LMM	strict	Alkaline_Phosphate
 1.39678253182436	0.162478976764336	1053	HGDP1KG	WBS	eurasia-long	pcs	LMM	strict	Alkaline_Phosphate
 1.37290700349295	0.169781259081116	1132	HGDP1KG	WBS	eur-lat	pcs	LMM	strict	Alkaline_Phosphate
@@ -589,16 +589,16 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 2.01502572033179	0.0439019541997438	1078	HGDP1KG	WBS	eur-lat	pcs	LMM	strict	Eosinophill_Percentage
 -0.478877255081282	0.632025952703923	1078	HGDP1KG	WBS	eur-long	pcs	LMM	strict	Eosinophill_Percentage
 -1.62957455470284	0.10319144588218	1085	HGDP1KG	WBS	sdi-eur	pcs	LMM	strict	Eosinophill_Percentage
-		1020	HGDP1KG	WBS	eas-nfe	pcs	LMM	strict	Eosinophill_Percentage
+-0.327359880605972	0.743395706846582	1020	HGDP1KG	WBS	eas-nfe	pcs	LMM	strict	Eosinophill_Percentage
 -0.35682959311692	0.721219380625307	1020	HGDP1KG	WBS	eas-sas	pcs	LMM	strict	Eosinophill_Percentage
-		1020	HGDP1KG	WBS	eas-afr	pcs	LMM	strict	Eosinophill_Percentage
+0.441221789052796	0.659052440485463	1020	HGDP1KG	WBS	eas-afr	pcs	LMM	strict	Eosinophill_Percentage
 -1.08296077797214	0.27882583267773	1020	HGDP1KG	WBS	eas-amr	pcs	LMM	strict	Eosinophill_Percentage
-		1020	HGDP1KG	WBS	nfe-sas	pcs	LMM	strict	Eosinophill_Percentage
-		1020	HGDP1KG	WBS	nfe-afr	pcs	LMM	strict	Eosinophill_Percentage
-		1020	HGDP1KG	WBS	nfe-amr	pcs	LMM	strict	Eosinophill_Percentage
-		1020	HGDP1KG	WBS	sas-afr	pcs	LMM	strict	Eosinophill_Percentage
+0.123690265211106	0.901560519704372	1020	HGDP1KG	WBS	nfe-sas	pcs	LMM	strict	Eosinophill_Percentage
+0.670246263547401	0.502700816465808	1020	HGDP1KG	WBS	nfe-afr	pcs	LMM	strict	Eosinophill_Percentage
+-0.750311575933846	0.453067072327503	1020	HGDP1KG	WBS	nfe-amr	pcs	LMM	strict	Eosinophill_Percentage
+0.777152008699716	0.437069092566772	1020	HGDP1KG	WBS	sas-afr	pcs	LMM	strict	Eosinophill_Percentage
 -1.04855960437335	0.294380856028122	1020	HGDP1KG	WBS	sas-amr	pcs	LMM	strict	Eosinophill_Percentage
-		1020	HGDP1KG	WBS	afr-amr	pcs	LMM	strict	Eosinophill_Percentage
+-1.12760051331951	0.259488669821461	1020	HGDP1KG	WBS	afr-amr	pcs	LMM	strict	Eosinophill_Percentage
 -1.40499782528434	0.160021924951611	73	HGDP1KG	WBS	eurasia-lat	pcs	LMM	strict	Glucose
 0.72410032021015	0.469004148029794	73	HGDP1KG	WBS	eurasia-long	pcs	LMM	strict	Glucose
 -0.638353209730386	0.523243782033772	77	HGDP1KG	WBS	eur-lat	pcs	LMM	strict	Glucose
@@ -648,7 +648,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.633633608225883	0.526319962304651	583	HGDP1KG	WBS	eurasia-long	pcs	LMM	strict	LDL
 -2.22456927013118	0.0261101674921645	635	HGDP1KG	WBS	eur-lat	pcs	LMM	strict	LDL
 -0.496966189605496	0.619212894092228	635	HGDP1KG	WBS	eur-long	pcs	LMM	strict	LDL
-		640	HGDP1KG	WBS	sdi-eur	pcs	LMM	strict	LDL
+-0.40202844514326	0.687663092196586	640	HGDP1KG	WBS	sdi-eur	pcs	LMM	strict	LDL
 0.15385709197527	0.877722416818311	576	HGDP1KG	WBS	eas-nfe	pcs	LMM	strict	LDL
 0.732723027496431	0.463727376196568	576	HGDP1KG	WBS	eas-sas	pcs	LMM	strict	LDL
 2.40517392780029	0.0161647703493751	576	HGDP1KG	WBS	eas-afr	pcs	LMM	strict	LDL
@@ -693,7 +693,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.07306776953136	0.283240710722675	2049	HGDP1KG	WBS	eurasia-long	pcs	LMM	strict	Platelet_Count
 0.348471444354918	0.727486155617539	2190	HGDP1KG	WBS	eur-lat	pcs	LMM	strict	Platelet_Count
 -0.0636285718319032	0.949265980800945	2190	HGDP1KG	WBS	eur-long	pcs	LMM	strict	Platelet_Count
-		2204	HGDP1KG	WBS	sdi-eur	pcs	LMM	strict	Platelet_Count
+-0.175324764778531	0.860824453662119	2204	HGDP1KG	WBS	sdi-eur	pcs	LMM	strict	Platelet_Count
 0.898217271713898	0.36906972708642	2017	HGDP1KG	WBS	eas-nfe	pcs	LMM	strict	Platelet_Count
 0.913999843726413	0.360716927815318	2017	HGDP1KG	WBS	eas-sas	pcs	LMM	strict	Platelet_Count
 1.17546354098735	0.239809315250791	2017	HGDP1KG	WBS	eas-afr	pcs	LMM	strict	Platelet_Count
@@ -723,7 +723,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.404925254124567	0.685532454441535	4795	HGDP1KG	WBS	eurasia-long	pcs	LMM	strict	Standing_Height
 4.1826226477862	2.88165469430376e-05	5119	HGDP1KG	WBS	eur-lat	pcs	LMM	strict	Standing_Height
 0.987071650780801	0.323607514310702	5119	HGDP1KG	WBS	eur-long	pcs	LMM	strict	Standing_Height
-		5137	HGDP1KG	WBS	sdi-eur	pcs	LMM	strict	Standing_Height
+-6.14299013995389	8.0982312223342e-10	5137	HGDP1KG	WBS	sdi-eur	pcs	LMM	strict	Standing_Height
 0.307327326164299	0.758594238195812	4735	HGDP1KG	WBS	eas-nfe	pcs	LMM	strict	Standing_Height
 -0.107290507676835	0.914558514851073	4735	HGDP1KG	WBS	eas-sas	pcs	LMM	strict	Standing_Height
 -1.11021735420035	0.266905376310936	4735	HGDP1KG	WBS	eas-afr	pcs	LMM	strict	Standing_Height
@@ -768,7 +768,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.51772296968648	0.129084251022969	12665	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Alkaline_Phosphate
 1.69623002559547	0.0898423262968684	14841	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Alkaline_Phosphate
 -0.159185599768504	0.873522648914876	14841	HGDP1KG	WBS	eur-long	pcs	LMM	loose	Alkaline_Phosphate
-		15054	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Alkaline_Phosphate
+-1.4542371760491	0.145880561372306	15054	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Alkaline_Phosphate
 1.29687720211733	0.194673441834761	12374	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Alkaline_Phosphate
 0.485673767217465	0.62719848572331	12374	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Alkaline_Phosphate
 2.32132743861175	0.0202691784357872	12374	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Alkaline_Phosphate
@@ -783,11 +783,11 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.032816708209	0.301689683144818	8193	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Aspartate_Aminotransferase
 0.140184518238364	0.88851420376948	9743	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Aspartate_Aminotransferase
 1.01369803130102	0.310726863763939	9743	HGDP1KG	WBS	eur-long	pcs	LMM	loose	Aspartate_Aminotransferase
-		9905	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Aspartate_Aminotransferase
-		8028	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Aspartate_Aminotransferase
-		8028	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Aspartate_Aminotransferase
-		8028	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Aspartate_Aminotransferase
-		8028	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Aspartate_Aminotransferase
+-0.225105858629013	0.821896923414727	9905	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Aspartate_Aminotransferase
+1.66841490428651	0.0952333916036504	8028	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Aspartate_Aminotransferase
+1.42660256148847	0.153694485476518	8028	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Aspartate_Aminotransferase
+-0.0913671290348055	0.92720087970336	8028	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Aspartate_Aminotransferase
+0.860640797313987	0.389435908975218	8028	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Aspartate_Aminotransferase
 -1.39262879625606	0.163732070457897	8028	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Aspartate_Aminotransferase
 -1.78491439350389	0.0742752036114792	8028	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Aspartate_Aminotransferase
 -1.73686436484745	0.082411114696417	8028	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Aspartate_Aminotransferase
@@ -798,7 +798,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.0391596848225697	0.968763075815976	6824	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Basophill_Percentage
 0.862403330804818	0.388465608281528	8299	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Basophill_Percentage
 1.08704062027139	0.277018858272556	8299	HGDP1KG	WBS	eur-long	pcs	LMM	loose	Basophill_Percentage
-		8492	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Basophill_Percentage
+-1.32999395923859	0.183520261615186	8492	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Basophill_Percentage
 0.401198310265774	0.688274124703939	6607	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Basophill_Percentage
 -1.8622425391944	0.0625689107966775	6607	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Basophill_Percentage
 -1.58972994446473	0.11189569089877	6607	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Basophill_Percentage
@@ -813,56 +813,56 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.90858618991796	0.0563154948443109	22160	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Body_Weight
 2.85023769446265	0.00436865677909746	25218	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Body_Weight
 1.3252241989478	0.185096801480474	25218	HGDP1KG	WBS	eur-long	pcs	LMM	loose	Body_Weight
-		25610	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Body_Weight
-		21705	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Body_Weight
-		21705	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Body_Weight
-		21705	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Body_Weight
-		21705	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Body_Weight
-		21705	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Body_Weight
-		21705	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Body_Weight
-		21705	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Body_Weight
+-3.4131260362087	0.000642222332115719	25610	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Body_Weight
+1.97546151453481	0.0482157979041355	21705	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Body_Weight
+1.51601908929895	0.12951452555626	21705	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Body_Weight
+-0.150759792610606	0.880165204513605	21705	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Body_Weight
+1.44627457609126	0.148100203731029	21705	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Body_Weight
+-1.52033780150603	0.128426098024784	21705	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Body_Weight
+-2.00984660399764	0.0444474265578827	21705	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Body_Weight
+-1.59027190457469	0.111773528707684	21705	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Body_Weight
 -1.25740836527481	0.20860580165575	21705	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	Body_Weight
-		21705	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Body_Weight
-		21705	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Body_Weight
+-0.15329520516655	0.878165481709006	21705	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Body_Weight
+1.27050380247904	0.20390522924501	21705	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Body_Weight
 0.0991873409104598	0.920989525782614	9562	HGDP1KG	WBS	eurasia-lat	pcs	LMM	loose	Cholesterol
 0.505304233884128	0.613345169544609	9562	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Cholesterol
 -0.412161241672261	0.680221243365716	11260	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Cholesterol
 1.12320759182913	0.261349339033061	11260	HGDP1KG	WBS	eur-long	pcs	LMM	loose	Cholesterol
-		11430	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Cholesterol
-		9317	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Cholesterol
-		9317	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Cholesterol
-		9317	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Cholesterol
-		9317	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Cholesterol
+1.1917585966941	0.233355914546569	11430	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Cholesterol
+-0.0704538932770192	0.943832397144863	9317	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Cholesterol
+-0.0867319526024327	0.93088457760575	9317	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Cholesterol
+2.5749183283493	0.010026375864534	9317	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Cholesterol
+0.451237451325967	0.651818420053283	9317	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Cholesterol
 -0.0215257319099488	0.982826277120481	9317	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Cholesterol
 2.72356285908957	0.00645819244825082	9317	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Cholesterol
-		9317	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Cholesterol
+0.709537476487911	0.47799100361341	9317	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Cholesterol
 3.18967288759367	0.00142433914540842	9317	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	Cholesterol
-		9317	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Cholesterol
-		9317	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Cholesterol
+0.851556531350518	0.394460274435741	9317	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Cholesterol
+-2.62778451800609	0.00859429373755255	9317	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Cholesterol
 -1.47225193188652	0.140952858378436	13434	HGDP1KG	WBS	eurasia-lat	pcs	LMM	loose	Eosinophill_Percentage
 1.32010780012051	0.186799028881196	13434	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Eosinophill_Percentage
 2.74252005883332	0.00609697259604786	15718	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Eosinophill_Percentage
 1.08064227052164	0.279856271811562	15718	HGDP1KG	WBS	eur-long	pcs	LMM	loose	Eosinophill_Percentage
-		15960	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Eosinophill_Percentage
-		13136	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Eosinophill_Percentage
+-1.78104285147484	0.0749054506000317	15960	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Eosinophill_Percentage
+1.19278919492615	0.232951942830763	13136	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Eosinophill_Percentage
 -0.301506455666245	0.763028328003631	13136	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Eosinophill_Percentage
-		13136	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Eosinophill_Percentage
+1.37745559783465	0.168371433690808	13136	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Eosinophill_Percentage
 0.69955546647097	0.48420496232055	13136	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Eosinophill_Percentage
-		13136	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Eosinophill_Percentage
-		13136	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Eosinophill_Percentage
-		13136	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Eosinophill_Percentage
-		13136	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	Eosinophill_Percentage
+-2.48660097987338	0.0128969962301404	13136	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Eosinophill_Percentage
+0.25697798636595	0.797195766878951	13136	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Eosinophill_Percentage
+-1.16768564505282	0.242933589228883	13136	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Eosinophill_Percentage
+1.82314560610468	0.0682813408063368	13136	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	Eosinophill_Percentage
 1.39831820812438	0.162017532455678	13136	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Eosinophill_Percentage
-		13136	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Eosinophill_Percentage
+-0.960438067652896	0.336834786802205	13136	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Eosinophill_Percentage
 -0.606273709442926	0.544333013628406	3415	HGDP1KG	WBS	eurasia-lat	pcs	LMM	loose	Glucose
 0.799116254730691	0.424223005221999	3415	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Glucose
 -0.860106280236999	0.389730459635777	4016	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Glucose
 0.516070981787785	0.605804834268876	4016	HGDP1KG	WBS	eur-long	pcs	LMM	loose	Glucose
-		4109	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Glucose
-		3358	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Glucose
-		3358	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Glucose
-		3358	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Glucose
-		3358	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Glucose
+1.04678039701394	0.295200873531376	4109	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Glucose
+1.50215050937504	0.133058242861525	3358	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Glucose
+1.206780190868	0.227516806778812	3358	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Glucose
+0.511757456939168	0.608820768262756	3358	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Glucose
+0.831943166999041	0.405441024657093	3358	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Glucose
 -1.08709519649477	0.276994740508965	3358	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Glucose
 -0.66372302216612	0.506867601664658	3358	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Glucose
 -1.55596925898288	0.119715402507302	3358	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Glucose
@@ -873,7 +873,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 3.31404267213539	0.000919574722040557	10363	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	HbA1c
 0.0403051651838571	0.967849835905675	12032	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	HbA1c
 0.648810126680769	0.516461111115601	12032	HGDP1KG	WBS	eur-long	pcs	LMM	loose	HbA1c
-		12239	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	HbA1c
+0.680599272452311	0.496125087417072	12239	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	HbA1c
 3.77037975014282	0.000162999328342012	10126	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	HbA1c
 2.04838476083204	0.0405223135513875	10126	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	HbA1c
 1.16832851071781	0.242674279251514	10126	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	HbA1c
@@ -888,37 +888,37 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.519139298820535	0.603663605119476	9147	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	HDL
 -2.09494658053533	0.0361757414481442	10344	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	HDL
 1.38088979696078	0.167312847565757	10344	HGDP1KG	WBS	eur-long	pcs	LMM	loose	HDL
-		10517	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	HDL
-		8969	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	HDL
-		8969	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	HDL
-		8969	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	HDL
-		8969	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	HDL
-		8969	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	HDL
-		8969	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	HDL
-		8969	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	HDL
-		8969	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	HDL
-		8969	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	HDL
+1.40955754276184	0.158670371113669	10517	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	HDL
+0.214596170257933	0.830082180069431	8969	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	HDL
+-0.0937211178936989	0.925330694459142	8969	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	HDL
+-0.0361573791057931	0.971156870296037	8969	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	HDL
+0.191110014769473	0.848439401596822	8969	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	HDL
+-0.457959356397787	0.646981641521327	8969	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	HDL
+-0.299101757915851	0.764862405026241	8969	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	HDL
+-0.177808229650405	0.858873584016494	8969	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	HDL
+-0.0165493099196862	0.986796163836249	8969	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	HDL
+0.231286917148072	0.817091909776122	8969	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	HDL
 0.170170090045462	0.864876373304332	8969	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	HDL
 -0.0895437435258304	0.928649790877347	9372	HGDP1KG	WBS	eurasia-lat	pcs	LMM	loose	LDL
 0.394393498202045	0.69329054329442	9372	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	LDL
 -1.39976408697499	0.161583975453166	11043	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	LDL
 -0.0544477690509123	0.956578421072784	11043	HGDP1KG	WBS	eur-long	pcs	LMM	loose	LDL
-		11239	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	LDL
+1.27664449310401	0.201727786174198	11239	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	LDL
 -0.252111200164384	0.80095511304822	9156	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	LDL
 -0.180772378997445	0.856546244260735	9156	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	LDL
 1.56658292748926	0.117212210982863	9156	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	LDL
-		9156	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	LDL
+0.0325124377646471	0.974063397372188	9156	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	LDL
 0.174391439681143	0.861557841386429	9156	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	LDL
 1.81964352532907	0.0688133088013445	9156	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	LDL
-		9156	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	LDL
+0.453970231701556	0.649850252714717	9156	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	LDL
 1.97060027604813	0.0487696150418842	9156	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	LDL
-		9156	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	LDL
-		9156	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	LDL
+0.240011600257626	0.810321263711736	9156	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	LDL
+-1.69259694940229	0.0905322121458047	9156	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	LDL
 1.9259067061026	0.0541160239501469	835	HGDP1KG	WBS	eurasia-lat	pcs	LMM	loose	MCHC
 -1.63509529063696	0.102029073255417	835	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	MCHC
 -0.345015792059608	0.730082498517977	929	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	MCHC
 -2.03328292067219	0.0420239476909048	929	HGDP1KG	WBS	eur-long	pcs	LMM	loose	MCHC
-		945	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	MCHC
+-2.07060476799811	0.0383957462298739	945	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	MCHC
 -1.75891344678838	0.0785922108590568	826	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	MCHC
 -0.294217611191886	0.768591624122686	826	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	MCHC
 -1.10367100411856	0.26973587807214	826	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	MCHC
@@ -933,11 +933,11 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 -1.38672288880859	0.165526278350865	7678	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	MCV
 -1.0050727634485	0.314861813957818	8696	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	MCV
 -3.03098990098407	0.00243753400615522	8696	HGDP1KG	WBS	eur-long	pcs	LMM	loose	MCV
-		8814	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	MCV
-		7554	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	MCV
-		7554	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	MCV
-		7554	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	MCV
-		7554	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	MCV
+-1.40549113265033	0.159875284295975	8814	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	MCV
+-1.11285649712624	0.265770066287186	7554	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	MCV
+0.891349394210714	0.372741757502849	7554	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	MCV
+-2.23837256577395	0.0251967695320783	7554	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	MCV
+-1.31575855075589	0.188255095307335	7554	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	MCV
 2.58132575579864	0.00984216615943968	7554	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	MCV
 -1.35033325912464	0.176909108505413	7554	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	MCV
 0.134239299867173	0.89321335033175	7554	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	MCV
@@ -948,16 +948,16 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.592842970082843	0.553286247501449	18172	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Platelet_Count
 0.0791838077766616	0.936886423670968	21171	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Platelet_Count
 0.201851614379218	0.84003272950192	21171	HGDP1KG	WBS	eur-long	pcs	LMM	loose	Platelet_Count
-		21514	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Platelet_Count
-		17735	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Platelet_Count
-		17735	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Platelet_Count
-		17735	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Platelet_Count
-		17735	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Platelet_Count
-		17735	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Platelet_Count
+0.486554145289784	0.62657432576666	21514	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Platelet_Count
+0.456111147583081	0.648310054374007	17735	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Platelet_Count
+0.179848312038742	0.857271654424298	17735	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Platelet_Count
+0.598725879523105	0.549355696503585	17735	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Platelet_Count
+0.665844539891735	0.505510472519691	17735	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Platelet_Count
+-0.468647815029303	0.639321393749037	17735	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Platelet_Count
 0.277491517615402	0.781402718154426	17735	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Platelet_Count
 -0.024466269053615	0.980480689052225	17735	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Platelet_Count
-		17735	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	Platelet_Count
-		17735	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Platelet_Count
+0.55573018133383	0.57839532088452	17735	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	Platelet_Count
+0.57071685329112	0.568191592693894	17735	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Platelet_Count
 -0.324119205094647	0.745847787549271	17735	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Platelet_Count
 -0.0478992183917348	0.961796562310473	5797	HGDP1KG	WBS	eurasia-lat	pcs	LMM	loose	SBP
 0.293293812786293	0.769297582498352	5797	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	SBP
@@ -978,17 +978,17 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.82396652062779	0.0681571338290908	33046	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Standing_Height
 4.54329585876055	5.53814364831721e-06	38153	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Standing_Height
 1.25716024079837	0.208695617130125	38153	HGDP1KG	WBS	eur-long	pcs	LMM	loose	Standing_Height
-		38717	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Standing_Height
-		32235	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Standing_Height
-		32235	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Standing_Height
-		32235	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Standing_Height
-		32235	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Standing_Height
-		32235	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Standing_Height
-		32235	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Standing_Height
-		32235	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Standing_Height
-		32235	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	Standing_Height
-		32235	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Standing_Height
-		32235	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Standing_Height
+-6.51382854940125	7.32591124431952e-11	38717	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Standing_Height
+1.33209627260665	0.182828555026868	32235	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Standing_Height
+0.411347713866182	0.680817587469825	32235	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Standing_Height
+0.235659857901602	0.813696621373032	32235	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Standing_Height
+2.17150447559139	0.0298930592033664	32235	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Standing_Height
+-1.7518035220999	0.0798075983859292	32235	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Standing_Height
+-0.867585672204678	0.385621192823314	32235	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Standing_Height
+0.28433863764316	0.776150878962149	32235	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Standing_Height
+0.0113888025134172	0.990913246741556	32235	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	Standing_Height
+2.213335025901	0.0268745565338158	32235	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Standing_Height
+1.08307230595481	0.278776330247821	32235	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Standing_Height
 -1.52373471928955	0.127574992725738	342	HGDP1KG	WBS	eurasia-lat	pcs	LMM	loose	Total_Protein
 1.69407919753939	0.0902502346886561	342	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Total_Protein
 -0.0292422393041189	0.976671393531826	352	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Total_Protein
@@ -1008,527 +1008,527 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.43552450097346	0.151137691650507	13168	HGDP1KG	WBS	eurasia-long	pcs	LMM	loose	Triglycerides
 1.16142737152831	0.245468143141981	15401	HGDP1KG	WBS	eur-lat	pcs	LMM	loose	Triglycerides
 1.35457455097087	0.175553146201414	15401	HGDP1KG	WBS	eur-long	pcs	LMM	loose	Triglycerides
-		15641	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Triglycerides
-		12871	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Triglycerides
-		12871	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Triglycerides
+-1.85446908064599	0.0636720796868751	15641	HGDP1KG	WBS	sdi-eur	pcs	LMM	loose	Triglycerides
+1.39019023465732	0.16447111803198	12871	HGDP1KG	WBS	eas-nfe	pcs	LMM	loose	Triglycerides
+0.35612851586511	0.721744322769296	12871	HGDP1KG	WBS	eas-sas	pcs	LMM	loose	Triglycerides
 0.253182454840128	0.800127223932235	12871	HGDP1KG	WBS	eas-afr	pcs	LMM	loose	Triglycerides
-		12871	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Triglycerides
-		12871	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Triglycerides
-		12871	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Triglycerides
-		12871	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Triglycerides
-		12871	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	Triglycerides
-		12871	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Triglycerides
-		12871	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Triglycerides
+0.464682583786728	0.642158782300641	12871	HGDP1KG	WBS	eas-amr	pcs	LMM	loose	Triglycerides
+-1.91916613779759	0.0549633114949651	12871	HGDP1KG	WBS	nfe-sas	pcs	LMM	loose	Triglycerides
+-0.965396682079773	0.334346162696752	12871	HGDP1KG	WBS	nfe-afr	pcs	LMM	loose	Triglycerides
+-1.57391196021452	0.115507804482788	12871	HGDP1KG	WBS	nfe-amr	pcs	LMM	loose	Triglycerides
+0.101885997033739	0.918847164865852	12871	HGDP1KG	WBS	sas-afr	pcs	LMM	loose	Triglycerides
+0.184682407944582	0.853478145238598	12871	HGDP1KG	WBS	sas-amr	pcs	LMM	loose	Triglycerides
+-0.00451843640808595	0.996394821618404	12871	HGDP1KG	WBS	afr-amr	pcs	LMM	loose	Triglycerides
 -42.7901736470122	0	13073	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Alkaline_Phosphate
 35.5497589249145	8.38023961372379e-277	13073	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Alkaline_Phosphate
 -17.6893950605085	5.06158877994507e-70	12965	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Alkaline_Phosphate
 20.6315155268101	1.43094559406325e-94	12965	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Alkaline_Phosphate
-		12966	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Alkaline_Phosphate
-		13328	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Alkaline_Phosphate
-		13328	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Alkaline_Phosphate
-		13328	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Alkaline_Phosphate
-		13328	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Alkaline_Phosphate
-		13328	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Alkaline_Phosphate
-		13328	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Alkaline_Phosphate
-		13328	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Alkaline_Phosphate
-		13328	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Alkaline_Phosphate
-		13328	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Alkaline_Phosphate
-		13328	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Alkaline_Phosphate
+-1.06725728124196	0.285855672672217	12966	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Alkaline_Phosphate
+34.6611101505619	3.03849009940319e-263	13328	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Alkaline_Phosphate
+4.23207486552274	2.31545303585984e-05	13328	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Alkaline_Phosphate
+-44.8215829707356	0	13328	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Alkaline_Phosphate
+22.415561546817	2.7751877390808e-111	13328	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Alkaline_Phosphate
+-40.1963450698318	0	13328	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Alkaline_Phosphate
+-47.362319076801	0	13328	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Alkaline_Phosphate
+-36.4947918122268	1.34129695055912e-291	13328	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Alkaline_Phosphate
+-45.4304444395036	0	13328	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Alkaline_Phosphate
+23.5667631905054	8.45181804605602e-123	13328	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Alkaline_Phosphate
+47.3341026017777	0	13328	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Alkaline_Phosphate
 -32.0558104394529	1.82196180865015e-225	4746	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Aspartate_Aminotransferase
 28.3404991044402	1.09604388782442e-176	4746	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Aspartate_Aminotransferase
 -15.9673798744114	2.15656471695728e-57	4783	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Aspartate_Aminotransferase
 9.78501509440226	1.30575800741942e-22	4783	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Aspartate_Aminotransferase
-		4783	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Aspartate_Aminotransferase
-		5048	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Aspartate_Aminotransferase
-		5048	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Aspartate_Aminotransferase
-		5048	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Aspartate_Aminotransferase
-		5048	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Aspartate_Aminotransferase
+1.78677259005834	0.0739742511925171	4783	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Aspartate_Aminotransferase
+29.8736411049607	4.33003882400099e-196	5048	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Aspartate_Aminotransferase
+23.0073242439861	3.93726833753748e-117	5048	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Aspartate_Aminotransferase
+-37.3510101438672	2.44148669446143e-305	5048	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Aspartate_Aminotransferase
+15.9571789890242	2.53953265801157e-57	5048	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Aspartate_Aminotransferase
 -29.8834894130328	3.22519791068668e-196	5048	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Aspartate_Aminotransferase
 -39.696348593572	0	5048	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Aspartate_Aminotransferase
-		5048	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Aspartate_Aminotransferase
+-33.2530506665934	1.84423214025998e-242	5048	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Aspartate_Aminotransferase
 -39.0890636124724	0	5048	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Aspartate_Aminotransferase
-		5048	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Aspartate_Aminotransferase
-		5048	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Aspartate_Aminotransferase
+-15.7988191744502	3.16998859227671e-56	5048	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Aspartate_Aminotransferase
+38.5203957420183	0	5048	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Aspartate_Aminotransferase
 -15.5637970593637	1.28258835276385e-54	2790	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Basophill_Percentage
 -2.10064393805829	0.0356722339894518	2790	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Basophill_Percentage
 -18.8017570194648	7.30557741842189e-79	2947	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Basophill_Percentage
 -4.25598509616842	2.08130571568613e-05	2947	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Basophill_Percentage
-		2947	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Basophill_Percentage
-		3144	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Basophill_Percentage
-		3144	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Basophill_Percentage
-		3144	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Basophill_Percentage
-		3144	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Basophill_Percentage
-		3144	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Basophill_Percentage
-		3144	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Basophill_Percentage
-		3144	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Basophill_Percentage
+3.07599116446361	0.00209804062098712	2947	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Basophill_Percentage
+6.10292993838901	1.04141500002157e-09	3144	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Basophill_Percentage
+-6.59222049667857	4.33296412184074e-11	3144	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Basophill_Percentage
+-34.6664282210135	2.52657134282826e-263	3144	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Basophill_Percentage
+-18.0793929976164	4.63152299737652e-73	3144	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Basophill_Percentage
+-17.025856542151	5.28139667518574e-65	3144	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Basophill_Percentage
+-35.0156835009444	1.29869257954397e-268	3144	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Basophill_Percentage
+-26.8145852878183	2.18437406780712e-158	3144	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Basophill_Percentage
 -35.0045775430598	1.91649077282301e-268	3144	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Basophill_Percentage
-		3144	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Basophill_Percentage
-		3144	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Basophill_Percentage
+-15.0921423770096	1.82421585288318e-51	3144	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Basophill_Percentage
+34.8020753742122	2.26263972508848e-265	3144	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Basophill_Percentage
 53.198838566572	0	86669	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Body_Weight
 -55.9206219403698	0	86669	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Body_Weight
 -35.8770459971002	6.96652844301151e-282	87430	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Body_Weight
 -36.6172767141702	1.5187677558543e-293	87430	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Body_Weight
-		87789	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Body_Weight
-		90145	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Body_Weight
-		90145	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Body_Weight
-		90145	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Body_Weight
-		90145	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Body_Weight
-		90145	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Body_Weight
-		90145	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Body_Weight
-		90145	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Body_Weight
-		90145	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Body_Weight
-		90145	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Body_Weight
-		90145	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Body_Weight
+14.709590138951	5.59452284709487e-49	87789	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Body_Weight
+-54.8207248386015	0	90145	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Body_Weight
+-51.3288314971993	0	90145	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Body_Weight
+-63.0292271192618	0	90145	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Body_Weight
+-56.4553286414273	0	90145	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Body_Weight
+53.4777096172987	0	90145	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Body_Weight
+-57.9097970965433	0	90145	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Body_Weight
+38.1764743194381	0	90145	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Body_Weight
+-61.9391620066491	0	90145	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Body_Weight
+-37.3022479459312	1.50901184915481e-304	90145	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Body_Weight
+60.9001901961912	0	90145	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Body_Weight
 51.7279930749233	0	80921	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Cholesterol
 -45.2277236080839	0	80921	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Cholesterol
 27.4126291928183	1.93924587868095e-165	81574	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Cholesterol
 -27.4978681283629	1.86177740993549e-166	81574	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Cholesterol
-		81722	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Cholesterol
-		83990	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Cholesterol
-		83990	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Cholesterol
-		83990	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Cholesterol
-		83990	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Cholesterol
-		83990	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Cholesterol
-		83990	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Cholesterol
-		83990	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Cholesterol
-		83990	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Cholesterol
-		83990	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Cholesterol
-		83990	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Cholesterol
+-6.89258822885153	5.47862903733786e-12	81722	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Cholesterol
+-50.7347586756591	0	83990	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Cholesterol
+-36.1117105650056	1.48550919583707e-285	83990	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Cholesterol
+57.5299513694503	0	83990	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Cholesterol
+-37.8984694373211	0	83990	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Cholesterol
+52.281061007661	0	83990	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Cholesterol
+59.8780579254079	0	83990	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Cholesterol
+53.358602000079	0	83990	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Cholesterol
+59.5020193972161	0	83990	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Cholesterol
+-8.09281454078641	5.83016005116777e-16	83990	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Cholesterol
+-59.5622908097835	0	83990	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Cholesterol
 -48.600017309886	0	19957	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Eosinophill_Percentage
 45.7348376941108	0	19957	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Eosinophill_Percentage
 -5.40809126242924	6.36999656281976e-08	19647	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Eosinophill_Percentage
 29.5902187908464	1.99658803394991e-192	19647	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Eosinophill_Percentage
-		19682	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Eosinophill_Percentage
-		20142	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Eosinophill_Percentage
-		20142	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Eosinophill_Percentage
-		20142	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Eosinophill_Percentage
-		20142	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Eosinophill_Percentage
-		20142	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Eosinophill_Percentage
-		20142	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Eosinophill_Percentage
-		20142	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Eosinophill_Percentage
-		20142	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Eosinophill_Percentage
-		20142	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Eosinophill_Percentage
-		20142	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Eosinophill_Percentage
+-5.48888101368622	4.04487971718938e-08	19682	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Eosinophill_Percentage
+44.5301798756517	0	20142	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Eosinophill_Percentage
+31.0850080397947	3.84059792264461e-212	20142	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Eosinophill_Percentage
+-31.3234810945644	2.23532151429892e-215	20142	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Eosinophill_Percentage
+40.015694912319	0	20142	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Eosinophill_Percentage
+-46.3693407380552	0	20142	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Eosinophill_Percentage
+-49.814476547331	0	20142	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Eosinophill_Percentage
+-43.7740983805551	0	20142	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Eosinophill_Percentage
+-44.5331179957928	0	20142	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Eosinophill_Percentage
+29.2447400500537	5.23795030462514e-188	20142	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Eosinophill_Percentage
+47.3415768670113	0	20142	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Eosinophill_Percentage
 -44.2860163201958	0	10277	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Glucose
 42.529443581332	0	10277	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Glucose
 -6.15456142128784	7.52855430119744e-10	10037	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Glucose
 28.1308290618739	4.11285392588371e-174	10037	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Glucose
-		10056	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Glucose
-		10364	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Glucose
-		10364	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Glucose
-		10364	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Glucose
-		10364	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Glucose
-		10364	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Glucose
-		10364	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Glucose
-		10364	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Glucose
-		10364	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Glucose
-		10364	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Glucose
-		10364	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Glucose
+-0.568624442911277	0.56961103335547	10056	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Glucose
+40.841239388548	0	10364	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Glucose
+27.8277350403372	2.00357948578689e-170	10364	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Glucose
+-23.6818706450558	5.54433430975833e-124	10364	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Glucose
+36.7803450190727	3.80686061148317e-296	10364	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Glucose
+-41.8809927157089	0	10364	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Glucose
+-45.1668026746473	0	10364	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Glucose
+-39.2391264086853	0	10364	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Glucose
+-38.741989762882	0	10364	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Glucose
+26.688879039243	6.33626882564929e-157	10364	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Glucose
+42.3100506628083	0	10364	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Glucose
 -55.592110300359	0	132608	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	HbA1c
 51.8109773930501	0	132608	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	HbA1c
 -22.7108981932715	3.49623433891056e-114	134857	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	HbA1c
 33.6287493510437	6.37673751210543e-248	134857	HGDP1KG	WBS	eur-long	nopcs	LR	strict	HbA1c
-		135213	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	HbA1c
-		135271	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	HbA1c
-		135271	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	HbA1c
-		135271	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	HbA1c
-		135271	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	HbA1c
-		135271	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	HbA1c
-		135271	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	HbA1c
-		135271	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	HbA1c
-		135271	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	HbA1c
-		135271	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	HbA1c
-		135271	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	HbA1c
+2.99704247502843	0.00272612726971897	135213	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	HbA1c
+54.3031672868106	0	135271	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	HbA1c
+40.2423112287117	0	135271	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	HbA1c
+-54.4701977894291	0	135271	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	HbA1c
+46.944648226622	0	135271	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	HbA1c
+-55.7541285183593	0	135271	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	HbA1c
+-60.3091633139037	0	135271	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	HbA1c
+-54.7500731794996	0	135271	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	HbA1c
+-58.7842151957049	0	135271	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	HbA1c
+27.6934674023724	8.36891920457673e-169	135271	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	HbA1c
+59.4886501951204	0	135271	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	HbA1c
 45.0873450294669	0	15743	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	HDL
 -42.9638208062844	0	15743	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	HDL
 -0.341528969665813	0.73270539981224	15497	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	HDL
 -30.3875643130586	8.01918339652949e-203	15497	HGDP1KG	WBS	eur-long	nopcs	LR	strict	HDL
-		15552	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	HDL
-		15796	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	HDL
-		15796	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	HDL
-		15796	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	HDL
-		15796	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	HDL
-		15796	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	HDL
-		15796	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	HDL
-		15796	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	HDL
-		15796	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	HDL
-		15796	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	HDL
-		15796	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	HDL
+5.36824973455799	7.95044154924704e-08	15552	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	HDL
+-41.9328254990745	0	15796	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	HDL
+-21.2700794847965	2.14916128314839e-100	15796	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	HDL
+-7.50018764256046	6.3726541284875e-14	15796	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	HDL
+-39.2661633936017	0	15796	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	HDL
+44.6386380636256	0	15796	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	HDL
+42.2994518806172	0	15796	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	HDL
+38.8900887532416	0	15796	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	HDL
+11.3937855455184	4.49047620137127e-30	15796	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	HDL
+-36.2771014029299	3.71629490779802e-288	15796	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	HDL
+-33.5220269801407	2.30229033534456e-246	15796	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	HDL
 50.688047643559	0	67245	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	LDL
 -43.8355156423143	0	67245	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	LDL
 27.132574869725	4.06573835499985e-162	67801	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	LDL
 -26.3778540051231	2.4600459727584e-153	67801	HGDP1KG	WBS	eur-long	nopcs	LR	strict	LDL
-		67935	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	LDL
-		69971	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	LDL
-		69971	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	LDL
-		69971	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	LDL
-		69971	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	LDL
-		69971	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	LDL
-		69971	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	LDL
-		69971	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	LDL
-		69971	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	LDL
-		69971	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	LDL
-		69971	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	LDL
+-7.30453567101209	2.78225853862618e-13	67935	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	LDL
+-49.8038112025265	0	69971	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	LDL
+-36.4456771665431	8.05428583894017e-291	69971	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	LDL
+57.4016944045597	0	69971	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	LDL
+-36.4841995285128	1.97473449981399e-291	69971	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	LDL
+51.1534848815066	0	69971	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	LDL
+59.6453436126875	0	69971	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	LDL
+52.7663935468182	0	69971	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	LDL
+59.4154420434916	0	69971	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	LDL
+-3.3985148177976	0.0006775279266915	69971	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	LDL
+-59.360956314348	0	69971	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	LDL
 51.4859971644402	0	101883	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	MCHC
 -44.8203698246425	0	101883	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	MCHC
 27.886140561759	3.92917776445328e-171	102668	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	MCHC
 -27.4766077570323	3.34240946321612e-166	102668	HGDP1KG	WBS	eur-long	nopcs	LR	strict	MCHC
-		102867	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	MCHC
-		105854	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	MCHC
-		105854	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	MCHC
-		105854	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	MCHC
-		105854	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	MCHC
-		105854	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	MCHC
-		105854	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	MCHC
-		105854	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	MCHC
-		105854	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	MCHC
-		105854	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	MCHC
-		105854	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	MCHC
+-9.24602818424583	2.32989747005491e-20	102867	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	MCHC
+-51.0987363853603	0	105854	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	MCHC
+-38.0997934451689	0	105854	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	MCHC
+58.029186338027	0	105854	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	MCHC
+-38.0855128486698	0	105854	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	MCHC
+52.5742337043674	0	105854	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	MCHC
+60.2611935166696	0	105854	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	MCHC
+53.7273999905345	0	105854	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	MCHC
+59.9372221427612	0	105854	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	MCHC
+-2.93093739171475	0.00337940882194845	105854	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	MCHC
+-60.0094623008536	0	105854	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	MCHC
 55.3013050681641	0	150340	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	MCV
 -50.7516350235498	0	150340	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	MCV
 27.2163381200123	4.16154133913909e-163	157871	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	MCV
 -33.4562646265198	2.0867432292496e-245	157871	HGDP1KG	WBS	eur-long	nopcs	LR	strict	MCV
-		158587	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	MCV
-		152294	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	MCV
-		152294	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	MCV
-		152294	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	MCV
-		152294	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	MCV
-		152294	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	MCV
-		152294	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	MCV
-		152294	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	MCV
-		152294	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	MCV
-		152294	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	MCV
-		152294	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	MCV
+-10.9007508494177	1.14310063183661e-27	158587	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	MCV
+-54.0638240925387	0	152294	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	MCV
+-38.0911233336914	0	152294	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	MCV
+55.8731012528495	0	152294	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	MCV
+-45.624568966115	0	152294	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	MCV
+55.8021102768144	0	152294	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	MCV
+60.3515693494014	0	152294	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	MCV
+54.5515576891691	0	152294	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	MCV
+59.0207178904694	0	152294	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	MCV
+-27.6811308269046	1.17815602318807e-168	152294	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	MCV
+-59.7299457233464	0	152294	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	MCV
 42.1400894063476	0	61911	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Platelet_Count
 -31.4677090185886	2.40331524281918e-217	61911	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Platelet_Count
 31.5216640027877	4.38605068579402e-218	62970	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Platelet_Count
 -18.5236346828436	1.33137715534644e-76	62970	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Platelet_Count
-		63104	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Platelet_Count
-		65048	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Platelet_Count
-		65048	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Platelet_Count
-		65048	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Platelet_Count
-		65048	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Platelet_Count
-		65048	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Platelet_Count
-		65048	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Platelet_Count
-		65048	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Platelet_Count
-		65048	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Platelet_Count
-		65048	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Platelet_Count
-		65048	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Platelet_Count
+-15.5485675778802	1.62704233342984e-54	63104	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Platelet_Count
+-44.7549445675884	0	65048	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Platelet_Count
+-33.3783733866724	2.82430583829739e-244	65048	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Platelet_Count
+58.5884522162675	0	65048	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Platelet_Count
+-19.9705582743574	9.93369065328224e-89	65048	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Platelet_Count
+45.0561579172728	0	65048	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Platelet_Count
+59.3642866806298	0	65048	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Platelet_Count
+51.0792597007086	0	65048	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Platelet_Count
+59.6258844257531	0	65048	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Platelet_Count
+26.0056039111523	4.2797082263859e-149	65048	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Platelet_Count
+-59.3164585062355	0	65048	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Platelet_Count
 -35.3902657077617	2.41050690191103e-274	25618	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	SBP
 21.0499335308975	2.29000796554595e-98	25618	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	SBP
 -27.1636163836511	1.74846287180578e-162	26234	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	SBP
 10.1555623841898	3.13000359649949e-24	26234	HGDP1KG	WBS	eur-long	nopcs	LR	strict	SBP
-		26274	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	SBP
-		27455	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	SBP
-		27455	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	SBP
-		27455	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	SBP
-		27455	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	SBP
-		27455	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	SBP
-		27455	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	SBP
-		27455	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	SBP
-		27455	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	SBP
-		27455	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	SBP
-		27455	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	SBP
+6.50736965218587	7.6478060746798e-11	26274	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	SBP
+37.4503919889798	5.91903379742454e-307	27455	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	SBP
+21.8998048497212	2.60895627043885e-106	27455	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	SBP
+-55.6049893099673	0	27455	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	SBP
+3.83034301507998	0.000127964751317308	27455	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	SBP
+-40.286182620092	0	27455	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	SBP
+-56.0105489742061	0	27455	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	SBP
+-48.0601676533093	0	27455	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	SBP
+-56.0797651204174	0	27455	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	SBP
+-25.3202335010742	1.91254901930369e-141	27455	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	SBP
+55.8715764856208	0	27455	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	SBP
 57.8374998890249	0	148956	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Standing_Height
 -56.6497172424066	0	148956	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Standing_Height
 7.93943046898833	2.03111710231476e-15	160093	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Standing_Height
 -38.1243371792067	0	160093	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Standing_Height
-		161607	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Standing_Height
-		147786	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Standing_Height
-		147786	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Standing_Height
-		147786	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Standing_Height
-		147786	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Standing_Height
-		147786	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Standing_Height
-		147786	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Standing_Height
-		147786	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Standing_Height
-		147786	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Standing_Height
-		147786	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Standing_Height
-		147786	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Standing_Height
+-3.36523583788625	0.000764782595724381	161607	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Standing_Height
+-56.565851399213	0	147786	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Standing_Height
+-48.8792483737927	0	147786	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Standing_Height
+16.5791057408154	9.86863950634818e-62	147786	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Standing_Height
+-53.1776333700194	0	147786	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Standing_Height
+57.3688785757553	0	147786	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Standing_Height
+58.4874405160498	0	147786	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Standing_Height
+54.7226021771995	0	147786	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Standing_Height
+51.1682401300664	0	147786	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Standing_Height
+-31.9008991425293	2.59448205024482e-223	147786	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Standing_Height
+-53.7822745822243	0	147786	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Standing_Height
 -51.5825753256076	0	61441	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Total_Protein
 46.7241669124916	0	61441	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Total_Protein
 -24.3925847592594	2.04993350164638e-131	61713	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Total_Protein
 28.7524739154303	8.43498253438221e-182	61713	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Total_Protein
-		61803	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Total_Protein
-		63855	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Total_Protein
-		63855	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Total_Protein
-		63855	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Total_Protein
-		63855	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Total_Protein
-		63855	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Total_Protein
-		63855	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Total_Protein
-		63855	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Total_Protein
-		63855	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Total_Protein
-		63855	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Total_Protein
-		63855	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Total_Protein
+7.09698727049829	1.27505797653568e-12	61803	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Total_Protein
+50.2421340008602	0	63855	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Total_Protein
+40.058082488317	0	63855	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Total_Protein
+-56.1048709659315	0	63855	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Total_Protein
+40.0999942458141	0	63855	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Total_Protein
+-51.2507251638515	0	63855	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Total_Protein
+-59.2929351941575	0	63855	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Total_Protein
+-52.0430500457818	0	63855	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Total_Protein
+-58.9179261294055	0	63855	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Total_Protein
+3.56000006810116	0.000370854697692658	63855	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Total_Protein
+58.9792524277712	0	63855	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Total_Protein
 28.9682794656448	1.65180495466416e-184	76513	HGDP1KG	WBS	eurasia-lat	nopcs	LR	strict	Triglycerides
 -9.96637075882205	2.13902532813996e-23	76513	HGDP1KG	WBS	eurasia-long	nopcs	LR	strict	Triglycerides
 34.1872932343664	3.73510263792239e-256	77836	HGDP1KG	WBS	eur-lat	nopcs	LR	strict	Triglycerides
 -8.18642837187425	2.69092698790993e-16	77836	HGDP1KG	WBS	eur-long	nopcs	LR	strict	Triglycerides
-		78045	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Triglycerides
-		80501	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Triglycerides
-		80501	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Triglycerides
-		80501	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Triglycerides
-		80501	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Triglycerides
-		80501	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Triglycerides
-		80501	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Triglycerides
-		80501	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Triglycerides
-		80501	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Triglycerides
-		80501	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Triglycerides
-		80501	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Triglycerides
+-16.5174091861182	2.74958205904916e-61	78045	HGDP1KG	WBS	sdi-eur	nopcs	LR	strict	Triglycerides
+-30.248690533692	5.42832164184273e-201	80501	HGDP1KG	WBS	eas-nfe	nopcs	LR	strict	Triglycerides
+-17.4761760161616	2.17612218224866e-68	80501	HGDP1KG	WBS	eas-sas	nopcs	LR	strict	Triglycerides
+60.2513815101076	0	80501	HGDP1KG	WBS	eas-afr	nopcs	LR	strict	Triglycerides
+11.1153391530888	1.05648429919743e-28	80501	HGDP1KG	WBS	eas-amr	nopcs	LR	strict	Triglycerides
+33.2261617721367	4.51157697325064e-242	80501	HGDP1KG	WBS	nfe-sas	nopcs	LR	strict	Triglycerides
+60.1738603797704	0	80501	HGDP1KG	WBS	nfe-afr	nopcs	LR	strict	Triglycerides
+47.8799110247428	0	80501	HGDP1KG	WBS	nfe-amr	nopcs	LR	strict	Triglycerides
+60.673219745778	0	80501	HGDP1KG	WBS	sas-afr	nopcs	LR	strict	Triglycerides
+36.6056363914229	2.3265487797726e-293	80501	HGDP1KG	WBS	sas-amr	nopcs	LR	strict	Triglycerides
+-60.4189043186659	0	80501	HGDP1KG	WBS	afr-amr	nopcs	LR	strict	Triglycerides
 -53.4907613644499	0	76264	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Alkaline_Phosphate
 46.9020988596359	0	76264	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Alkaline_Phosphate
 -20.2042258944995	8.98676946343096e-91	80445	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Alkaline_Phosphate
 29.5264171538223	1.3190045325023e-191	80445	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Alkaline_Phosphate
-		81013	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Alkaline_Phosphate
-		77117	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Alkaline_Phosphate
-		77117	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Alkaline_Phosphate
-		77117	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Alkaline_Phosphate
-		77117	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Alkaline_Phosphate
-		77117	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Alkaline_Phosphate
-		77117	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Alkaline_Phosphate
-		77117	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Alkaline_Phosphate
-		77117	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Alkaline_Phosphate
-		77117	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Alkaline_Phosphate
-		77117	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Alkaline_Phosphate
+-9.39994039764304	5.45939882563525e-21	81013	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Alkaline_Phosphate
+48.7979775689102	0	77117	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Alkaline_Phosphate
+10.5077614137172	7.95596124008764e-26	77117	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Alkaline_Phosphate
+-55.3461169461668	0	77117	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Alkaline_Phosphate
+34.8844301831516	1.28049678519423e-266	77117	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Alkaline_Phosphate
+-53.6840271196167	0	77117	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Alkaline_Phosphate
+-58.692437177478	0	77117	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Alkaline_Phosphate
+-50.9097011578168	0	77117	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Alkaline_Phosphate
+-56.4111634942483	0	77117	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Alkaline_Phosphate
+34.842257899321	5.57739945073217e-266	77117	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Alkaline_Phosphate
+58.1971941634686	0	77117	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Alkaline_Phosphate
 -48.0624363450824	0	48808	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Aspartate_Aminotransferase
 43.0262438392108	0	48808	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Aspartate_Aminotransferase
 -20.7873275886082	5.63636252591659e-96	51159	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Aspartate_Aminotransferase
 21.3481199213134	4.05943971094866e-101	51159	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Aspartate_Aminotransferase
-		51454	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Aspartate_Aminotransferase
-		50325	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Aspartate_Aminotransferase
-		50325	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Aspartate_Aminotransferase
-		50325	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Aspartate_Aminotransferase
-		50325	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Aspartate_Aminotransferase
-		50325	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Aspartate_Aminotransferase
-		50325	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Aspartate_Aminotransferase
-		50325	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Aspartate_Aminotransferase
-		50325	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Aspartate_Aminotransferase
-		50325	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Aspartate_Aminotransferase
-		50325	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Aspartate_Aminotransferase
+-0.104527383491909	0.916750838418442	51454	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Aspartate_Aminotransferase
+48.8507875822893	0	50325	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Aspartate_Aminotransferase
+40.9810259438887	0	50325	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Aspartate_Aminotransferase
+-55.4377705000366	0	50325	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Aspartate_Aminotransferase
+33.7471327405928	1.17779152332059e-249	50325	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Aspartate_Aminotransferase
+-47.610872726555	0	50325	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Aspartate_Aminotransferase
+-58.2456231898649	0	50325	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Aspartate_Aminotransferase
+-51.3376457105252	0	50325	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Aspartate_Aminotransferase
+-57.9716733541185	0	50325	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Aspartate_Aminotransferase
+-19.3797907943689	1.14310684431395e-83	50325	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Aspartate_Aminotransferase
+57.4853827263172	0	50325	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Aspartate_Aminotransferase
 -15.0027405372263	7.04493674587901e-51	40078	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Basophill_Percentage
 -13.9805547390821	2.04884766099565e-44	40078	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Basophill_Percentage
 -29.5023806472574	2.68347579638215e-191	42089	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Basophill_Percentage
 -6.91152649019385	4.79465975388023e-12	42089	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Basophill_Percentage
-		42362	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Basophill_Percentage
-		41941	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Basophill_Percentage
-		41941	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Basophill_Percentage
-		41941	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Basophill_Percentage
-		41941	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Basophill_Percentage
-		41941	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Basophill_Percentage
-		41941	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Basophill_Percentage
-		41941	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Basophill_Percentage
-		41941	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Basophill_Percentage
-		41941	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Basophill_Percentage
-		41941	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Basophill_Percentage
+0.632452434070303	0.527091280620234	42362	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Basophill_Percentage
+-11.0894944388619	1.41082834318269e-28	41941	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Basophill_Percentage
+-26.2067990194703	2.2231622315928e-151	41941	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Basophill_Percentage
+-58.1338502359684	0	41941	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Basophill_Percentage
+-37.6341517053706	0	41941	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Basophill_Percentage
+-20.308241827177	1.08727230687208e-91	41941	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Basophill_Percentage
+-56.7214268221467	0	41941	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Basophill_Percentage
+-34.0751046437208	1.72463870598249e-254	41941	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Basophill_Percentage
+-57.3098170724205	0	41941	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Basophill_Percentage
+-22.8467810066911	1.57314408141451e-115	41941	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Basophill_Percentage
+57.2213061623229	0	41941	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Basophill_Percentage
 54.3774585890804	0	145112	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Body_Weight
 -56.4773518903858	0	145112	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Body_Weight
 -36.0099425191133	5.84642383224026e-284	152874	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Body_Weight
 -37.5588050100588	0	152874	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Body_Weight
-		154217	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Body_Weight
-		149167	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Body_Weight
-		149167	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Body_Weight
-		149167	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Body_Weight
-		149167	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Body_Weight
-		149167	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Body_Weight
-		149167	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Body_Weight
-		149167	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Body_Weight
-		149167	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Body_Weight
-		149167	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Body_Weight
-		149167	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Body_Weight
+13.0068094963109	1.11918020206473e-38	154217	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Body_Weight
+-55.696483294216	0	149167	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Body_Weight
+-51.6143783436155	0	149167	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Body_Weight
+-63.1452783331694	0	149167	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Body_Weight
+-56.9007436324092	0	149167	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Body_Weight
+55.38891370028	0	149167	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Body_Weight
+-58.500576205548	0	149167	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Body_Weight
+40.0118187623854	0	149167	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Body_Weight
+-62.3782291630364	0	149167	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Body_Weight
+-40.0425925626988	0	149167	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Body_Weight
+61.2656104591513	0	149167	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Body_Weight
 53.7769289920299	0	149018	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Cholesterol
 -47.9352358834369	0	149018	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Cholesterol
 27.5413966997744	5.61055058356294e-167	161382	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Cholesterol
 -28.9258789579311	5.64460793456398e-184	161382	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Cholesterol
-		162770	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Cholesterol
-		151051	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Cholesterol
-		151051	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Cholesterol
-		151051	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Cholesterol
-		151051	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Cholesterol
-		151051	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Cholesterol
-		151051	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Cholesterol
-		151051	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Cholesterol
-		151051	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Cholesterol
-		151051	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Cholesterol
-		151051	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Cholesterol
+-5.82886914056426	5.5804240317831e-09	162770	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Cholesterol
+-53.3672528309146	0	151051	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Cholesterol
+-38.7619858078579	0	151051	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Cholesterol
+57.7316921901093	0	151051	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Cholesterol
+-42.0479091480131	0	151051	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Cholesterol
+54.805826068649	0	151051	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Cholesterol
+60.6399497279152	0	151051	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Cholesterol
+54.8806450260707	0	151051	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Cholesterol
+59.9404126470237	0	151051	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Cholesterol
+-13.7427690378109	5.62813392258379e-43	151051	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Cholesterol
+-60.1728255502567	0	151051	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Cholesterol
 -55.9712017705984	0	90273	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Eosinophill_Percentage
 53.54404795229	0	90273	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Eosinophill_Percentage
 -7.87780413224792	3.33184459853782e-15	95086	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Eosinophill_Percentage
 34.8453789443426	5.00223127562916e-266	95086	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Eosinophill_Percentage
-		95728	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Eosinophill_Percentage
-		90662	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Eosinophill_Percentage
-		90662	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Eosinophill_Percentage
-		90662	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Eosinophill_Percentage
-		90662	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Eosinophill_Percentage
-		90662	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Eosinophill_Percentage
-		90662	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Eosinophill_Percentage
-		90662	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Eosinophill_Percentage
-		90662	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Eosinophill_Percentage
-		90662	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Eosinophill_Percentage
-		90662	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Eosinophill_Percentage
+-12.857370657078	7.81913965664406e-38	95728	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Eosinophill_Percentage
+53.7148921650515	0	90662	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Eosinophill_Percentage
+39.7831644869934	0	90662	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Eosinophill_Percentage
+-41.988934347384	0	90662	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Eosinophill_Percentage
+48.3020525448378	0	90662	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Eosinophill_Percentage
+-55.4485833233392	0	90662	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Eosinophill_Percentage
+-58.2898188006119	0	90662	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Eosinophill_Percentage
+-53.5052319294749	0	90662	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Eosinophill_Percentage
+-53.7038593705412	0	90662	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Eosinophill_Percentage
+36.2711177264294	4.61792016893535e-288	90662	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Eosinophill_Percentage
+56.0591842819284	0	90662	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Eosinophill_Percentage
 -55.0438831433168	0	68243	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Glucose
 52.4584911895303	0	68243	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Glucose
 -12.8579249197994	7.76328379460637e-38	69775	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Glucose
 35.8423984380816	2.4156018723429e-281	69775	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Glucose
-		70092	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Glucose
-		68824	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Glucose
-		68824	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Glucose
-		68824	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Glucose
-		68824	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Glucose
-		68824	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Glucose
-		68824	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Glucose
-		68824	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Glucose
-		68824	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Glucose
-		68824	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Glucose
-		68824	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Glucose
+-1.64420603511175	0.100133650758186	70092	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Glucose
+52.729499308377	0	68824	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Glucose
+38.1566588931944	0	68824	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Glucose
+-40.1524344939401	0	68824	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Glucose
+47.7023724274411	0	68824	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Glucose
+-54.4477938002642	0	68824	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Glucose
+-57.4511298230564	0	68824	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Glucose
+-52.0345370071003	0	68824	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Glucose
+-52.5922518558491	0	68824	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Glucose
+36.2896920829388	2.35266342137078e-288	68824	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Glucose
+55.1890159848498	0	68824	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Glucose
 -56.4184076492938	0	198276	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	HbA1c
 52.8756314054618	0	198276	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	HbA1c
 -22.8848784957526	6.57234563946609e-116	236753	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	HbA1c
 34.2518822937703	4.08885559779138e-257	236753	HGDP1KG	WBS	eur-long	nopcs	LR	loose	HbA1c
-		240702	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	HbA1c
-		196024	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	HbA1c
-		196024	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	HbA1c
-		196024	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	HbA1c
-		196024	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	HbA1c
-		196024	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	HbA1c
-		196024	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	HbA1c
-		196024	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	HbA1c
-		196024	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	HbA1c
-		196024	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	HbA1c
-		196024	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	HbA1c
+1.70440928109122	0.088304651215524	240702	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	HbA1c
+55.3081999567098	0	196024	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	HbA1c
+41.2611757074773	0	196024	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	HbA1c
+-54.5132090831637	0	196024	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	HbA1c
+48.5395692380735	0	196024	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	HbA1c
+-56.7856797178794	0	196024	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	HbA1c
+-60.5892102743411	0	196024	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	HbA1c
+-55.1978763045698	0	196024	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	HbA1c
+-58.8690513394589	0	196024	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	HbA1c
+30.346353937004	2.80678432629617e-202	196024	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	HbA1c
+59.7419112035559	0	196024	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	HbA1c
 55.6402850215753	0	81898	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	HDL
 -53.3540599355891	0	81898	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	HDL
 5.17468138803205	2.28300224481041e-07	85657	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	HDL
 -38.2159353221094	0	85657	HGDP1KG	WBS	eur-long	nopcs	LR	loose	HDL
-		86313	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	HDL
-		81333	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	HDL
-		81333	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	HDL
-		81333	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	HDL
-		81333	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	HDL
-		81333	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	HDL
-		81333	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	HDL
-		81333	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	HDL
-		81333	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	HDL
-		81333	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	HDL
-		81333	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	HDL
+6.98851721445455	2.77806594189531e-12	86313	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	HDL
+-52.7506654041725	0	81333	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	HDL
+-30.0089612265944	7.49755287756371e-198	81333	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	HDL
+7.84087749492625	4.47408768484966e-15	81333	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	HDL
+-48.7601554851135	0	81333	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	HDL
+55.5472562873662	0	81333	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	HDL
+54.4203721939633	0	81333	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	HDL
+50.9483783570354	0	81333	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	HDL
+32.6788418048398	3.12085654229072e-234	81333	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	HDL
+-45.2845069814054	0	81333	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	HDL
+-48.0441215105936	0	81333	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	HDL
 53.178769719616	0	134255	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	LDL
 -47.0725586898152	0	134255	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	LDL
 27.2963795951793	4.68283022748109e-164	143043	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	LDL
 -28.182068565281	9.70037514105834e-175	143043	HGDP1KG	WBS	eur-long	nopcs	LR	loose	LDL
-		144079	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	LDL
-		136842	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	LDL
-		136842	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	LDL
-		136842	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	LDL
-		136842	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	LDL
-		136842	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	LDL
-		136842	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	LDL
-		136842	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	LDL
-		136842	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	LDL
-		136842	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	LDL
-		136842	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	LDL
+-5.87698898869134	4.17795987231516e-09	144079	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	LDL
+-52.9211513684404	0	136842	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	LDL
+-39.414625853677	0	136842	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	LDL
+57.8104479686331	0	136842	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	LDL
+-41.2889323542009	0	136842	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	LDL
+54.2797103095556	0	136842	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	LDL
+60.6826619712001	0	136842	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	LDL
+54.7851264026936	0	136842	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	LDL
+60.0972135889114	0	136842	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	LDL
+-9.66438185460956	4.27191035067328e-22	136842	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	LDL
+-60.1934610856246	0	136842	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	LDL
 53.3430847637085	0	169528	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	MCHC
 -47.2611711002756	0	169528	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	MCHC
 28.1192559058912	5.6974752183594e-174	183962	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	MCHC
 -28.5656752323141	1.79429459695789e-179	183962	HGDP1KG	WBS	eur-long	nopcs	LR	loose	MCHC
-		185343	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	MCHC
-		171304	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	MCHC
-		171304	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	MCHC
-		171304	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	MCHC
-		171304	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	MCHC
-		171304	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	MCHC
-		171304	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	MCHC
-		171304	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	MCHC
-		171304	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	MCHC
-		171304	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	MCHC
-		171304	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	MCHC
+-9.29407466643615	1.4849217334072e-20	185343	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	MCHC
+-53.3589384975205	0	171304	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	MCHC
+-40.448972925785	0	171304	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	MCHC
+57.9301382322607	0	171304	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	MCHC
+-41.6249105589506	0	171304	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	MCHC
+54.7542059776585	0	171304	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	MCHC
+60.7393179478041	0	171304	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	MCHC
+55.027796294893	0	171304	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	MCHC
+60.1083008490034	0	171304	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	MCHC
+-7.77743330053702	7.40107682054759e-15	171304	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	MCHC
+-60.3227579060016	0	171304	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	MCHC
 55.8795418086046	0	206754	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	MCV
 -51.5117821600293	0	206754	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	MCV
 27.4472220654384	7.49882647842505e-166	253480	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	MCV
 -33.9638734419989	7.6119938882282e-253	253480	HGDP1KG	WBS	eur-long	nopcs	LR	loose	MCV
-		258494	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	MCV
-		203946	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	MCV
-		203946	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	MCV
-		203946	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	MCV
-		203946	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	MCV
-		203946	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	MCV
-		203946	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	MCV
-		203946	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	MCV
-		203946	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	MCV
-		203946	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	MCV
-		203946	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	MCV
+-9.82966217776688	8.38997390420474e-23	258494	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	MCV
+-54.727059248957	0	203946	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	MCV
+-38.7251993540764	0	203946	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	MCV
+55.8595862843757	0	203946	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	MCV
+-46.8531038950747	0	203946	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	MCV
+56.514948863534	0	203946	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	MCV
+60.5121337947682	0	203946	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	MCV
+54.795856766891	0	203946	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	MCV
+59.0425542140764	0	203946	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	MCV
+-29.9285695893926	8.36374490991216e-197	203946	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	MCV
+-59.8762215054965	0	203946	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	MCV
 43.6936441640368	0	123337	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Platelet_Count
 -33.9803382148602	4.34879293787861e-253	123337	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Platelet_Count
 32.5506895759566	2.04728423332943e-232	130402	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Platelet_Count
 -20.1123210619215	5.75660616574691e-90	130402	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Platelet_Count
-		131340	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Platelet_Count
-		126803	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Platelet_Count
-		126803	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Platelet_Count
-		126803	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Platelet_Count
-		126803	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Platelet_Count
-		126803	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Platelet_Count
-		126803	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Platelet_Count
-		126803	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Platelet_Count
-		126803	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Platelet_Count
-		126803	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Platelet_Count
-		126803	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Platelet_Count
+-18.7197793895937	3.41562829991079e-78	131340	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Platelet_Count
+-47.1574109745542	0	126803	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Platelet_Count
+-36.8899024422844	6.70895975672113e-298	126803	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Platelet_Count
+59.4418197000793	0	126803	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Platelet_Count
+-24.1269147956152	1.30480444793799e-128	126803	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Platelet_Count
+46.1808518691554	0	126803	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Platelet_Count
+60.4088929168681	0	126803	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Platelet_Count
+52.4196753889845	0	126803	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Platelet_Count
+60.7006327172355	0	126803	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Platelet_Count
+26.1134894126937	2.56227312606475e-150	126803	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Platelet_Count
+-60.2931916422931	0	126803	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Platelet_Count
 -38.0700129168702	0	85776	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	SBP
 23.2353011973517	2.00312278631603e-119	85776	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	SBP
 -28.0268373570949	7.65372183993906e-173	88968	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	SBP
 13.171999533197	1.27184072018766e-39	88968	HGDP1KG	WBS	eur-long	nopcs	LR	loose	SBP
-		89409	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	SBP
-		89125	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	SBP
-		89125	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	SBP
-		89125	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	SBP
-		89125	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	SBP
-		89125	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	SBP
-		89125	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	SBP
-		89125	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	SBP
-		89125	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	SBP
-		89125	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	SBP
-		89125	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	SBP
+4.07815392513475	4.53947102170516e-05	89409	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	SBP
+40.7476030358666	0	89125	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	SBP
+24.949861851785	2.1427602937814e-137	89125	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	SBP
+-59.9465658524739	0	89125	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	SBP
+7.84466912980091	4.34096489090225e-15	89125	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	SBP
+-42.603082235996	0	89125	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	SBP
+-60.3870138318939	0	89125	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	SBP
+-50.401146310088	0	89125	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	SBP
+-60.7825644532245	0	89125	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	SBP
+-25.5619416240627	4.04468243064616e-144	89125	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	SBP
+60.4972781113872	0	89125	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	SBP
 58.2026684451515	0	206525	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Standing_Height
 -57.0218653037694	0	206525	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Standing_Height
 8.56504295022845	1.0803556693809e-17	251329	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Standing_Height
 -38.409704935922	0	251329	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Standing_Height
-		256661	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Standing_Height
-		201782	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Standing_Height
-		201782	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Standing_Height
-		201782	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Standing_Height
-		201782	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Standing_Height
-		201782	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Standing_Height
-		201782	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Standing_Height
-		201782	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Standing_Height
-		201782	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Standing_Height
-		201782	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Standing_Height
-		201782	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Standing_Height
+-2.19078908530835	0.0284670588300436	256661	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Standing_Height
+-57.0058003699671	0	201782	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Standing_Height
+-49.1110319885272	0	201782	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Standing_Height
+17.8807224831959	1.66663257127375e-71	201782	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Standing_Height
+-53.6678113063328	0	201782	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Standing_Height
+57.9653640675159	0	201782	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Standing_Height
+58.7726712365576	0	201782	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Standing_Height
+55.067250256955	0	201782	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Standing_Height
+51.506051836394	0	201782	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Standing_Height
+-33.4128851771312	8.91088148719439e-245	201782	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Standing_Height
+-54.2229102213061	0	201782	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Standing_Height
 -53.8669007992148	0	122372	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Total_Protein
 49.4996451531567	0	122372	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Total_Protein
 -24.5141638281606	1.04333110304357e-132	123727	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Total_Protein
 30.7389841281833	1.71628667372313e-207	123727	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Total_Protein
-		124031	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Total_Protein
-		125985	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Total_Protein
-		125985	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Total_Protein
-		125985	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Total_Protein
-		125985	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Total_Protein
-		125985	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Total_Protein
-		125985	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Total_Protein
-		125985	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Total_Protein
-		125985	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Total_Protein
-		125985	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Total_Protein
-		125985	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Total_Protein
+5.92284972528514	3.16409962213184e-09	124031	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Total_Protein
+53.4253141505023	0	125985	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Total_Protein
+43.1531970980796	0	125985	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Total_Protein
+-56.5448527551259	0	125985	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Total_Protein
+44.1679541355589	0	125985	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Total_Protein
+-54.4465733778066	0	125985	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Total_Protein
+-60.4797216106101	0	125985	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Total_Protein
+-54.5417790285385	0	125985	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Total_Protein
+-59.7200403002744	0	125985	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Total_Protein
+8.71890459223187	2.80906139870139e-18	125985	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Total_Protein
+59.9309277894798	0	125985	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Total_Protein
 26.3009274931966	1.87143334544846e-152	134215	HGDP1KG	WBS	eurasia-lat	nopcs	LR	loose	Triglycerides
 -7.14058308417303	9.29358363829619e-13	134215	HGDP1KG	WBS	eurasia-long	nopcs	LR	loose	Triglycerides
 35.3676606477455	5.36672883772565e-274	139062	HGDP1KG	WBS	eur-lat	nopcs	LR	loose	Triglycerides
 -5.6774240771039	1.36738183958221e-08	139062	HGDP1KG	WBS	eur-long	nopcs	LR	loose	Triglycerides
-		139882	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Triglycerides
-		138810	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Triglycerides
-		138810	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Triglycerides
-		138810	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Triglycerides
-		138810	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Triglycerides
-		138810	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Triglycerides
-		138810	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Triglycerides
-		138810	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Triglycerides
-		138810	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Triglycerides
-		138810	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Triglycerides
-		138810	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Triglycerides
+-18.3993949107416	1.32839829114805e-75	139882	HGDP1KG	WBS	sdi-eur	nopcs	LR	loose	Triglycerides
+-25.3921650067441	3.07801323078795e-142	138810	HGDP1KG	WBS	eas-nfe	nopcs	LR	loose	Triglycerides
+-15.725840714396	1.00606517613205e-55	138810	HGDP1KG	WBS	eas-sas	nopcs	LR	loose	Triglycerides
+61.0276348656691	0	138810	HGDP1KG	WBS	eas-afr	nopcs	LR	loose	Triglycerides
+16.3679579040335	3.23900837310015e-60	138810	HGDP1KG	WBS	eas-amr	nopcs	LR	loose	Triglycerides
+26.4620845305283	2.64909525121387e-154	138810	HGDP1KG	WBS	nfe-sas	nopcs	LR	loose	Triglycerides
+60.7290119970033	0	138810	HGDP1KG	WBS	nfe-afr	nopcs	LR	loose	Triglycerides
+46.5721248816398	0	138810	HGDP1KG	WBS	nfe-amr	nopcs	LR	loose	Triglycerides
+61.4214233698338	0	138810	HGDP1KG	WBS	sas-afr	nopcs	LR	loose	Triglycerides
+39.7670883380751	0	138810	HGDP1KG	WBS	sas-amr	nopcs	LR	loose	Triglycerides
+-61.0386117808429	0	138810	HGDP1KG	WBS	afr-amr	nopcs	LR	loose	Triglycerides
 -1.59216131474485	0.111348463024409	1119	HGDP1KG	WBS	eurasia-lat	nopcs	LMM	strict	Alkaline_Phosphate
 1.79213572377771	0.0731112276858295	1119	HGDP1KG	WBS	eurasia-long	nopcs	LMM	strict	Alkaline_Phosphate
 0.402466567082397	0.687340688529774	1199	HGDP1KG	WBS	eur-lat	nopcs	LMM	strict	Alkaline_Phosphate
@@ -1609,16 +1609,16 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.3537558890571	0.17581427092048	1124	HGDP1KG	WBS	eur-lat	nopcs	LMM	strict	Eosinophill_Percentage
 0.35591275045953	0.721905906753291	1124	HGDP1KG	WBS	eur-long	nopcs	LMM	strict	Eosinophill_Percentage
 -1.06581277255156	0.286508285939344	1134	HGDP1KG	WBS	sdi-eur	nopcs	LMM	strict	Eosinophill_Percentage
-		1067	HGDP1KG	WBS	eas-nfe	nopcs	LMM	strict	Eosinophill_Percentage
+-0.321575317193518	0.747774445382721	1067	HGDP1KG	WBS	eas-nfe	nopcs	LMM	strict	Eosinophill_Percentage
 -0.622918095580876	0.533338346009174	1067	HGDP1KG	WBS	eas-sas	nopcs	LMM	strict	Eosinophill_Percentage
-		1067	HGDP1KG	WBS	eas-afr	nopcs	LMM	strict	Eosinophill_Percentage
+0.208890892005678	0.834533414447058	1067	HGDP1KG	WBS	eas-afr	nopcs	LMM	strict	Eosinophill_Percentage
 -0.894485151523542	0.371062370834796	1067	HGDP1KG	WBS	eas-amr	nopcs	LMM	strict	Eosinophill_Percentage
-		1067	HGDP1KG	WBS	nfe-sas	nopcs	LMM	strict	Eosinophill_Percentage
-		1067	HGDP1KG	WBS	nfe-afr	nopcs	LMM	strict	Eosinophill_Percentage
-		1067	HGDP1KG	WBS	nfe-amr	nopcs	LMM	strict	Eosinophill_Percentage
-		1067	HGDP1KG	WBS	sas-afr	nopcs	LMM	strict	Eosinophill_Percentage
+-0.248920962079052	0.803421920155645	1067	HGDP1KG	WBS	nfe-sas	nopcs	LMM	strict	Eosinophill_Percentage
+0.490992059573416	0.623432063649315	1067	HGDP1KG	WBS	nfe-afr	nopcs	LMM	strict	Eosinophill_Percentage
+-0.560897760636999	0.574867236715087	1067	HGDP1KG	WBS	nfe-amr	nopcs	LMM	strict	Eosinophill_Percentage
+0.785106099091854	0.432391364055109	1067	HGDP1KG	WBS	sas-afr	nopcs	LMM	strict	Eosinophill_Percentage
 -0.378029661621284	0.705408559351553	1067	HGDP1KG	WBS	sas-amr	nopcs	LMM	strict	Eosinophill_Percentage
-		1067	HGDP1KG	WBS	afr-amr	nopcs	LMM	strict	Eosinophill_Percentage
+-0.84282011510111	0.399329056360199	1067	HGDP1KG	WBS	afr-amr	nopcs	LMM	strict	Eosinophill_Percentage
 -1.41861485682966	0.156011332086357	73	HGDP1KG	WBS	eurasia-lat	nopcs	LMM	strict	Glucose
 0.699802053807242	0.484050931964767	73	HGDP1KG	WBS	eurasia-long	nopcs	LMM	strict	Glucose
 -0.59285972890605	0.553275030875197	77	HGDP1KG	WBS	eur-lat	nopcs	LMM	strict	Glucose
@@ -1668,7 +1668,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.452658722297611	0.650794507049729	580	HGDP1KG	WBS	eurasia-long	nopcs	LMM	strict	LDL
 -1.69528316361314	0.0900217171287381	630	HGDP1KG	WBS	eur-lat	nopcs	LMM	strict	LDL
 -0.601619590036125	0.547427385751829	630	HGDP1KG	WBS	eur-long	nopcs	LMM	strict	LDL
-		636	HGDP1KG	WBS	sdi-eur	nopcs	LMM	strict	LDL
+-0.698987010447047	0.484560148628746	636	HGDP1KG	WBS	sdi-eur	nopcs	LMM	strict	LDL
 0.0336005489463695	0.973195684520867	574	HGDP1KG	WBS	eas-nfe	nopcs	LMM	strict	LDL
 0.570504540683679	0.568335543283693	574	HGDP1KG	WBS	eas-sas	nopcs	LMM	strict	LDL
 2.11158082214954	0.0347224189129971	574	HGDP1KG	WBS	eas-afr	nopcs	LMM	strict	LDL
@@ -1743,17 +1743,17 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.324221590803723	0.745770277114727	6122	HGDP1KG	WBS	eurasia-long	nopcs	LMM	strict	Standing_Height
 7.43486771274842	1.04672661219454e-13	6644	HGDP1KG	WBS	eur-lat	nopcs	LMM	strict	Standing_Height
 -1.65457032537047	0.0980116870615489	6644	HGDP1KG	WBS	eur-long	nopcs	LMM	strict	Standing_Height
-		6705	HGDP1KG	WBS	sdi-eur	nopcs	LMM	strict	Standing_Height
-		6016	HGDP1KG	WBS	eas-nfe	nopcs	LMM	strict	Standing_Height
-		6016	HGDP1KG	WBS	eas-sas	nopcs	LMM	strict	Standing_Height
-		6016	HGDP1KG	WBS	eas-afr	nopcs	LMM	strict	Standing_Height
-		6016	HGDP1KG	WBS	eas-amr	nopcs	LMM	strict	Standing_Height
+-7.93745496292797	2.06371941895529e-15	6705	HGDP1KG	WBS	sdi-eur	nopcs	LMM	strict	Standing_Height
+-0.191953704676448	0.847778469299205	6016	HGDP1KG	WBS	eas-nfe	nopcs	LMM	strict	Standing_Height
+-0.730683595277921	0.464972437967318	6016	HGDP1KG	WBS	eas-sas	nopcs	LMM	strict	Standing_Height
+1.50502030417994	0.132318856684183	6016	HGDP1KG	WBS	eas-afr	nopcs	LMM	strict	Standing_Height
+-0.765885525913084	0.443744418923223	6016	HGDP1KG	WBS	eas-amr	nopcs	LMM	strict	Standing_Height
 -0.577371262128385	0.563688683217137	6016	HGDP1KG	WBS	nfe-sas	nopcs	LMM	strict	Standing_Height
 1.85096830433899	0.0641741130800027	6016	HGDP1KG	WBS	nfe-afr	nopcs	LMM	strict	Standing_Height
-		6016	HGDP1KG	WBS	nfe-amr	nopcs	LMM	strict	Standing_Height
+-0.512852556356681	0.608054462827382	6016	HGDP1KG	WBS	nfe-amr	nopcs	LMM	strict	Standing_Height
 2.35742188182669	0.0184023267215926	6016	HGDP1KG	WBS	sas-afr	nopcs	LMM	strict	Standing_Height
-		6016	HGDP1KG	WBS	sas-amr	nopcs	LMM	strict	Standing_Height
-		6016	HGDP1KG	WBS	afr-amr	nopcs	LMM	strict	Standing_Height
+-0.0267709301615866	0.978642439275258	6016	HGDP1KG	WBS	sas-amr	nopcs	LMM	strict	Standing_Height
+-2.23885727224364	0.0251652043778016	6016	HGDP1KG	WBS	afr-amr	nopcs	LMM	strict	Standing_Height
 0.0391680403552305	0.968756414176266	35	HGDP1KG	WBS	eurasia-lat	nopcs	LMM	strict	Total_Protein
 0.964786681577356	0.334651668095386	35	HGDP1KG	WBS	eurasia-long	nopcs	LMM	strict	Total_Protein
 1.88194289852697	0.059843769028143	38	HGDP1KG	WBS	eur-lat	nopcs	LMM	strict	Total_Protein
@@ -1788,7 +1788,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.6370289438738	0.101624421981423	15087	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Alkaline_Phosphate
 -1.78893771371139	0.0736248472058447	17842	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Alkaline_Phosphate
 1.83113793852687	0.0670799571037225	17842	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Alkaline_Phosphate
-		18184	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Alkaline_Phosphate
+1.59661496472722	0.110351561083005	18184	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Alkaline_Phosphate
 1.63541914178558	0.101961212386387	14711	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Alkaline_Phosphate
 1.07960575137375	0.280317779226392	14711	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Alkaline_Phosphate
 -0.523927272017923	0.600329125410554	14711	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Alkaline_Phosphate
@@ -1803,11 +1803,11 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.967502790019118	0.33329274718365	8490	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Aspartate_Aminotransferase
 -1.2991818507221	0.193881528493775	10158	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Aspartate_Aminotransferase
 1.43068375717736	0.152520870465944	10158	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Aspartate_Aminotransferase
-		10322	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Aspartate_Aminotransferase
-		8306	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Aspartate_Aminotransferase
-		8306	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Aspartate_Aminotransferase
-		8306	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Aspartate_Aminotransferase
-		8306	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Aspartate_Aminotransferase
+1.34267514224086	0.179377187144092	10322	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Aspartate_Aminotransferase
+1.6212501166006	0.104964008482212	8306	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Aspartate_Aminotransferase
+1.38037789129001	0.167470323732218	8306	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Aspartate_Aminotransferase
+-1.26246482127338	0.206781577081357	8306	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Aspartate_Aminotransferase
+0.960442301527037	0.336832656841737	8306	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Aspartate_Aminotransferase
 -1.39685514693518	0.162457134861991	8306	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Aspartate_Aminotransferase
 -2.77612543264101	0.00550109808972878	8306	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Aspartate_Aminotransferase
 -1.57894184119702	0.114349397641355	8306	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Aspartate_Aminotransferase
@@ -1818,7 +1818,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 -0.179868985503657	0.857255424039824	6863	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Basophill_Percentage
 0.207225386721496	0.83583384186502	8360	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Basophill_Percentage
 -0.127154473894505	0.898818137385286	8360	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Basophill_Percentage
-		8550	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Basophill_Percentage
+-1.40996041625191	0.15855137140367	8550	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Basophill_Percentage
 0.0230685673777347	0.981595578609743	6656	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Basophill_Percentage
 -2.31085188437197	0.0208410375151955	6656	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Basophill_Percentage
 -1.80520544134271	0.0710425397854191	6656	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Basophill_Percentage
@@ -1833,26 +1833,26 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.81476627635862	0.0695598349970318	24992	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Body_Weight
 8.17727841240949	2.90326664372911e-16	28638	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Body_Weight
 -2.77472465475401	0.00552484613217212	28638	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Body_Weight
-		29127	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Body_Weight
-		24442	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Body_Weight
-		24442	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Body_Weight
+-8.3727272905186	5.629979219967e-17	29127	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Body_Weight
+1.1563880910068	0.247522450550755	24442	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Body_Weight
+-0.302936946671293	0.761937914116576	24442	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Body_Weight
 3.82209815848633	0.000132320994946796	24442	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Body_Weight
-		24442	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Body_Weight
-		24442	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Body_Weight
-		24442	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Body_Weight
-		24442	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Body_Weight
-		24442	HGDP1KG	WBS	sas-afr	nopcs	LMM	loose	Body_Weight
-		24442	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	Body_Weight
-		24442	HGDP1KG	WBS	afr-amr	nopcs	LMM	loose	Body_Weight
+-0.487905939946933	0.625616466947862	24442	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Body_Weight
+-2.26461693342736	0.0235361968733085	24442	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Body_Weight
+2.91676496979615	0.00353682170730212	24442	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Body_Weight
+-2.44265491624172	0.0145796707374866	24442	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Body_Weight
+4.67120820902447	2.99433230293864e-06	24442	HGDP1KG	WBS	sas-afr	nopcs	LMM	loose	Body_Weight
+-0.231012281237044	0.817305261019252	24442	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	Body_Weight
+-4.44030039742331	8.98333924816214e-06	24442	HGDP1KG	WBS	afr-amr	nopcs	LMM	loose	Body_Weight
 0.613213452835686	0.539735210686379	10148	HGDP1KG	WBS	eurasia-lat	nopcs	LMM	loose	Cholesterol
 -0.236953032863357	0.812693227006453	10148	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Cholesterol
 1.24404612974209	0.213482585752845	11944	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Cholesterol
 -0.664888009368659	0.506122125555008	11944	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Cholesterol
-		12145	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Cholesterol
-		9898	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Cholesterol
-		9898	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Cholesterol
-		9898	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Cholesterol
-		9898	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Cholesterol
+-0.572713873112829	0.566838442586213	12145	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Cholesterol
+-0.961151311517769	0.336476093103853	9898	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Cholesterol
+-1.09368998207625	0.274090969431628	9898	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Cholesterol
+3.4036143457291	0.000665005724992617	9898	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Cholesterol
+-0.98200232016822	0.326098705178789	9898	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Cholesterol
 0.214037936657866	0.830517473452746	9898	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Cholesterol
 4.17705391296961	2.95309050224135e-05	9898	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Cholesterol
 0.428745067523908	0.668108759316171	9898	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Cholesterol
@@ -1863,26 +1863,26 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.972620230280072	0.330742084296169	15723	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Eosinophill_Percentage
 -1.65016187590828	0.0989098320335044	18557	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Eosinophill_Percentage
 2.88178143105644	0.00395433926804327	18557	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Eosinophill_Percentage
-		18884	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Eosinophill_Percentage
-		15328	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Eosinophill_Percentage
+0.905864110367541	0.365007782570418	18884	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Eosinophill_Percentage
+1.25465629104604	0.209603559290932	15328	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Eosinophill_Percentage
 0.231745178637561	0.816735938957333	15328	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Eosinophill_Percentage
-		15328	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Eosinophill_Percentage
+-0.355935122621586	0.721889151947271	15328	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Eosinophill_Percentage
 1.38445060815807	0.166220521893152	15328	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Eosinophill_Percentage
-		15328	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Eosinophill_Percentage
-		15328	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Eosinophill_Percentage
-		15328	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Eosinophill_Percentage
-		15328	HGDP1KG	WBS	sas-afr	nopcs	LMM	loose	Eosinophill_Percentage
+-1.97987588532983	0.0477174767010067	15328	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Eosinophill_Percentage
+-1.54911848112335	0.121353240988399	15328	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Eosinophill_Percentage
+-0.537504124729776	0.590919436532623	15328	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Eosinophill_Percentage
+-0.608375276960264	0.54293860484495	15328	HGDP1KG	WBS	sas-afr	nopcs	LMM	loose	Eosinophill_Percentage
 1.63943357830892	0.10112299329859	15328	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	Eosinophill_Percentage
-		15328	HGDP1KG	WBS	afr-amr	nopcs	LMM	loose	Eosinophill_Percentage
+1.36116597350913	0.173461244538722	15328	HGDP1KG	WBS	afr-amr	nopcs	LMM	loose	Eosinophill_Percentage
 -0.581190052121399	0.561112371470827	3388	HGDP1KG	WBS	eurasia-lat	nopcs	LMM	loose	Glucose
 0.638326889753462	0.523260911460871	3388	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Glucose
 -0.749732139287479	0.453416046731994	3991	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Glucose
 0.351295998132564	0.725366296900113	3991	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Glucose
-		4076	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Glucose
-		3327	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Glucose
-		3327	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Glucose
-		3327	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Glucose
-		3327	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Glucose
+0.539833809666699	0.589311648410944	4076	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Glucose
+1.44900451436871	0.147336321873812	3327	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Glucose
+1.0433448697627	0.296788596899997	3327	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Glucose
+0.661209919268065	0.508477700863526	3327	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Glucose
+0.615647920627118	0.538126916467854	3327	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Glucose
 -1.23603349076224	0.216446115048577	3327	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Glucose
 -0.442143843205624	0.658385119798964	3327	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Glucose
 -1.76196811134847	0.0780746854309038	3327	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Glucose
@@ -1893,7 +1893,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 3.30909283498313	0.000935987961365793	10401	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	HbA1c
 0.0355601001812312	0.971633123627927	12064	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	HbA1c
 0.279467201248008	0.779886305268905	12064	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	HbA1c
-		12260	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	HbA1c
+0.481886020994478	0.629886917052707	12260	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	HbA1c
 3.72048030141204	0.000198844252047921	10172	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	HbA1c
 1.9808893188532	0.0476036871703565	10172	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	HbA1c
 1.39958207113302	0.161638505944088	10172	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	HbA1c
@@ -1908,32 +1908,32 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.621851255650631	0.534039679491489	11016	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	HDL
 1.29409639603848	0.195632126269051	12583	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	HDL
 -0.761054202757263	0.446624693129884	12583	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	HDL
-		12797	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	HDL
-		10751	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	HDL
-		10751	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	HDL
+-1.84233510682387	0.065426147568682	12797	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	HDL
+0.0534400172502862	0.957381321593821	10751	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	HDL
+-0.802450455709199	0.422292436654306	10751	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	HDL
 2.31835095585899	0.0204302551782063	10751	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	HDL
 -0.27357804053051	0.784408911500371	10751	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	HDL
-		10751	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	HDL
-		10751	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	HDL
-		10751	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	HDL
-		10751	HGDP1KG	WBS	sas-afr	nopcs	LMM	loose	HDL
-		10751	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	HDL
+-0.997967744538031	0.318294999869465	10751	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	HDL
+2.53845594366887	0.0111342820689195	10751	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	HDL
+-0.454758417608672	0.649283048649805	10751	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	HDL
+3.14117391519877	0.00168272076107595	10751	HGDP1KG	WBS	sas-afr	nopcs	LMM	loose	HDL
+0.456534223849235	0.64800586638179	10751	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	HDL
 -2.71154287152224	0.00669708800871988	10751	HGDP1KG	WBS	afr-amr	nopcs	LMM	loose	HDL
 -0.154409679508042	0.877286722045498	9463	HGDP1KG	WBS	eurasia-lat	nopcs	LMM	loose	LDL
 0.428462082731885	0.668314733592765	9463	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	LDL
 -0.132327295876949	0.894725418226306	11172	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	LDL
 -0.462875480571544	0.643453623646539	11172	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	LDL
-		11367	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	LDL
+0.473877608642411	0.635587187405816	11367	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	LDL
 -0.354719831477775	0.722799492476283	9248	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	LDL
 -0.389963644323027	0.69656343051912	9248	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	LDL
 2.54296296676362	0.0109916878247763	9248	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	LDL
-		9248	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	LDL
+-0.172323022898625	0.863183585431538	9248	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	LDL
 0.13437286806391	0.893107735187872	9248	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	LDL
 2.86124704286765	0.00421978095094093	9248	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	LDL
-		9248	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	LDL
+0.378162641407219	0.705309776163581	9248	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	LDL
 3.20427378926072	0.00135403647033497	9248	HGDP1KG	WBS	sas-afr	nopcs	LMM	loose	LDL
-		9248	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	LDL
-		9248	HGDP1KG	WBS	afr-amr	nopcs	LMM	loose	LDL
+0.217825407718918	0.827565147364453	9248	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	LDL
+-2.83495747787867	0.00458317855351484	9248	HGDP1KG	WBS	afr-amr	nopcs	LMM	loose	LDL
 2.42744658758417	0.0152055256438569	972	HGDP1KG	WBS	eurasia-lat	nopcs	LMM	loose	MCHC
 -2.45570279046696	0.0140609394071919	972	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	MCHC
 -0.858079787895905	0.390848407308911	1093	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	MCHC
@@ -1953,11 +1953,11 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 -2.04403520381066	0.0409500694910179	12405	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	MCV
 -6.26194670116334	3.80200900593374e-10	14557	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	MCV
 0.352403465247401	0.72453570357573	14557	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	MCV
-		14859	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	MCV
-		12127	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	MCV
-		12127	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	MCV
-		12127	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	MCV
-		12127	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	MCV
+3.12101406655331	0.00180229424950953	14859	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	MCV
+-1.14203443217889	0.253439707679101	12127	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	MCV
+1.067194640461	0.285883952239527	12127	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	MCV
+-5.41472707195105	6.13822613088103e-08	12127	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	MCV
+-0.304150263957784	0.761013414461292	12127	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	MCV
 3.03961827974095	0.00236878168013352	12127	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	MCV
 -4.64678670137705	3.3714544969715e-06	12127	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	MCV
 1.58252015175235	0.113530875652379	12127	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	MCV
@@ -1968,11 +1968,11 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.478727672748416	0.63213237655432	28024	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Platelet_Count
 -5.89114681477506	3.83524621217945e-09	33435	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Platelet_Count
 3.6607507339285	0.000251477323712413	33435	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Platelet_Count
-		34166	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Platelet_Count
-		27317	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Platelet_Count
-		27317	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Platelet_Count
-		27317	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Platelet_Count
-		27317	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Platelet_Count
+5.59499823748865	2.20624010850752e-08	34166	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Platelet_Count
+1.08609838489586	0.277435466852299	27317	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Platelet_Count
+1.80160968944871	0.0716068357283955	27317	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Platelet_Count
+-3.2521570941365	0.00114532700875698	27317	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Platelet_Count
+2.78665796466856	0.00532546555752356	27317	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Platelet_Count
 0.0992527032131525	0.920937630285706	27317	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Platelet_Count
 -4.4989278157606	6.82970409219618e-06	27317	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Platelet_Count
 1.33390540515509	0.182234859925957	27317	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Platelet_Count
@@ -1983,7 +1983,7 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.727560427786748	0.46688271201362	8887	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	SBP
 -2.96419245250611	0.00303478425323922	10035	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	SBP
 2.3021461070995	0.0213269340059657	10035	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	SBP
-		10185	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	SBP
+3.33881790184739	0.000841356984019818	10185	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	SBP
 1.10913361690207	0.267372544632773	8728	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	SBP
 1.96466409790569	0.0494531278854474	8728	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	SBP
 -0.575517301387173	0.564941492979276	8728	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	SBP
@@ -1998,26 +1998,26 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 0.693412463703029	0.488050742745303	53974	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Standing_Height
 12.2311238541379	2.11985208743022e-34	64771	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Standing_Height
 -6.70868284667576	1.96388979494959e-11	64771	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Standing_Height
-		66120	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Standing_Height
-		52360	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Standing_Height
-		52360	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Standing_Height
-		52360	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Standing_Height
-		52360	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Standing_Height
-		52360	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Standing_Height
-		52360	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Standing_Height
-		52360	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Standing_Height
+-12.3839730397888	3.19143983501236e-35	66120	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Standing_Height
+0.0756452536942371	0.939701332339202	52360	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Standing_Height
+-1.36754944166391	0.171453151207435	52360	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Standing_Height
+7.23469653248414	4.66571234805607e-13	52360	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Standing_Height
+-2.23842102030799	0.0251936125249677	52360	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Standing_Height
+-1.7566736657467	0.0789734486797838	52360	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Standing_Height
+7.68147665233083	1.57265145299101e-14	52360	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Standing_Height
+-2.40382282730482	0.0162246344802156	52360	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Standing_Height
 9.49699519193815	2.16034015690305e-21	52360	HGDP1KG	WBS	sas-afr	nopcs	LMM	loose	Standing_Height
-		52360	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	Standing_Height
-		52360	HGDP1KG	WBS	afr-amr	nopcs	LMM	loose	Standing_Height
+-0.969687772010033	0.332202147392265	52360	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	Standing_Height
+-9.40136471733138	5.38598861610153e-21	52360	HGDP1KG	WBS	afr-amr	nopcs	LMM	loose	Standing_Height
 -0.506810784238927	0.612287588803643	366	HGDP1KG	WBS	eurasia-lat	nopcs	LMM	loose	Total_Protein
 0.81506048223732	0.415037690440243	366	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Total_Protein
 1.79076209292035	0.0733314807108817	374	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Total_Protein
 -0.800966228408021	0.423151197146638	374	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Total_Protein
 0.141662697186683	0.887346441045661	376	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Total_Protein
-		362	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Total_Protein
-		362	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Total_Protein
-		362	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Total_Protein
-		362	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Total_Protein
+0.508250901419915	0.611277397935911	362	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Total_Protein
+0.821929341352601	0.411117112553736	362	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Total_Protein
+1.20976211970313	0.226370185526202	362	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Total_Protein
+0.466900270255147	0.640571231929244	362	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Total_Protein
 0.174705523531098	0.861311027379278	362	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Total_Protein
 0.73004508744495	0.465362625137301	362	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Total_Protein
 -0.332402926024158	0.739585029395163	362	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Total_Protein
@@ -2028,14 +2028,14 @@ q	pval	nsnp	dataset	gwas	contrasts	covar	gtype	threshold	phenotype
 1.26482575828264	0.205933795584477	13350	HGDP1KG	WBS	eurasia-long	nopcs	LMM	loose	Triglycerides
 1.59469788083449	0.110779812171504	15601	HGDP1KG	WBS	eur-lat	nopcs	LMM	loose	Triglycerides
 1.04486438691014	0.296085651433825	15601	HGDP1KG	WBS	eur-long	nopcs	LMM	loose	Triglycerides
-		15838	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Triglycerides
-		13060	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Triglycerides
-		13060	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Triglycerides
+-2.32187927902366	0.0202394368422811	15838	HGDP1KG	WBS	sdi-eur	nopcs	LMM	loose	Triglycerides
+1.26410676308919	0.20619170950057	13060	HGDP1KG	WBS	eas-nfe	nopcs	LMM	loose	Triglycerides
+0.223822786867809	0.822895198386843	13060	HGDP1KG	WBS	eas-sas	nopcs	LMM	loose	Triglycerides
 0.308873370411699	0.757417854327045	13060	HGDP1KG	WBS	eas-afr	nopcs	LMM	loose	Triglycerides
 0.392871044451641	0.694414728741047	13060	HGDP1KG	WBS	eas-amr	nopcs	LMM	loose	Triglycerides
-		13060	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Triglycerides
-		13060	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Triglycerides
-		13060	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Triglycerides
-		13060	HGDP1KG	WBS	sas-afr	nopcs	LMM	loose	Triglycerides
-		13060	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	Triglycerides
+-1.85468594646056	0.0636410867736876	13060	HGDP1KG	WBS	nfe-sas	nopcs	LMM	loose	Triglycerides
+-0.812064954211485	0.416754361338784	13060	HGDP1KG	WBS	nfe-afr	nopcs	LMM	loose	Triglycerides
+-1.46532995064022	0.142830918848098	13060	HGDP1KG	WBS	nfe-amr	nopcs	LMM	loose	Triglycerides
+0.259352523151171	0.795363257708033	13060	HGDP1KG	WBS	sas-afr	nopcs	LMM	loose	Triglycerides
+0.282226446142677	0.777769881126313	13060	HGDP1KG	WBS	sas-amr	nopcs	LMM	loose	Triglycerides
 -0.128644622749385	0.897638855800415	13060	HGDP1KG	WBS	afr-amr	nopcs	LMM	loose	Triglycerides
