@@ -44,31 +44,10 @@ rule resample_snps_for_q:
     output:
         "data/{dataset}/prs_resampled/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps"
     shell:
-        r"""
-        awk '
-        BEGIN {{
-            FS = OFS = "\t"
-            target_file = ARGV[ARGC-1]
-        }}
-        FILENAME != target_file {{
-            if (FNR == 1) next  # skip header line in regenie files
-            beta[$3] = $10
-            next
-        }}
-        FILENAME == target_file {{
-            if (FNR == 1) {{
-                print
-                next
-            }}
-            id = $2
-            if (id in beta) {{
-                $5 = beta[id]
-            }}
-            print
-        }}
-        ' {input.regenie_files} {input.target_snps} > {output}
         """
-	
+        Rscript code/pga_test/down_sample_snps.R {output} {input.target_snps} {input.regenie_files}
+        """
+
 
 ##### Calculate H #####
 
