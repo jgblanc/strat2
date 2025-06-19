@@ -3,20 +3,15 @@ CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
 #GWAS= ["ALL-R", "ALL", "WBS", "ALL"]
-#CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 #CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 
 DATASET = ["HGDP1KG"]
-GWAS = ["WBS"]
+GWAS = ["ALL"]
 COVARS = ["pcs", "nopcs"]
-CONTRASTS = ["eurasia-lat"]
-PHENOTYPE = ["Standing_Height"]
-GTYPE = ["LMM"]
-THRESHOLD = ["strict"]
-
-#PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
-#GTYPE = ["LR", "LMM"]
-#THRESHOLD = ["strict", "loose"]
+PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
+GTYPE = ["LR", "LMM"]
+THRESHOLD = ["strict", "loose"]
 
 def get_chr_range(x):
   if x == "1":
@@ -28,25 +23,9 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("data/{dataset}/prs_resampled/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
+        expand("plots/pga_test_resampled/{dataset}/{gwas}/q_results.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
 
 localrules: concat_pga_test
-
-
-
-rule resample_snps_for_q:
-    input:
-        target_snps = "data/{dataset}/prs/{gwas}/pcs/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps",
-        regenie_files = expand(
-            "data/step2-results/{{gwas}}/{{covars}}/{{gtype}}/raw/chr{chr}_{{phenotype}}.regenie",
-            chr=CHR
-        )
-    output:
-        "data/{dataset}/prs_resampled/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps"
-    shell:
-        """
-        Rscript code/pga_test/down_sample_snps.R {output} {input.target_snps} {input.regenie_files}
-        """
 
 
 ##### Calculate H #####
@@ -565,4 +544,37 @@ rule run_step_two_LMM:
 
 ##### Downsampling to ascertained SNPs ########
 
+rule resample_snps_for_q:
+    input:
+        target_snps = "data/{dataset}/prs/{gwas}/pcs/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps",
+        regenie_files = expand(
+            "data/step2-results/{{gwas}}/{{covars}}/{{gtype}}/raw/chr{chr}_{{phenotype}}.regenie",
+            chr=CHR
+        )
+    output:
+        "data/{dataset}/prs_resampled/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps"
+    shell:
+        """
+        Rscript code/pga_test/down_sample_snps.R {output} {input.target_snps} {input.regenie_files}
+        """
 
+rule pga_test_resample:
+    input:
+        betas="data/{dataset}/prs_resampled/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}_block.snps",
+        r = expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr =CHR),
+    output:
+        results="output/pga_test_resampled/{dataset}/{gwas}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.results"
+    shell:
+        """
+        Rscript code/pga_test/run_test_jacknife.R {input.betas} {output.results} {input.r}
+        """
+
+rule concat_pga_test:
+    input:
+        expand("output/pga_test_resampled/{{dataset}}/{{gwas}}/{covars}/{gtype}/{threshold}/{contrasts}/{phenotype}.results", covars=COVARS, gtype=GTYPE, threshold=THRESHOLD, phenotype=PHENOTYPE, contrasts=CONTRASTS)
+    output:
+        "plots/pga_test_resampled/{dataset}/{gwas}/q_results.txt"
+    shell:
+        """
+        Rscript code/summarize/concat_q.R {output} {input}
+	      """
