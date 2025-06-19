@@ -14,29 +14,33 @@ target_snps=args[2]
 
 # Read in target SNPs
 df <- fread(target_snps)
+print(head(df))
 
 # Loop through Chrs
 nChr = length(args) - 2
 
 # Do first chr
 dfR <- fread(args[3])
+print(head(dfR))
 dfOut <- df %>%
-  filter("#CHROM" == 1) %>%
+  filter(`#CHROM` == 1) %>%
   left_join(dfR %>% select(ID, BETA_regenie = BETA), by = "ID") %>%
   mutate(BETA = coalesce(BETA_regenie, BETA)) %>%
   select(-BETA_regenie)
+print(head(dfOut))
+
 
 # Loop through CHRs
 for (i in 1:(nChr-1)) {
   idx <- 3+i
   chr_idx <- i+1
-  tmp <- fread(args[idx])
-  dfR <- rbind(dfR, tmp)
+  dfR <- fread(args[idx])
 
   tmp <- df %>%
-    filter("#CHROM" == chr_idx) %>%
+    filter(`#CHROM` == chr_idx) %>%
     left_join(dfR %>% select(ID, BETA_regenie = BETA), by = "ID") %>%
     mutate(BETA = coalesce(BETA_regenie, BETA)) %>%
+    select(-BETA_regenie)
   dfOut <- rbind(dfOut, tmp)
 
 }
