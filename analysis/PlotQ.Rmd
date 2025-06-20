@@ -16,12 +16,253 @@ library(ggtext)
 ```
 
 
+
+## Resampled SNPs
+
+```{r}
+# Read in all Qs 
+tmp1 <- fread("../plots/pga_test_resampled/HGDP1KG/ALL/q_results.txt")
+tmp2 <- fread("../plots/pga_test_resampled/HGDP1KG/WBS/q_results.txt")
+tmp3 <- fread("../plots/pga_test_resampled/InUKBB/WBS-R/q_results.txt") %>% mutate(gwas = "WBS")
+tmp4 <- fread("../plots/pga_test_resampled/InUKBB/ALL-R/q_results.txt") %>% mutate(gwas = "ALL")
+dfQ <- rbind(tmp1, tmp2, tmp3, tmp4)
+
+# Read in H values
+tmp1 <- fread("../plots/overlap_stats/H_HGDP1KG.txt")
+tmp2 <- fread("../plots/overlap_stats/H_InUKBB.txt") %>% mutate(gwas = case_when(gwas == "ALL-R" ~ "ALL",gwas == "WBS-R" ~ "WBS"))
+dfH <- rbind(tmp1, tmp2) %>% select(H, L, gwas, contrasts, dataset) 
+
+# Read in ratio values 
+tmp1 <- fread("../plots/error/common_rare_R2EO_HGDP1KG.txt") %>% mutate(dataset = "HGDP1KG") %>% filter(PC == 80) %>% select(contrasts, Ratio, gwas, dataset)
+tmp2 <- fread("../plots/error/common_rare_R2EO_InUKBB.txt") %>% mutate(dataset = "InUKBB") %>% filter(PC == 80) %>% select(contrasts, Ratio, gwas, dataset) %>% mutate(gwas = case_when(gwas == "ALL-R" ~ "ALL",gwas == "WBS-R" ~ "WBS"))
+dfRatio <- rbind(tmp1, tmp2)
+
+# Combine
+df <- inner_join(dfQ, dfH)
+df <- inner_join(df, dfRatio)
+```
+
+
+```{r}
+# Multiple Testing correction w/in each gwas/covar/gytpe/threshold
+df <- df %>% group_by(gwas, covar, gtype, threshold) %>% mutate(adjuP = p.adjust(pval, method = "bonferroni")) %>% mutate(sigP = case_when(adjuP < 0.05  ~ TRUE, adjuP >= 0.05 ~ F)) %>% mutate(HPrime = H * (1 - Ratio))
+```
+
+## Q^2 vs H
+
+```{r}
+df %>% filter() %>% ggplot(aes(x = H, y = q^2, color = covar)) + 
+  geom_jitter(data = ~ subset(., covar == "nopcs"), 
+              aes(color = covar), alpha = 0.5) +
+  geom_jitter(data = ~ subset(., covar == "pcs"), 
+              aes(color = covar), alpha = 0.5) +
+  scale_x_log10() + 
+  scale_y_log10() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  facet_grid(vars(gtype), vars(threshold),labeller = labeller(
+    gtype = c("LR" = "Linear Regression", "LMM" = "LMM"),
+    threshold = c("strict" = "Strict Threshold (5e-8)", "loose" = "Liberal Threshold (5e-3)")
+  )) + 
+  scale_color_manual(
+  name = "PCs included",  # Legend title
+  values = c("nopcs" = "goldenrod2", "pcs" = "darkred"),
+  labels = c("nopcs" = "none", "pcs" = "40 common + 40 rare"))+
+  theme_bw(base_size = 12) + 
+  theme(legend.position = "bottom", strip.background=element_rect(colour="black",fill="white")) + 
+  xlab(TeX("$\\hat{H}")) + 
+  ylab(TeX("$\\hat{q}^2"))
+```
+
+```{r}
+library(scales)  # for alpha()
+
+# Create q^2 and reshape to long format
+df_long <- df %>%
+  mutate(q2 = q^2) %>%
+  pivot_longer(cols = c(H, HPrime), names_to = "x_type", values_to = "xval")
+
+ggplot(df_long, aes(x = xval, y = q2, color = covar)) + 
+  
+  # Plot nopcs points first (go underneath)
+  geom_jitter(data = subset(df_long, x_type == "H" & covar == "nopcs"), alpha = 0.05) +
+  
+  # Plot pcs points second (go on top)
+  geom_jitter(data = subset(df_long, x_type == "H" & covar == "pcs"), alpha = 0.05) +
+  geom_jitter(data = subset(df_long, x_type == "HPrime" & covar == "pcs"), alpha = 0.5) +
+  
+  # Faint smooths for H (use alpha-colored lines)
+  geom_smooth(
+    data = subset(df_long, x_type == "H" & covar == "pcs"),
+    aes(x = xval, y = q2), method = "lm", se = FALSE,
+    color = alpha("darkred", 0.2)
+  ) +
+  geom_smooth(
+    data = subset(df_long, x_type == "H" & covar == "nopcs"),
+    aes(x = xval, y = q2), method = "lm", se = FALSE,
+    color = alpha("goldenrod2", 0.2)
+  ) +
+  
+  # Colored smooths for HPrime (appear in legend)
+  geom_smooth(
+    data = subset(df_long, x_type == "HPrime"),
+    aes(x = xval, y = q2, color = covar), method = "lm", se = FALSE
+  ) +
+  
+  scale_x_log10() + 
+  scale_y_log10() + 
+  
+  facet_grid(
+    vars(gtype), vars(threshold),
+    labeller = labeller(
+      gtype = c("LR" = "Linear Regression", "LMM" = "LMM"),
+      threshold = c("strict" = "Strict Threshold (5e-8)", "loose" = "Liberal Threshold (5e-3)")
+    )
+  ) +
+  
+  scale_color_manual(
+    name = "PCs included",
+    values = c("nopcs" = "goldenrod2", "pcs" = "darkred"),
+    labels = c("nopcs" = "none", "pcs" = "40 common + 40 rare")
+  ) +
+  
+  theme_bw(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    strip.background = element_rect(colour = "black", fill = "white")
+  ) +
+  xlab(TeX("$\\hat{H}$ or $\\hat{H}'$")) + 
+  ylab(TeX("$\\hat{q}^2$"))
+
+```
+
+
+```{r}
+df$H_ratio <- df$H / df$HPrime
+
+df %>% filter() %>% ggplot(aes(x = H_ratio, y = q^2, color = covar)) + 
+  geom_jitter(data = ~ subset(., covar == "nopcs"), 
+              aes(color = covar), alpha = 0.5) +
+  geom_jitter(data = ~ subset(., covar == "pcs"), 
+              aes(color = covar), alpha = 0.5) +
+  scale_x_log10() + 
+  scale_y_log10() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  facet_grid(vars(gtype), vars(threshold),labeller = labeller(
+    gtype = c("LR" = "Linear Regression", "LMM" = "LMM"),
+    threshold = c("strict" = "Strict Threshold (5e-8)", "loose" = "Liberal Threshold (5e-3)")
+  )) + 
+  scale_color_manual(
+  name = "PCs included",  # Legend title
+  values = c("nopcs" = "goldenrod2", "pcs" = "darkred"),
+  labels = c("nopcs" = "none", "pcs" = "40 common + 40 rare"))+
+  theme_bw(base_size = 12) + 
+  theme(legend.position = "bottom", strip.background=element_rect(colour="black",fill="white")) + 
+  xlab(TeX("$\\frac{H}{H'}")) + 
+  ylab(TeX("$\\hat{q}^2"))
+```
+
+
+
+
+## Finding Significant Results 
+
+
+
+```{r}
+dfPCs <- df %>% filter(covar == "pcs")
+dfNoPCs <- df %>% filter(covar == "nopcs")
+
+dfPlot <- dfPCs
+dfPlot$q_nopcs <- dfNoPCs$q
+dfPlot$q_ratio <- (dfPlot$q_nopcs / dfPlot$q)^2
+dfPlot$H_ratio <- dfPlot$H / dfPlot$HPrime
+
+minL <- min(dfPlot$L)
+maxL <- max(dfPlot$L)
+
+dfPlot %>% ggplot(aes(x = HPrime, y = -log10(adjuP), color = sigP)) +
+  geom_jitter() +
+  scale_x_log10() + theme_bw() + 
+  facet_grid(vars(gtype), vars(threshold),labeller = labeller(
+    gtype = c("LR" = "Linear Regression", "LMM" = "LMM"),
+    threshold = c("strict" = "Strict Threshold (5e-8)", "loose" = "Liberal Threshold (5e-3)")
+  )) +
+  geom_vline(xintercept = 1/maxL, color = "red", linetype = "dashed") + geom_vline(xintercept = 1/minL,color = "red", linetype = "dashed")
+```
+
+
+
+## Not-Resampled SNPs
+
+```{r}
+# Read in all Qs 
+tmp1 <- fread("../plots/pga_test/HGDP1KG/ALL/q_results.txt")
+tmp2 <- fread("../plots/pga_test/HGDP1KG/WBS/q_results.txt")
+tmp3 <- fread("../plots/pga_test/InUKBB/WBS-R/q_results.txt") %>% mutate(gwas = "WBS")
+tmp4 <- fread("../plots/pga_test/InUKBB/ALL-R/q_results.txt") %>% mutate(gwas = "ALL")
+dfQ <- rbind(tmp1, tmp2, tmp3, tmp4)
+
+# Read in H values
+tmp1 <- fread("../plots/overlap_stats/H_HGDP1KG.txt")
+tmp2 <- fread("../plots/overlap_stats/H_InUKBB.txt") %>% mutate(gwas = case_when(gwas == "ALL-R" ~ "ALL",gwas == "WBS-R" ~ "WBS"))
+dfH <- rbind(tmp1, tmp2) %>% select(H, L, gwas, contrasts, dataset) 
+
+# Read in ratio values 
+tmp1 <- fread("../plots/error/common_rare_R2EO_HGDP1KG.txt") %>% mutate(dataset = "HGDP1KG") %>% filter(PC == 80) %>% select(contrasts, Ratio, gwas, dataset)
+tmp2 <- fread("../plots/error/common_rare_R2EO_InUKBB.txt") %>% mutate(dataset = "InUKBB") %>% filter(PC == 80) %>% select(contrasts, Ratio, gwas, dataset) %>% mutate(gwas = case_when(gwas == "ALL-R" ~ "ALL",gwas == "WBS-R" ~ "WBS"))
+dfRatio <- rbind(tmp1, tmp2)
+
+# Combine
+df <- inner_join(dfQ, dfH)
+df <- inner_join(df, dfRatio)
+```
+
+
+```{r}
+# Multiple Testing correction w/in each gwas/covar/gytpe/threshold
+df <- df %>% group_by(gwas, covar, gtype, threshold) %>% mutate(adjuP = p.adjust(pval, method = "bonferroni")) %>% mutate(sigP = case_when(adjuP < 0.05  ~ TRUE, adjuP >= 0.05 ~ F)) %>% mutate(HPrime = H * (1 - Ratio))
+
+#df %>% summarise(count = n())
+```
+
+```{r}
+df %>% filter() %>% ggplot(aes(x = H, y = q^2, color = covar)) + 
+  geom_jitter(data = ~ subset(., covar == "nopcs"), 
+              aes(color = covar), alpha = 0.5) +
+  geom_jitter(data = ~ subset(., covar == "pcs"), 
+              aes(color = covar), alpha = 0.5) +
+  scale_x_log10() + 
+  scale_y_log10() + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  facet_grid(vars(gtype), vars(threshold),labeller = labeller(
+    gtype = c("LR" = "Linear Regression", "LMM" = "LMM"),
+    threshold = c("strict" = "Strict Threshold (5e-8)", "loose" = "Liberal Threshold (5e-3)")
+  )) + 
+  scale_color_manual(
+  name = "PCs included",  # Legend title
+  values = c("nopcs" = "goldenrod2", "pcs" = "darkred"),
+  labels = c("nopcs" = "none", "pcs" = "40 common + 40 rare"))+
+  theme_bw(base_size = 12) + 
+  theme(legend.position = "bottom", strip.background=element_rect(colour="black",fill="white")) + 
+  xlab(TeX("$\\hat{H}")) + 
+  ylab(TeX("$\\hat{q}^2"))
+```
+
+
+
+
+
+
+
+
+
+
 ## CoB in WBS 
 
 ```{r}
-df <- fread("../plots/pga_test/InUKBB/WBS-R/q_results.txt")
-tmp2 <- fread("../plots/overlap_stats/H_InUKBB.txt")
-tmp3 <- fread("../plots/error/common_rare_R2EO_InUKBB.txt") %>% mutate(type = "CoB") %>% filter(PC == 80) %>% select(contrasts, Ratio, gwas)
+df <- fread("../plots/pga_test_resampled/HGDP1KG/ALL/q_results.txt")
+tmp2 <- fread("../plots/overlap_stats/H_HGDP1KG.txt")
+tmp3 <- fread("../plots/error/common_rare_R2EO_HGDP1KG.txt") %>% mutate(type = "HGDP1KG") %>% filter(PC == 80) %>% select(contrasts, Ratio, gwas)
 
 df <- left_join(df, tmp2) %>% mutate(adjuP = p.adjust(pval)) %>% mutate(sigP = case_when(adjuP < 0.05  ~ TRUE, adjuP >= 0.05 ~ F))
 df <- left_join(df, tmp3)
