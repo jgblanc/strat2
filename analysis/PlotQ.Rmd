@@ -51,95 +51,8 @@ df <- df %>% group_by(gwas, covar, gtype, threshold) %>% mutate(adjuP = p.adjust
 ## Q^2 vs H
 
 ```{r}
-df %>% filter() %>% ggplot(aes(x = H, y = q^2, color = covar)) + 
-  geom_jitter(data = ~ subset(., covar == "nopcs"), 
-              aes(color = covar), alpha = 0.5) +
-  geom_jitter(data = ~ subset(., covar == "pcs"), 
-              aes(color = covar), alpha = 0.5) +
-  scale_x_log10() + 
-  scale_y_log10() + 
-  geom_smooth(method = "lm", se = FALSE) + 
-  facet_grid(vars(gtype), vars(threshold),labeller = labeller(
-    gtype = c("LR" = "Linear Regression", "LMM" = "LMM"),
-    threshold = c("strict" = "Strict Threshold (5e-8)", "loose" = "Liberal Threshold (5e-3)")
-  )) + 
-  scale_color_manual(
-  name = "PCs included",  # Legend title
-  values = c("nopcs" = "goldenrod2", "pcs" = "darkred"),
-  labels = c("nopcs" = "none", "pcs" = "40 common + 40 rare"))+
-  theme_bw(base_size = 12) + 
-  theme(legend.position = "bottom", strip.background=element_rect(colour="black",fill="white")) + 
-  xlab(TeX("$\\hat{H}")) + 
-  ylab(TeX("$\\hat{q}^2"))
-```
-
-```{r}
-library(scales)  # for alpha()
-
-# Create q^2 and reshape to long format
-df_long <- df %>%
-  mutate(q2 = q^2) %>%
-  pivot_longer(cols = c(H, HPrime), names_to = "x_type", values_to = "xval")
-
-ggplot(df_long, aes(x = xval, y = q2, color = covar)) + 
-  
-  # Plot nopcs points first (go underneath)
-  geom_jitter(data = subset(df_long, x_type == "H" & covar == "nopcs"), alpha = 0.05) +
-  
-  # Plot pcs points second (go on top)
-  geom_jitter(data = subset(df_long, x_type == "H" & covar == "pcs"), alpha = 0.05) +
-  geom_jitter(data = subset(df_long, x_type == "HPrime" & covar == "pcs"), alpha = 0.5) +
-  
-  # Faint smooths for H (use alpha-colored lines)
-  geom_smooth(
-    data = subset(df_long, x_type == "H" & covar == "pcs"),
-    aes(x = xval, y = q2), method = "lm", se = FALSE,
-    color = alpha("darkred", 0.2)
-  ) +
-  geom_smooth(
-    data = subset(df_long, x_type == "H" & covar == "nopcs"),
-    aes(x = xval, y = q2), method = "lm", se = FALSE,
-    color = alpha("goldenrod2", 0.2)
-  ) +
-  
-  # Colored smooths for HPrime (appear in legend)
-  geom_smooth(
-    data = subset(df_long, x_type == "HPrime"),
-    aes(x = xval, y = q2, color = covar), method = "lm", se = FALSE
-  ) +
-  
-  scale_x_log10() + 
-  scale_y_log10() + 
-  
-  facet_grid(
-    vars(gtype), vars(threshold),
-    labeller = labeller(
-      gtype = c("LR" = "Linear Regression", "LMM" = "LMM"),
-      threshold = c("strict" = "Strict Threshold (5e-8)", "loose" = "Liberal Threshold (5e-3)")
-    )
-  ) +
-  
-  scale_color_manual(
-    name = "PCs included",
-    values = c("nopcs" = "goldenrod2", "pcs" = "darkred"),
-    labels = c("nopcs" = "none", "pcs" = "40 common + 40 rare")
-  ) +
-  
-  theme_bw(base_size = 12) +
-  theme(
-    legend.position = "bottom",
-    strip.background = element_rect(colour = "black", fill = "white")
-  ) +
-  xlab(TeX("$\\hat{H}$ or $\\hat{H}'$")) + 
-  ylab(TeX("$\\hat{q}^2$"))
-
-```
-
-
-```{r}
 df$H_ratio <- df$H / df$HPrime
-
-df %>% filter() %>% ggplot(aes(x = H_ratio, y = q^2, color = covar)) + 
+plResample <- df %>% filter() %>% ggplot(aes(x = H, y = q^2, color = covar)) + 
   geom_jitter(data = ~ subset(., covar == "nopcs"), 
               aes(color = covar), alpha = 0.5) +
   geom_jitter(data = ~ subset(., covar == "pcs"), 
@@ -156,41 +69,13 @@ df %>% filter() %>% ggplot(aes(x = H_ratio, y = q^2, color = covar)) +
   values = c("nopcs" = "goldenrod2", "pcs" = "darkred"),
   labels = c("nopcs" = "none", "pcs" = "40 common + 40 rare"))+
   theme_bw(base_size = 12) + 
-  theme(legend.position = "bottom", strip.background=element_rect(colour="black",fill="white")) + 
-  xlab(TeX("$\\frac{H}{H'}")) + 
-  ylab(TeX("$\\hat{q}^2"))
+  theme(legend.position = "none", strip.background=element_rect(colour="black",fill="white"),plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = 8))  + 
+  xlab(TeX("$\\hat{H}")) + 
+  ylab(TeX("$\\hat{q}^2")) + 
+  ggtitle("effect sizes only")
+
+plResample
 ```
-
-
-
-
-## Finding Significant Results 
-
-
-
-```{r}
-dfPCs <- df %>% filter(covar == "pcs")
-dfNoPCs <- df %>% filter(covar == "nopcs")
-
-dfPlot <- dfPCs
-dfPlot$q_nopcs <- dfNoPCs$q
-dfPlot$q_ratio <- (dfPlot$q_nopcs / dfPlot$q)^2
-dfPlot$H_ratio <- dfPlot$H / dfPlot$HPrime
-
-minL <- min(dfPlot$L)
-maxL <- max(dfPlot$L)
-
-dfPlot %>% ggplot(aes(x = HPrime, y = -log10(adjuP), color = sigP)) +
-  geom_jitter() +
-  scale_x_log10() + theme_bw() + 
-  facet_grid(vars(gtype), vars(threshold),labeller = labeller(
-    gtype = c("LR" = "Linear Regression", "LMM" = "LMM"),
-    threshold = c("strict" = "Strict Threshold (5e-8)", "loose" = "Liberal Threshold (5e-3)")
-  )) +
-  geom_vline(xintercept = 1/maxL, color = "red", linetype = "dashed") + geom_vline(xintercept = 1/minL,color = "red", linetype = "dashed")
-```
-
-
 
 ## Not-Resampled SNPs
 
@@ -220,13 +105,15 @@ df <- inner_join(df, dfRatio)
 
 ```{r}
 # Multiple Testing correction w/in each gwas/covar/gytpe/threshold
-df <- df %>% group_by(gwas, covar, gtype, threshold) %>% mutate(adjuP = p.adjust(pval, method = "bonferroni")) %>% mutate(sigP = case_when(adjuP < 0.05  ~ TRUE, adjuP >= 0.05 ~ F)) %>% mutate(HPrime = H * (1 - Ratio))
+df <- df %>% group_by(gwas, covar, gtype, threshold) %>% mutate(adjuP = p.adjust(pval, method = "bonferroni")) %>% mutate(sigP = case_when(adjuP < 0.025  ~ TRUE, adjuP >= 0.025 ~ F)) %>% mutate(HPrime = H * (1 - Ratio))
 
-#df %>% summarise(count = n())
+df %>% summarise(count = n())
 ```
 
 ```{r}
-df %>% filter() %>% ggplot(aes(x = H, y = q^2, color = covar)) + 
+df$H_ratio <- df$H / df$HPrime
+
+plRaw <- df %>% filter() %>% ggplot(aes(x = H, y = q^2, color = covar)) + 
   geom_jitter(data = ~ subset(., covar == "nopcs"), 
               aes(color = covar), alpha = 0.5) +
   geom_jitter(data = ~ subset(., covar == "pcs"), 
@@ -241,19 +128,167 @@ df %>% filter() %>% ggplot(aes(x = H, y = q^2, color = covar)) +
   scale_color_manual(
   name = "PCs included",  # Legend title
   values = c("nopcs" = "goldenrod2", "pcs" = "darkred"),
-  labels = c("nopcs" = "none", "pcs" = "40 common + 40 rare"))+
+  labels = c("nopcs" = "no pcs", "pcs" = "40 common + 40 rare"))+
   theme_bw(base_size = 12) + 
-  theme(legend.position = "bottom", strip.background=element_rect(colour="black",fill="white")) + 
+  theme(legend.position = "right", strip.background=element_rect(colour="black",fill="white"),plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = 8)) + 
   xlab(TeX("$\\hat{H}")) + 
-  ylab(TeX("$\\hat{q}^2"))
+  ylab(TeX("$\\hat{q}^2")) + 
+  ggtitle("ascertainment effect")
 ```
 
 
+### Final Figure Confounding
+
+```{r}
+library(gridExtra)
+library(grid)
+
+# Define label grobs
+label_a <- textGrob("a", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_b <- textGrob("b", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+
+# Wrap plots with labels
+row_a <- arrangeGrob(plResample, top = label_a)
+row_b <- arrangeGrob(plRaw, top = label_b)
 
 
+# Final arrangement: top_row + c, d, e stacked below
+final_plot <- grid.arrange(row_a, row_b,
+                           ncol = 2, widths = c(0.72,1))
+
+# Save
+ggsave("~/Desktop/ConfoundingFig.png", final_plot, height = 6, width = 13)
+
+```
+
+### Supplemental SNP Number Figure 
+
+```{r}
+dfSNPNum <- df %>% filter() %>% ggplot(aes(x =nsnp, y = q^2, color = covar)) + 
+  geom_jitter(data = ~ subset(., covar == "nopcs"), 
+              aes(color = covar), alpha = 0.5) +
+  geom_jitter(data = ~ subset(., covar == "pcs"), 
+              aes(color = covar), alpha = 0.5) +
+  facet_grid(vars(gtype), vars(threshold),labeller = labeller(
+    gtype = c("LR" = "Linear Regression", "LMM" = "LMM"),
+    threshold = c("strict" = "Strict Threshold (5e-8)", "loose" = "Liberal Threshold (5e-3)")
+  )) + 
+  scale_y_log10() +
+  scale_color_manual(
+  name = "PCs included",  # Legend title
+  values = c("nopcs" = "goldenrod2", "pcs" = "darkred"),
+  labels = c("nopcs" = "no pcs", "pcs" = "40 common + 40 rare"))+
+  theme_bw(base_size = 12) + 
+  theme(legend.position = "right", strip.background=element_rect(colour="black",fill="white"),plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = 8)) + 
+  xlab(TeX("Number of SNPs in PGS")) + 
+  ylab(TeX("$\\hat{q}^2")) 
+
+# Save
+ggsave("~/Desktop/SNPNum.png", dfSNPNum, height = 6, width = 10)
+```
 
 
+## Finding Significant Results 
 
+```{r}
+dfPCs <- df %>% filter(covar == "pcs") %>% mutate(HPrime = H * (1 - Ratio), log10P = -1 * log10(pval)) %>% filter(gtype == "LMM")
+
+dfNoPCs <- df %>% filter(covar == "nopcs") %>% mutate(HPrime = H * (1 - Ratio), log10P = -1 * log10(pval)) %>% filter(gtype == "LMM")
+
+dfPCs$q_nopcs <- dfNoPCs$q
+
+sig <- dfPCs %>% filter(sigP == TRUE)
+
+df$sigP <- factor(df$sigP, levels = c(TRUE, FALSE))
+```
+
+```{r}
+plManhattan <- dfPCs %>% 
+  ggplot(aes(x = HPrime, y = log10P, color = sigP)) + 
+  geom_point() +
+  geom_hline(yintercept = -log10(0.025 / 425),color = "red", linetype = "dashed") + 
+  facet_grid(rows = NULL, cols = vars(gwas, threshold), labeller = labeller(
+    threshold = c("strict" = "Strict Threshold (5e-8)", 
+                  "loose" = "Liberal Threshold (5e-3)"))) +
+  ylab("-log10(P)") +
+  xlab(TeX("$\\hat{H}'")) + 
+  theme_bw(base_size = 12) +
+  theme(legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 8)) +
+  scale_color_manual(values = c("gray70", "violet"))
+plManhattan
+```
+
+SDI - Height
+```{r}
+pl1 <- df %>% filter(contrasts == "sdi-eur", gtype == "LMM") %>% filter(phenotype == "Standing_Height") %>% mutate(upper = q + 3.85, lower = q - 3.85) %>%  ggplot(aes(x = covar, y = q, color = covar, shape = sigP)) + geom_point(size = 3) +  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.5) + theme_bw(base_size = 12) + scale_color_manual(values = c("goldenrod", "darkred")) + theme(legend.position = "none", strip.background=element_rect(colour="black",fill="white")) + geom_hline(yintercept = 0, color = "red", linetype = "dashed") + ylab(TeX("standing height $\\hat{q}$ (sdi - eur)")) + xlab("") +facet_grid(rows = NULL, cols = vars(gwas, threshold), labeller = labeller(threshold = c("strict" = "Strict Threshold", "loose" = "Liberal Threshold"))) + scale_shape_manual(values = c(8,16))
+```
+
+EurLat - Height
+```{r}
+pl2 <- df %>% filter(contrasts == "eur-lat", gtype == "LMM") %>% filter(phenotype == "Standing_Height") %>% mutate(upper = q + 3.85, lower = q - 3.85) %>%  ggplot(aes(x = covar, y = q, color = covar, shape = sigP)) + geom_point(size = 3) +  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.5) + theme_bw(base_size = 12) + scale_color_manual(values = c("goldenrod", "darkred")) + theme(legend.position = "none", strip.background=element_rect(colour="black",fill="white")) + geom_hline(yintercept = 0, color = "red", linetype = "dashed") + ylab(TeX("standing height $\\hat{q}$ (eur-lat)")) + xlab("") +facet_grid(rows = NULL, cols = vars(gwas, threshold), labeller = labeller(threshold = c("strict" = "Strict Threshold", "loose" = "Liberal Threshold"))) + scale_shape_manual(values = c(8,16))
+```
+
+Sas-Amr - MCV
+```{r}
+pl3 <- df %>% filter(contrasts == "sas-amr", gtype == "LMM") %>% filter(phenotype == "MCV") %>% mutate(upper = q + 3.85, lower = q - 3.85) %>%  ggplot(aes(x = covar, y = q, color = covar, shape = sigP)) + geom_point(size = 3) +  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.5) + theme_bw(base_size = 12) + scale_color_manual(values = c("goldenrod", "darkred")) + theme(legend.position = "none", strip.background=element_rect(colour="black",fill="white")) + geom_hline(yintercept = 0, color = "red", linetype = "dashed") + ylab(TeX("MCV $\\hat{q}$ (sas-amr)")) + xlab("") +facet_grid(rows = NULL, cols = vars(gwas, threshold), labeller = labeller(threshold = c("strict" = "Strict Threshold", "loose" = "Liberal Threshold"))) + scale_shape_manual(values = c(8,16))
+```
+
+Eng-Sct - SBP
+```{r}
+pl4 <- df %>% filter(contrasts == "England-Scotland", gtype == "LMM") %>% filter(phenotype == "SBP") %>% mutate(upper = q + 3.85, lower = q - 3.85) %>%  ggplot(aes(x = covar, y = q, color = covar, shape = sigP)) + geom_point(size = 3) +  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.5) + theme_bw(base_size = 12) + scale_color_manual(values = c("goldenrod", "darkred")) + theme(legend.position = "none", strip.background=element_rect(colour="black",fill="white")) + geom_hline(yintercept = 0, color = "red", linetype = "dashed") + ylab(TeX("SBP $\\hat{q}$ (ENG-SCT)")) + xlab("") +facet_grid(rows = NULL, cols = vars(gwas, threshold), labeller = labeller(threshold = c("strict" = "Strict Threshold", "loose" = "Liberal Threshold"))) + scale_shape_manual(values = c(8,16))
+```
+
+RoI-Sct - SBP
+```{r}
+pl5 <- df %>% filter(contrasts == "RepublicOfIrelend-Scotland", gtype == "LMM") %>% filter(phenotype == "SBP") %>% mutate(upper = q + 3.85, lower = q - 3.85) %>%  ggplot(aes(x = covar, y = q, color = covar, shape = sigP)) + geom_point(size = 3) +  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.5) + theme_bw(base_size = 12) + scale_color_manual(values = c("goldenrod", "darkred")) + theme(legend.position = "none", strip.background=element_rect(colour="black",fill="white")) + geom_hline(yintercept = 0, color = "red", linetype = "dashed") + ylab(TeX("SBP $\\hat{q}$ (RoI-SCT)")) + xlab("") +facet_grid(rows = NULL, cols = vars(gwas, threshold), labeller = labeller(threshold = c("strict" = "Strict Threshold", "loose" = "Liberal Threshold"))) + scale_shape_manual(values = c(8,16))
+```
+
+Sct-Wales - SBP
+```{r}
+pl6 <- df %>% filter(contrasts == "Scotland-Wales", gtype == "LMM") %>% filter(phenotype == "SBP") %>% mutate(upper = q + 3.85, lower = q - 3.85) %>%  ggplot(aes(x = covar, y = q, color = covar, shape = sigP)) + geom_point(size = 3) +  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.5) + theme_bw(base_size = 12) + scale_color_manual(values = c("goldenrod", "darkred")) + theme(legend.position = "none", strip.background=element_rect(colour="black",fill="white")) + geom_hline(yintercept = 0, color = "red", linetype = "dashed") + ylab(TeX("SBP $\\hat{q}$ (SCT-WAL)")) + xlab("") +facet_grid(rows = NULL, cols = vars(gwas, threshold), labeller = labeller(threshold = c("strict" = "Strict Threshold", "loose" = "Liberal Threshold"))) + scale_shape_manual(values = c(8,16))
+```
+
+### Final Significant Results Figure 
+
+```{r}
+library(gridExtra)
+library(grid)
+
+# Define label grobs
+label_a <- textGrob("a", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_b <- textGrob("b", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_c <- textGrob("c", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_d <- textGrob("d", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_e <- textGrob("e", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_f <- textGrob("f", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_g <- textGrob("g", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+
+# Wrap plots with labels
+row_a <- arrangeGrob(plManhattan, top = label_a)
+row_b <- arrangeGrob(pl1, top = label_b)
+row_c <- arrangeGrob(pl2, top = label_c)
+row_d <- arrangeGrob(pl3, top = label_d)
+row_e <- arrangeGrob(pl4, top = label_e)
+row_f <- arrangeGrob(pl5, top = label_f)
+row_g <- arrangeGrob(pl6, top = label_g)
+
+# Final arrangement: top_row + c, d, e stacked below
+final_plot <- grid.arrange(row_a, row_b, row_c, row_d, row_e, row_f, row_g, 
+                           ncol = 1,
+                           heights = c(0.75, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5))
+
+# Save
+ggsave("~/Desktop/SigFig.png", final_plot, height = 18, width = 12)
+```
 
 
 
