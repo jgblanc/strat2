@@ -500,3 +500,18 @@ Loose threshold
 df %>% filter(threshold == "loose") %>% ggplot(aes(x = (1-Ratio) * H, y = q^2, color = sigP)) + geom_point() + facet_grid(vars(covar), vars(gtype)) + ggtitle("Loose Threshold") + xlab("H'")
 ```
 
+```{r}
+df <- fread("~/strat2/plots/error/R2EO_InUKBB.txt")
+
+df %>% filter(PC == 40) %>% ggplot(aes(x = H, y = Ratio, color = gwas)) + geom_point() + scale_x_log10() + theme_bw() + theme( strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)")) 
+```
+
+
+```{r}
+df <- fread("~/strat2/plots/error/500_R2EO_InUKBB.txt")
+
+
+df %>% filter(PC == 40) %>% ggplot(aes(x = H, y = Ratio, color = gwas)) + geom_point() + scale_x_log10() + theme_bw() + theme( strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)"))
+```
+```
+
