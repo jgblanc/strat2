@@ -4,7 +4,7 @@ for i in range(1, 23):
   CHR.append(str(i))
 CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 SUBDATASET = ["eurasia", "all", "nfe", "nfe_no_ceu"]
-GWAS=["ALL"]
+GWAS=["WBS_500", "ALL_500", "e5_500", "e10_500", "e50_500", "e200_500"]
 COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 #PHENOTYPE = ["Alkaline_Phosphate"]
@@ -19,7 +19,8 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("data/HGDP1KG/prs/{gwas}/{covars}/{gtype}/{threshold}/eas-nfe/{phenotype}.snps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
+        expand("data/HGDP1KG/variants/{gwas}/eur-lat/overlappingSNPs_chr{chr}.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET),
+	expand("data/HGDP1KG/r/{gwas}/eur-lat_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps,combine_clumps_betas
 
 ## Clump Regenie Results

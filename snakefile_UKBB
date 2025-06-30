@@ -2,11 +2,11 @@
 CHR =[]
 for i in range(1, 23):
   CHR.append(str(i))
-GWAS = ["WBS", "WBS-R", "ALL", "ALL-R"]
+GWAS = ["WBS-R_500", "ALL-R_500", "e5_500", "e10_500", "e50_500", "e200_500", "WBS_500", "ALL_500"]
 
 rule all:
     input:
-        expand("/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3.psam" ,chr=CHR, gwas=GWAS)
+        expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/pcSNPs_ALL.pgen" ,chr=CHR, gwas=GWAS)
 
 
 ## UKBB Genotype data processing

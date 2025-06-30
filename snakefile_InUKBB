@@ -3,7 +3,7 @@ CHR =[]
 for i in range(1, 23):
   CHR.append(str(i))
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
-GWAS=["ALL-R"]
+GWAS=["WBS-R_500", "ALL-R_500", "e5_500", "e10_500", "e50_500", "e200_500"]
 COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 #PHENOTYPE = ["Standing_Height"]
@@ -12,7 +12,7 @@ THRESHOLD = ["loose", "strict"]
 
 rule all:
     input:
-        expand("data/InUKBB/prs/{gwas}/{covars}/{gtype}/{threshold}/England-NorthernIreland/{phenotype}.snps", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
+        expand("data/InUKBB/variants/{gwas}/England-NorthernIreland/overlappingSNPs_chr{chr}.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps, combine_clumps_betas
 
 ## Clump Regenie Results

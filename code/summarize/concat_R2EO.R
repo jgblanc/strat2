@@ -34,13 +34,12 @@ for (i in 2:length(args)) {
 
   # Read in results
   df <- fread(filename)
-  print(df)
   names_from_file <- colnames(df)
+  print(names_from_file)
   df$dataset <- dataset
   df$gwas <- gwas
   df$contrasts <- constrasts
   colnames(dfOut) <- c(names_from_file, "dataset", "gwas", "contrasts")
-  print(head(df))
   dfOut <- rbind(dfOut, df)
 
 }
