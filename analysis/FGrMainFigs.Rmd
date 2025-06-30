@@ -149,6 +149,7 @@ dfHP <- inner_join(dfBoth2, dfOl)
 
 # Bonferonni correction 
 ci <- qnorm(1 -(0.025/nrow(dfHP)))
+dfHP$HPrime <- dfHP$H * (1-dfHP$Ratio)
 dfHP$lc <- dfHP$HPrime - (ci * sqrt(dfHP$varH)) 
 dfHP$uc <- dfHP$HPrime + (ci * sqrt(dfHP$varH)) 
 ```

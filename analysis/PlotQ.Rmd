@@ -501,17 +501,20 @@ df %>% filter(threshold == "loose") %>% ggplot(aes(x = (1-Ratio) * H, y = q^2, c
 ```
 
 ```{r}
-df <- fread("~/strat2/plots/error/R2EO_InUKBB.txt")
+df <- fread("~/strat2/plots/error/R2EO_HGDP1KG.txt")
 
-df %>% filter(PC == 40) %>% ggplot(aes(x = H, y = Ratio, color = gwas)) + geom_point() + scale_x_log10() + theme_bw() + theme( strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)")) 
+df %>% filter(PC == 40) %>% ggplot(aes(x = H , y = R2, color = gwas)) + geom_point() + scale_x_log10() + theme_bw() + theme( strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)")) 
 ```
 
 
 ```{r}
-df <- fread("~/strat2/plots/error/500_R2EO_InUKBB.txt")
+df2 <- fread("~/strat2/plots/error/500_R2EO_HGDP1KG.txt")
 
 
-df %>% filter(PC == 40) %>% ggplot(aes(x = H, y = Ratio, color = gwas)) + geom_point() + scale_x_log10() + theme_bw() + theme( strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)"))
+df2 %>% filter(PC == 40) %>% ggplot(aes(x = H, y =R2, color = gwas)) + geom_point() + scale_x_log10() + theme_bw() + theme( strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab(TeX("proportion of variance explained by contrast in GWAS panel ($\\hat{H}$)")) + ylim(0,1)
 ```
-```
+
+
+
+
 
