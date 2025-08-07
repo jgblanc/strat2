@@ -1,13 +1,13 @@
-## Compute H using one SNP per independent block
-
-args=commandArgs(TRUE)
-
-if(length(args)<3){stop("Rscript calc_H.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
-
 suppressWarnings(suppressMessages({
   library(data.table)
   library(tidyverse)
 }))
+
+args = commandArgs(TRUE)
+
+if(length(args) < 3){
+  stop("Usage: Rscript residualize_one_by_one.R <snp_file> <pc_file> <out_file>")
+}
 
 snp_file = args[1]
 pc_file = args[2]
@@ -17,39 +17,47 @@ out_file = args[3]
 dfPCs <- fread(pc_file)
 print(head(dfPCs))
 
+# Read FID and IID to use later for merging
+ids <- fread(snp_file, select = c("FID", "IID"))
+print(head(ids))
 
-# Read in dosages
-print("Starting")
-dfSNPs <- fread(snp_file,select = 1:100,verbose = TRUE)
-print(head(dfSNPs))
+# Merge with PCs once
+df_base <- inner_join(ids, dfPCs, by = c("FID", "IID"))
 
+# Get all SNP column names
+all_cols <- colnames(fread(snp_file, nrows = 0))
+snp_cols <- all_cols[grepl("^:", all_cols)]
+snp_cols <- snp_cols[1:10]
 
-# Combine
-dfALL <- inner_join(dfSNPs,dfPCs)
+# Create output file with header
+fwrite(data.table(FID=character(), IID=character(), SNP=character(), Residual=numeric()),
+       out_file, sep="\t")
 
-# Extract PCs
-pc_matrix <- as.matrix(dfALL[ , grep("^PC", names(dfALL)) ])
-print(dim(pc_matrix))
+# Residualize and append each SNP
+for (snp in snp_cols) {
+  print(paste("Processing:", snp))
 
-# Extract genotypes
-geno_matrix <- as.matrix(dfALL[ , grepl("^:", names(dfALL)) ])
-print(dim(geno_matrix))
+  # Read FID, IID, and the SNP column only
+  df_snp <- fread(snp_file, select = c("FID", "IID", snp))
 
-# Function to residualize a vector on covariates
-residualize <- function(y, covars) {
-  print("LM!")
-  lm.fit <- lm(y ~ covars)
-  return(resid(lm.fit))
+  # Merge with PCs
+  df <- inner_join(df_snp, dfPCs, by = c("FID", "IID"))
+
+  # Extract genotype vector
+  y <- df[[snp]]
+
+  # Extract PCs as covariates
+  covars <- as.matrix(df %>% select(starts_with("PC")))
+
+  # Residualize
+  model <- lm(y ~ covars)
+  resids <- resid(model)
+
+  # Save output
+  result <- data.table(FID = df$FID, IID = df$IID, SNP = snp, Residual = resids)
+  fwrite(result, out_file, sep="\t", append=TRUE)
 }
 
-# Apply across all SNPs
-geno_resid <- apply(geno_matrix, 2, residualize, covars = pc_matrix)
-
-# Add back FID and IID
-geno_resid <- cbind(FID = dfALL$FID, IID = dfALL$IID, geno_resid)
-
-# Construct output
-write.table(geno_resid, out_file, sep = "\t", quote = FALSE, row.names = FALSE)
 
 
 
