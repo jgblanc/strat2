@@ -19,23 +19,27 @@ colnames(dfPCs)[1] <- "FID"
 
 # Extract PCs as covariates
 covars <- as.matrix(dfPCs %>% select(starts_with("PC")))
+print("got covars")
 
 # Read FID and IID to use later for merging
-ids <- dfPCs[,1:2]
+dfSNPs <- fread(snp_file)
+print(dim(dfSNPs))
 
 # Get all SNP column names
 all_cols <- colnames(fread(snp_file, nrows = 0))
 snp_cols <- all_cols[7:length(all_cols)]
+L <- length(snp_cols)
+M <- nrow(dfPCs)
 
 # First write: FID, IID only
 fwrite(ids, out_file, sep = "\t", quote = FALSE)
 
 # Residualize and append each SNP
-for (snp in snp_cols) {
-  print(paste("Processing:", snp))
+for (i in 1:L) {
+  print(paste("Processing:", i))
 
   # Read FID, IID, and the SNP column only
-  y <- fread(snp_file, select = snp)[[1]]
+  y <- scan(snp_file, what = numeric(), skip = 1, sep = "\t")[seq(from = i+7, to = L * M, by = L+7)]
   print(y)
 
   # Residualize
