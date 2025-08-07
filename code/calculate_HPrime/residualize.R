@@ -17,48 +17,41 @@ out_file = args[3]
 dfPCs <- fread(pc_file)
 colnames(dfPCs)[1] <- "FID"
 
+# Extract PCs as covariates
+covars <- as.matrix(dfPCs %>% select(starts_with("PC")))
 
 # Read FID and IID to use later for merging
-ids <- fread(snp_file, select = c("FID", "IID"))
-
-# Merge with PCs once
-df_base <- inner_join(ids, dfPCs, by = c("FID", "IID"))
-print(head(df_base))
+ids <- dfPCs[,1:2]
 
 # Get all SNP column names
 all_cols <- colnames(fread(snp_file, nrows = 0))
 snp_cols <- all_cols[7:length(all_cols)]
-head(snp_cols)
 
-snp_cols <- snp_cols[1:10]
-
-# Create output file with header
-fwrite(data.table(FID=character(), IID=character(), SNP=character(), Residual=numeric()),
-       out_file, sep="\t")
+# First write: FID, IID only
+fwrite(ids, out_file, sep = "\t", quote = FALSE)
 
 # Residualize and append each SNP
 for (snp in snp_cols) {
   print(paste("Processing:", snp))
 
   # Read FID, IID, and the SNP column only
-  df_snp <- fread(snp_file, select = c("FID", "IID", snp))
-
-  # Merge with PCs
-  df <- inner_join(df_snp, dfPCs, by = c("FID", "IID"))
-
-  # Extract genotype vector
-  y <- df[[snp]]
-
-  # Extract PCs as covariates
-  covars <- as.matrix(df %>% select(starts_with("PC")))
+  y <- fread(snp_file, select = snp)[[1]]
+  print(y)
 
   # Residualize
   model <- lm(y ~ covars)
   resids <- resid(model)
 
-  # Save output
-  result <- data.table(FID = df$FID, IID = df$IID, SNP = snp, Residual = resids)
-  fwrite(result, out_file, sep="\t", append=TRUE)
+  # Write to temp file
+  temp_file <- tempfile()
+  fwrite(data.table(resids), temp_file, col.names = snp)
+
+  # Paste column onto the existing output file
+  system(sprintf("paste %s %s > %s", out_file, temp_file, paste0(out_file, ".tmp")))
+  system(sprintf("mv %s %s", paste0(out_file, ".tmp"), out_file))
+
+  # Clean up
+  unlink(temp_file)
 }
 
 
