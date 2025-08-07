@@ -80,10 +80,10 @@ rule dosage_even_snps:
 
 rule resdulize_odd_snps:
     input:
-        SNPs="output/calculate_HPrime/{gwas}/odd_dosage.raw"",
+        SNPs="output/calculate_HPrime/{gwas}/odd_dosage.raw",
         PCs="output/calculate_PCA/{gwas}/even_PCA.eigenvec"
     output:
-        "output/calculate_HPrime/{gwas}/odd_residual.raw",
+        "output/calculate_HPrime/{gwas}/odd_residual.raw"
     shell:
         """
         Rscript code/calculate_HPrime/residualize.R {input.SNPs} {input.PCs} {output}
