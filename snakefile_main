@@ -23,7 +23,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_HPrime/{gwas}/odd_dosage.raw", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
+        expand("output/calculate_HPrime/{gwas}/even_residual.raw", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
 
 localrules: concat_pga_test
 
@@ -89,6 +89,16 @@ rule resdulize_odd_snps:
         Rscript code/calculate_HPrime/residualize.R {input.SNPs} {input.PCs} {output}
         """
 
+rule resdulize_even_snps:
+    input:
+        SNPs="output/calculate_HPrime/{gwas}/even_dosage.raw",
+        PCs="output/calculate_PCA/{gwas}/odd_PCA.eigenvec"
+    output:
+        "output/calculate_HPrime/{gwas}/even_residual.raw"
+    shell:
+        """
+        Rscript code/calculate_HPrime/residualize.R {input.SNPs} {input.PCs} {output}
+        """
 
 
 ##### Calculate H #####
