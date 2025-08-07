@@ -21,43 +21,43 @@ colnames(dfPCs)[1] <- "FID"
 covars <- as.matrix(dfPCs %>% select(starts_with("PC")))
 print("got covars")
 
-# Read FID and IID to use later for merging
-dfSNPs <- fread(snp_file)
-print(dim(dfSNPs))
+# Initialize an empty list to store results
+results_list <- list()
+index <- 1
 
-# Get all SNP column names
-all_cols <- colnames(fread(snp_file, nrows = 0))
-snp_cols <- all_cols[7:length(all_cols)]
-L <- length(snp_cols)
-M <- nrow(dfPCs)
+con <- file(snp_file, open = "r")
 
-# First write: FID, IID only
-fwrite(ids, out_file, sep = "\t", quote = FALSE)
+# Read and discard the first line to skip it
+readLines(con, n = 1, warn = FALSE)
 
-# Residualize and append each SNP
-for (i in 1:L) {
-  print(paste("Processing:", i))
+# Read and process each line
+while(TRUE) {
 
-  # Read FID, IID, and the SNP column only
-  y <- scan(snp_file, what = numeric(), skip = 1, sep = "\t")[seq(from = i+7, to = L * M, by = L+7)]
-  print(y)
+  line <- readLines(con, n = 1, warn = FALSE)
+  if (length(line) == 0) break  # Exit loop if end of file
 
-  # Residualize
-  model <- lm(y ~ covars)
-  resids <- resid(model)
+  # Get fields
+  fields <- strsplit(line, "\\s+")[[1]]
+  dosages <- as.numeric(fields[7:length(fields)])
+  ID <- fields[2]
 
-  # Write to temp file
-  temp_file <- tempfile()
-  fwrite(data.table(resids), temp_file, col.names = snp)
+  # Convert to dosage of ALT allele
+  dosages <- 2 - dosages
 
-  # Paste column onto the existing output file
-  system(sprintf("paste %s %s > %s", out_file, temp_file, paste0(out_file, ".tmp")))
-  system(sprintf("mv %s %s", paste0(out_file, ".tmp"), out_file))
+  # Calculate variance
+  variance <- var(dosages)
 
-  # Clean up
-  unlink(temp_file)
+  # Save results to list
+  results_list[[index]] <- data.table(ID = ID, Var = variance)
+  index <- 1+ index
 }
 
+# Close the connection
+close(con)
+
+# Combine the list into a data.table and save the output
+dfOut <- rbindlist(results_list)
+fwrite(dfOut, outFile, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
 
 
 
