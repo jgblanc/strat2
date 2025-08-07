@@ -15,18 +15,21 @@ out_file = args[3]
 
 # Read in PCs
 dfPCs <- fread(pc_file)
-print(head(dfPCs))
+colnames(dfPCs)[1] <- "FID"
+
 
 # Read FID and IID to use later for merging
 ids <- fread(snp_file, select = c("FID", "IID"))
-print(head(ids))
 
 # Merge with PCs once
 df_base <- inner_join(ids, dfPCs, by = c("FID", "IID"))
+print(head(df_base))
 
 # Get all SNP column names
 all_cols <- colnames(fread(snp_file, nrows = 0))
-snp_cols <- all_cols[grepl("^:", all_cols)]
+snp_cols <- all_cols[7:length(all_cols)]
+head(snp_cols)
+
 snp_cols <- snp_cols[1:10]
 
 # Create output file with header
