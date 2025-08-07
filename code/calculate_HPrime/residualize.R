@@ -43,12 +43,13 @@ while(TRUE) {
 
   # Convert to dosage of ALT allele
   dosages <- 2 - dosages
+  head(dosages)
 
-  # Calculate variance
-  variance <- var(dosages)
+  # Regress out PCs (residualize)
+  resids <- resid(lm(dosages ~ covars))
 
   # Save results to list
-  results_list[[index]] <- data.table(ID = ID, Var = variance)
+  results_list[[index]] <- data.table(ID = ID, t(resids))
   index <- 1+ index
 }
 
