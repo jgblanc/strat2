@@ -2,7 +2,7 @@
 
 args=commandArgs(TRUE)
 
-if(length(args)<6){stop("Rscript calc_H.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
+if(length(args)<3){stop("Rscript calc_H.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
@@ -13,14 +13,16 @@ snp_file = args[1]
 pc_file = args[2]
 out_file = args[3]
 
+# Read in PCs
+dfPCs <- fread(pc_file)
+print(head(dfPCs))
+
 
 # Read in dosages
-dfSNPs <- fread(id_file)
+print("Starting")
+dfSNPs <- fread(snp_file,select = 1:100,verbose = TRUE)
 print(head(dfSNPs))
 
-# Read in PCs
-dfPCs <- nrow(dfIDs)
-print(head(dfPCs))
 
 # Combine
 dfALL <- inner_join(dfSNPs,dfPCs)
