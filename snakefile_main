@@ -23,7 +23,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_HPrime/{gwas}/even_dosage.raw", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
+        expand("output/calculate_HPrime/{gwas}/even_residual.raw", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE),
 
 localrules: concat_pga_test
 
@@ -36,7 +36,7 @@ rule dosage_odd_snps:
     input:
         IDs="data/ids/gwas_ids/{gwas}.txt"
     output:
-        "output/calculate_HPrime/{gwas}/odd_dosage.raw",
+        "output/calculate_HPrime/{gwas}/odd_dosage.traw",
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3",
         out_prefix="output/calculate_HPrime/{gwas}/odd_dosage",
@@ -60,7 +60,7 @@ rule dosage_even_snps:
     input:
         IDs="data/ids/gwas_ids/{gwas}.txt"
     output:
-        "output/calculate_HPrime/{gwas}/even_dosage.raw",
+        "output/calculate_HPrime/{gwas}/even_dosage.traw",
     params:
         plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3",
         out_prefix="output/calculate_HPrime/{gwas}/even_dosage",
@@ -82,10 +82,13 @@ rule dosage_even_snps:
 
 rule resdulize_odd_snps:
     input:
-        SNPs="output/calculate_HPrime/{gwas}/odd_dosage.raw",
+        SNPs="output/calculate_HPrime/{gwas}/odd_dosage.traw",
         PCs="output/calculate_PCA/{gwas}/even_PCA.eigenvec"
     output:
         "output/calculate_HPrime/{gwas}/odd_residual.raw"
+    resources:
+        mem_mb=38000,
+        time="24:00:00"	
     shell:
         """
         Rscript code/calculate_HPrime/residualize.R {input.SNPs} {input.PCs} {output}
@@ -93,10 +96,13 @@ rule resdulize_odd_snps:
 
 rule resdulize_even_snps:
     input:
-        SNPs="output/calculate_HPrime/{gwas}/even_dosage.raw",
+        SNPs="output/calculate_HPrime/{gwas}/even_dosage.traw",
         PCs="output/calculate_PCA/{gwas}/odd_PCA.eigenvec"
     output:
         "output/calculate_HPrime/{gwas}/even_residual.raw"
+    resources:
+        mem_mb=38000,
+        time="24:00:00"	
     shell:
         """
         Rscript code/calculate_HPrime/residualize.R {input.SNPs} {input.PCs} {output}

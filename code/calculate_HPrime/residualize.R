@@ -16,6 +16,7 @@ out_file = args[3]
 # Read in PCs
 dfPCs <- fread(pc_file)
 colnames(dfPCs)[1] <- "FID"
+ind_ids <- dfPCs$FID
 
 # Extract PCs as covariates
 covars <- as.matrix(dfPCs %>% select(starts_with("PC")))
@@ -32,10 +33,11 @@ readLines(con, n = 1, warn = FALSE)
 
 # Read and process each line
 while(TRUE) {
-
+	    
+  print(index)
   line <- readLines(con, n = 1, warn = FALSE)
   if (length(line) == 0) break  # Exit loop if end of file
-
+ 
   # Get fields
   fields <- strsplit(line, "\\s+")[[1]]
   dosages <- as.numeric(fields[7:length(fields)])
@@ -43,10 +45,9 @@ while(TRUE) {
 
   # Convert to dosage of ALT allele
   dosages <- 2 - dosages
-  head(dosages)
 
-  # Regress out PCs (residualize)
   resids <- resid(lm(dosages ~ covars))
+
 
   # Save results to list
   results_list[[index]] <- data.table(ID = ID, t(resids))
@@ -58,7 +59,8 @@ close(con)
 
 # Combine the list into a data.table and save the output
 dfOut <- rbindlist(results_list)
-fwrite(dfOut, outFile, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+colnames(dfOut) <- c("ID", ind_ids)
+fwrite(dfOut, out_file, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
 
 
 
