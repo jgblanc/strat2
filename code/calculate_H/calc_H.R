@@ -43,8 +43,13 @@ for (i in 2:22) {
 }
 print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 
+# Read in Pvar file
+dfPvar <- fread(paste0(plink_prefix, ".pvar"))
+
 # Read in SNP file
 dfSNP <- fread(snp_file) %>% select("ID", "block")
+dfSNP <- inner_join(dfPvar, dfSNP) %>% select("ID", "block")
+print(paste0("Number of PC SNPs ", nrow(dfSNP)))
 
 # Combine SNP and R files
 dfALL <- inner_join(df, dfSNP) %>% drop_na()
