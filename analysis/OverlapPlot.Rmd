@@ -123,6 +123,8 @@ dfPlot <- dfAllOverlap %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr",
 dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
 
 plCont <- dfPlot %>% ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 6)) + ylab(TeX("$\\hat{H}$")) + scale_y_log10(breaks = c(1e-5, 1e-4, 1e-3, 1e-2)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5))
+
+plCont
 ```
 
 HGDP1KG - Lat
@@ -132,6 +134,7 @@ dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-
 
 
 plLat <- dfPlot %>% ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 8)) + ylab(TeX("$\\hat{H}$")) + scale_y_log10(breaks = c(1e-5, 1e-4, 1e-3, 1e-2),  limits = c(7e-6, 1e-2)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5)) 
+plLat
 ```
 
 InUKBB
