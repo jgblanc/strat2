@@ -58,7 +58,7 @@ rule dosage_chr_snps:
 
 rule resdulize_snps:
     input:
-        SNPs="output/calculate_HPrime/{gwas}/{chr}_dosage.traw",
+        SNPs="output/calculate_HPrime/{gwas}/chr{chr}_dosage.traw",
         oddPCs="output/calculate_PCA/{gwas}/odd_PCA.eigenvec",
         evenPCs="output/calculate_PCA/{gwas}/even_PCA.eigenvec"
     output:

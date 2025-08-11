@@ -33,6 +33,7 @@ if (chr_num %in% c(1,3,5,7,9,11,13,15,17,19,21)) {
 
 # Extract PCs as covariates
 covars <- as.matrix(dfPCs %>% select(starts_with("PC")))
+#covars <- cbind(1, covars)
 print("got covars")
 
 # Initialize an empty list to store results
@@ -45,7 +46,7 @@ con <- file(snp_file, open = "r")
 readLines(con, n = 1, warn = FALSE)
 
 # Read and process each line
-while(TRUE) {
+while(index <= 100) {
 
   print(index)
   line <- readLines(con, n = 1, warn = FALSE)
@@ -53,10 +54,11 @@ while(TRUE) {
 
   # Get fields
   fields <- strsplit(line, "\\s+")[[1]]
-  dosages <- as.numeric(fields[7:length(fields)])
+  dosages <- matrix(as.numeric(fields[7:length(fields)]), ncol = 1)
   ID <- fields[2]
 
   # Convert to dosage of ALT allele
+  #resids <- resid(lm.fit(x=covars, y=dosages))
   resids <- resid(lm(dosages ~ covars))
 
   # Save results to list
