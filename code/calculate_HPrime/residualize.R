@@ -29,7 +29,7 @@ if (chr_num %in% c(1,3,5,7,9,11,13,15,17,19,21)) {
   pca_file_path <- paste0(pc_prefix, "odd_PCA.eigenvec")
   dfPCs <- fread(pca_file_path)
   colnames(dfPCs)[1] <- "FID"
-  ind_ids <- dfPCs$FID
+  ind_ids <- paste(dfPCs$FID,dfPCs$FID, sep=":")
 
 }
 
@@ -39,9 +39,13 @@ covars <- as.matrix(dfPCs %>% select(starts_with("PC")))
 print("got covars")
 
 # Make psam file
-dfPSAM <- dfPCs %>% select("FID", "IID")
-dfPSAM$SEX <- NA
-fwrite(dfPSAM, out_psam, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+#dfPSAM <- dfPCs %>% select("FID", "IID")
+#dfPSAM$PAT <- 0
+#dfPSAM$MISS <- 0
+#dfPSAM$MAT <- 0
+#dfPSAM$SEX <- 0
+#dfPSAM$PHENO <- 0
+#fwrite(dfPSAM, out_psam, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
 
 
 # Initialize an empty list to store results
@@ -54,7 +58,7 @@ con <- file(snp_file, open = "r")
 readLines(con, n = 1, warn = FALSE)
 
 # Read and process each line
-while(index <= 100) {
+while(index <= 5) {
 
   print(index)
   line <- readLines(con, n = 1, warn = FALSE)
@@ -64,8 +68,6 @@ while(index <= 100) {
   fields <- strsplit(line, "\\s+")[[1]]
   dosages <- matrix(as.numeric(fields[7:length(fields)]), ncol = 1)
   ID <- fields[2]
-  CHR <- fields[1]
-  POS <- fields[4]
   REF <- fields[5]
   ALT <- fields[6]
 
@@ -74,7 +76,7 @@ while(index <= 100) {
   resids <- resid(lm(dosages ~ covars))
 
   # Save results to list
-  results_list[[index]] <- data.table(CHR = CHR, POS = POS, ID = ID, REF=REF, ALT=ALT, t(resids))
+  results_list[[index]] <- data.table(ID = ID, REF=REF, ALT=ALT, t(resids))
   index <- 1+ index
 }
 
@@ -83,12 +85,15 @@ close(con)
 
 # Combine the list into a data.table and save the output
 dfOut <- rbindlist(results_list)
-colnames(dfOut) <- c("CHROM", "POS", "ID", "REF", "ALT", ind_ids)
+colnames(dfOut) <- c("ID", "REF", "ALT", ind_ids)
+colnames(dfOut)[1] <- "SNP"
+colnames(dfOut)[2] <- "A1"
+colnames(dfOut)[3] <- "A2"
 fwrite(dfOut, out_file, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
 
 # Save pvar. file
-dfPVAR <- dfOut %>% select("CHROM", "POS", "ID", "REF", "ALT")
-fwrite(dfPvar, out_pvar, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+#dfPVAR <- dfOut %>% select("CHROM", "POS", "ID", "REF", "ALT")
+#fwrite(dfPVAR, out_pvar, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
 
 
 

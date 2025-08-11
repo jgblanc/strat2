@@ -23,7 +23,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pgen", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -62,9 +62,7 @@ rule resdulize_snps:
         oddPCs="output/calculate_PCA/{gwas}/odd_PCA.eigenvec",
         evenPCs="output/calculate_PCA/{gwas}/even_PCA.eigenvec"
     output:
-        traw="output/calculate_HPrime/{gwas}/chr{chr}_residual.traw",
-        psam="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam",
-        pvar="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pvar"
+        traw="output/calculate_HPrime/{gwas}/chr{chr}_residual.traw"
     resources:
         mem_mb=38000,
         time="24:00:00"
@@ -72,31 +70,30 @@ rule resdulize_snps:
         pca_prefix="output/calculate_PCA/{gwas}/"
     shell:
         """
-        Rscript code/calculate_HPrime/residualize.R {input.SNPs} {params.pca_prefix} {wildcards.chr} {output.traw} {output.psam} {output.pvar}
+        Rscript code/calculate_HPrime/residualize.R {input.SNPs} {params.pca_prefix} {wildcards.chr} {output.traw}
         """
 
 rule remake_plink_files:
     input:
-        resids="output/calculate_HPrime/{gwas}/chr{chr}_residual.traw"
+        resids="output/calculate_HPrime/{gwas}/chr{chr}_residual.traw",
     output:
-        pgen="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pgen"
-    resources:
-        mem_mb=38000,
-        time="24:00:00"
+        pgen="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pgen",
+	psam="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam"
     params:
         out_prefix="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}"
     shell:
         """
+        head -n1 {input.resids} | cut -f4- | tr '\t' '\n' | \
+	awk '{{ split($1, arr, ":"); print arr[1], arr[2], 0, 0, 0, -9 }}' > {params.out_prefix}.fam
+
         plink2 \
-        --import-dosage {input.resids} skip0=1 skip1=2 id-delim=_ chr-col-num=1 pos-col-num=4 ref-first \
-        --fam {output.fam} \
-	--threads 8 \
+        --import-dosage {input.resids} ref-first id-delim=: \
+        --threads 8 \
+	--fam {params.out_prefix}.fam \
         --memory 38000 \
         --make-pgen \
         --out {params.out_prefix}
         """
-
-
 
 ##### Calculate H #####
 
