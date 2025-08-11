@@ -23,7 +23,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pvar", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -62,7 +62,9 @@ rule resdulize_snps:
         oddPCs="output/calculate_PCA/{gwas}/odd_PCA.eigenvec",
         evenPCs="output/calculate_PCA/{gwas}/even_PCA.eigenvec"
     output:
-        "output/calculate_HPrime/{gwas}/chr{chr}_residual.traw"
+        traw="output/calculate_HPrime/{gwas}/chr{chr}_residual.traw",
+        psam="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam",
+        pvar="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pvar"
     resources:
         mem_mb=38000,
         time="24:00:00"
@@ -70,17 +72,14 @@ rule resdulize_snps:
         pca_prefix="output/calculate_PCA/{gwas}/"
     shell:
         """
-        Rscript code/calculate_HPrime/residualize.R {input.SNPs} {params.pca_prefix} {wildcards.chr} {output}
+        Rscript code/calculate_HPrime/residualize.R {input.SNPs} {params.pca_prefix} {wildcards.chr} {output.traw} {output.psam} {output.pvar}
         """
 
 rule remake_plink_files:
     input:
         resids="output/calculate_HPrime/{gwas}/chr{chr}_residual.traw"
     output:
-        pvar="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pvar",
-        psam="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam",
-        pgen="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pgen",
-	fam="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.fam"
+        pgen="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pgen"
     resources:
         mem_mb=38000,
         time="24:00:00"
@@ -88,7 +87,6 @@ rule remake_plink_files:
         out_prefix="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}"
     shell:
         """
-	head -n1 {input.resids} | cut -f7- | tr '\t' '\n' | awk '{{print "0",$1,0,0,0,-9}}' > {output.fam}
         plink2 \
         --import-dosage {input.resids} skip0=1 skip1=2 id-delim=_ chr-col-num=1 pos-col-num=4 ref-first \
         --fam {output.fam} \

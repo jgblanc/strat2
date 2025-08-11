@@ -13,6 +13,8 @@ snp_file = args[1]
 pc_prefix = args[2]
 chr_num = as.numeric(args[3])
 out_file = args[4]
+out_psam = args[5]
+out_pvar = args[6 ]
 
 # Read in PCs for correct chromosomes
 if (chr_num %in% c(1,3,5,7,9,11,13,15,17,19,21)) {
@@ -36,6 +38,12 @@ covars <- as.matrix(dfPCs %>% select(starts_with("PC")))
 #covars <- cbind(1, covars)
 print("got covars")
 
+# Make psam file
+dfPSAM <- dfPCs %>% select("FID", "IID")
+dfPSAM$SEX <- NA
+fwrite(dfPSAM, out_psam, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+
+
 # Initialize an empty list to store results
 results_list <- list()
 index <- 1
@@ -56,13 +64,17 @@ while(index <= 100) {
   fields <- strsplit(line, "\\s+")[[1]]
   dosages <- matrix(as.numeric(fields[7:length(fields)]), ncol = 1)
   ID <- fields[2]
+  CHR <- fields[1]
+  POS <- fields[4]
+  REF <- fields[5]
+  ALT <- fields[6]
 
   # Convert to dosage of ALT allele
   #resids <- resid(lm.fit(x=covars, y=dosages))
   resids <- resid(lm(dosages ~ covars))
 
   # Save results to list
-  results_list[[index]] <- data.table(ID = ID, t(resids))
+  results_list[[index]] <- data.table(CHR = CHR, POS = POS, ID = ID, REF=REF, ALT=ALT, t(resids))
   index <- 1+ index
 }
 
@@ -71,8 +83,13 @@ close(con)
 
 # Combine the list into a data.table and save the output
 dfOut <- rbindlist(results_list)
-colnames(dfOut) <- c("ID", ind_ids)
+colnames(dfOut) <- c("CHROM", "POS", "ID", "REF", "ALT", ind_ids)
 fwrite(dfOut, out_file, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+
+# Save pvar. file
+dfPVAR <- dfOut %>% select("CHROM", "POS", "ID", "REF", "ALT")
+fwrite(dfPvar, out_pvar, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+
 
 
 
