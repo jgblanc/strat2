@@ -1,7 +1,7 @@
 # Snakefile to run main pipeline
-CHR = []
-for i in range(1, 23):
-  CHR.append(str(i))
+CHR = ["22"]
+#for i in range(1, 23):
+#  CHR.append(str(i))
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 DATASET = ["InUKBB"]
@@ -23,7 +23,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_HPrime/{gwas}/chr{chr}_dosage.traw", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("output/calculate_HPrime/{gwas}/chr{chr}_residual.traw", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -56,33 +56,24 @@ rule dosage_chr_snps:
         --out {params.out_prefix}
         """
 
-rule resdulize_odd_snps:
+rule resdulize_snps:
     input:
-        SNPs="output/calculate_HPrime/{gwas}/odd_dosage.traw",
-        PCs="output/calculate_PCA/{gwas}/even_PCA.eigenvec"
+        SNPs="output/calculate_HPrime/{gwas}/{chr}_dosage.traw",
+        oddPCs="output/calculate_PCA/{gwas}/odd_PCA.eigenvec",
+        evenPCs="output/calculate_PCA/{gwas}/even_PCA.eigenvec"
     output:
-        "output/calculate_HPrime/{gwas}/odd_residual.raw"
+        "output/calculate_HPrime/{gwas}/chr{chr}_residual.traw"
     resources:
         mem_mb=38000,
         time="24:00:00"
+    params:
+        pca_prefix="output/calculate_PCA/{gwas}/"
     shell:
         """
-        Rscript code/calculate_HPrime/residualize.R {input.SNPs} {input.PCs} {output}
+        Rscript code/calculate_HPrime/residualize.R {input.SNPs} {params.pca_prefix} {wildcards.chr} {output}
         """
 
-rule resdulize_even_snps:
-    input:
-        SNPs="output/calculate_HPrime/{gwas}/even_dosage.traw",
-        PCs="output/calculate_PCA/{gwas}/odd_PCA.eigenvec"
-    output:
-        "output/calculate_HPrime/{gwas}/even_residual.raw"
-    resources:
-        mem_mb=38000,
-        time="24:00:00"
-    shell:
-        """
-        Rscript code/calculate_HPrime/residualize.R {input.SNPs} {input.PCs} {output}
-        """
+
 
 
 ##### Calculate H #####

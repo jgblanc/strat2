@@ -5,18 +5,31 @@ suppressWarnings(suppressMessages({
 
 args = commandArgs(TRUE)
 
-if(length(args) < 3){
+if(length(args) < 4){
   stop("Usage: Rscript residualize_one_by_one.R <snp_file> <pc_file> <out_file>")
 }
 
 snp_file = args[1]
-pc_file = args[2]
-out_file = args[3]
+pc_prefix = args[2]
+chr_num = as.numeric(args[3])
+out_file = args[4]
 
-# Read in PCs
-dfPCs <- fread(pc_file)
-colnames(dfPCs)[1] <- "FID"
-ind_ids <- dfPCs$FID
+# Read in PCs for correct chromosomes
+if (chr_num %in% c(1,3,5,7,9,11,13,15,17,19,21)) {
+  print("Odd Chr")
+  pca_file_path <- paste0(pc_prefix, "even_PCA.eigenvec")
+  dfPCs <- fread(pca_file_path)
+  colnames(dfPCs)[1] <- "FID"
+  ind_ids <- dfPCs$FID
+
+} else if (chr_num %in% c(2,4,6,8,10,12,14,16,18,20,22)) {
+  print("Even chr")
+  pca_file_path <- paste0(pc_prefix, "odd_PCA.eigenvec")
+  dfPCs <- fread(pca_file_path)
+  colnames(dfPCs)[1] <- "FID"
+  ind_ids <- dfPCs$FID
+
+}
 
 # Extract PCs as covariates
 covars <- as.matrix(dfPCs %>% select(starts_with("PC")))
@@ -33,21 +46,18 @@ readLines(con, n = 1, warn = FALSE)
 
 # Read and process each line
 while(TRUE) {
-	    
+
   print(index)
   line <- readLines(con, n = 1, warn = FALSE)
   if (length(line) == 0) break  # Exit loop if end of file
- 
+
   # Get fields
   fields <- strsplit(line, "\\s+")[[1]]
   dosages <- as.numeric(fields[7:length(fields)])
   ID <- fields[2]
 
   # Convert to dosage of ALT allele
-  dosages <- 2 - dosages
-
   resids <- resid(lm(dosages ~ covars))
-
 
   # Save results to list
   results_list[[index]] <- data.table(ID = ID, t(resids))
