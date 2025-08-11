@@ -77,9 +77,10 @@ rule remake_plink_files:
     input:
         resids="output/calculate_HPrime/{gwas}/chr{chr}_residual.traw"
     output:
-        "output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pvar",
-        "output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam",
-        "output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pgen"
+        pvar="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pvar",
+        psam="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam",
+        pgen="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pgen",
+	fam="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.fam"
     resources:
         mem_mb=38000,
         time="24:00:00"
@@ -87,9 +88,11 @@ rule remake_plink_files:
         out_prefix="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}"
     shell:
         """
+	head -n1 {input.resids} | cut -f7- | tr '\t' '\n' | awk '{{print "0",$1,0,0,0,-9}}' > {output.fam}
         plink2 \
         --import-dosage {input.resids} skip0=1 skip1=2 id-delim=_ chr-col-num=1 pos-col-num=4 ref-first \
-        --threads 8 \
+        --fam {output.fam} \
+	--threads 8 \
         --memory 38000 \
         --make-pgen \
         --out {params.out_prefix}
