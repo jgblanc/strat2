@@ -23,7 +23,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_HPrime/{gwas}/chr{chr}_dosage.traw", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("output/calculate_PCA/{gwas}/rare_even_PCA.eigenvec", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -407,6 +407,32 @@ rule calc_odd_PCA_rare:
         --memory 60000 \
         --out {params.out_prefix}
 	      """
+
+rule calc_even_PCA_rare:
+    input:
+        IDs="data/ids/gwas_ids/{gwas}.txt"
+    output:
+        "output/calculate_PCA/{gwas}/rare_even_PCA.eigenvec",
+        "output/calculate_PCA/{gwas}/rare_even_PCA.eigenval"
+    params:
+        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/pcSNPs_ALL",
+        out_prefix="output/calculate_PCA/{gwas}/rare_even_PCA"
+    threads: 16
+    resources:
+        mem_mb=60000,
+        time="36:00:00"
+    shell:
+        """
+        plink2 --pfile {params.plink_prefix} \
+        --keep {input.IDs} \
+	--thin-count 1000000 \
+        --chr 2,4,6,8,10,12,14,16,18,20,22 \
+        --threads 16 \
+        --pca 40 \
+        --memory 60000 \
+        --out {params.out_prefix}
+	      """
+
 
 rule calc_R2_even_rare:
     input:
