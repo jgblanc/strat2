@@ -23,6 +23,7 @@ if (chr_num %in% c(1,3,5,7,9,11,13,15,17,19,21)) {
   dfPCs <- fread(pca_file_path)
   colnames(dfPCs)[1] <- "FID"
   ind_ids <- dfPCs$FID
+  ind_ids <- paste(dfPCs$FID,dfPCs$FID, sep=":")
 
 } else if (chr_num %in% c(2,4,6,8,10,12,14,16,18,20,22)) {
   print("Even chr")
@@ -58,7 +59,7 @@ con <- file(snp_file, open = "r")
 readLines(con, n = 1, warn = FALSE)
 
 # Read and process each line
-while(index <= 5) {
+while(TRUE) {
 
   print(index)
   line <- readLines(con, n = 1, warn = FALSE)

@@ -2,7 +2,7 @@
 #SBATCH --job-name=main
 #SBATCH --output=logs/main.out
 #SBATCH --error=logs/main.err
-#SBATCH --time=05:00:00
+#SBATCH --time=37:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem-per-cpu=40000
@@ -18,6 +18,6 @@ module load regenie
 
 echo "SLURM_JOBID="$SLURM_JOBID
 rm -r .snakemake/
-cat snakefile_UKBB
-snakemake --unlock -s snakefile_UKBB
-snakemake --profile cluster-setup/ -s snakefile_UKBB --rerun-incomplete
+cat snakefile_main
+snakemake --unlock -s snakefile_main
+snakemake --profile cluster-setup/ -s snakefile_main --rerun-incomplete
