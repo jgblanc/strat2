@@ -1,7 +1,7 @@
 # Snakefile to run main pipeline
-CHR = []
-for i in range(1, 23):
-  CHR.append(str(i))
+CHR = ["20"]
+#for i in range(1, 23):
+#  CHR.append(str(i))
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 DATASET = ["InUKBB"]

@@ -1,4 +1,4 @@
-suppressWarnings(suppressMessages({
+uppressWarnings(suppressMessages({
   library(data.table)
   library(tidyverse)
 }))
@@ -6,96 +6,89 @@ suppressWarnings(suppressMessages({
 args = commandArgs(TRUE)
 
 if(length(args) < 4){
-  stop("Usage: Rscript residualize_one_by_one.R <snp_file> <pc_file> <out_file>")
+  stop("Usage: Rscript residualize_one_by_one.R <snp_file> <pc_prefix> <chr_num> <out_file> <out_psam> <out_pvar>")
 }
 
 snp_file = args[1]
 pc_prefix = args[2]
 chr_num = as.numeric(args[3])
 out_file = args[4]
-out_psam = args[5]
-out_pvar = args[6 ]
 
-# Read in PCs for correct chromosomes
+
+#-------------------------------
+# Select correct PCA file
+#-------------------------------
 if (chr_num %in% c(1,3,5,7,9,11,13,15,17,19,21)) {
   print("Odd Chr")
   pca_file_path <- paste0(pc_prefix, "even_PCA.eigenvec")
-  dfPCs <- fread(pca_file_path)
-  colnames(dfPCs)[1] <- "FID"
-  ind_ids <- dfPCs$FID
-  ind_ids <- paste(dfPCs$FID,dfPCs$FID, sep=":")
-
 } else if (chr_num %in% c(2,4,6,8,10,12,14,16,18,20,22)) {
-  print("Even chr")
+  print("Even Chr")
   pca_file_path <- paste0(pc_prefix, "odd_PCA.eigenvec")
-  dfPCs <- fread(pca_file_path)
-  colnames(dfPCs)[1] <- "FID"
-  ind_ids <- paste(dfPCs$FID,dfPCs$FID, sep=":")
-
+} else {
+  stop("Chromosome number not recognized.")
 }
 
-# Extract PCs as covariates
+dfPCs <- fread(pca_file_path)
+colnames(dfPCs)[1] <- "FID"
+ind_ids <- paste(dfPCs$FID, dfPCs$FID, sep=":")
+
+
+#-------------------------------
+# Prepare covariates (with intercept)
+#-------------------------------
 covars <- as.matrix(dfPCs %>% select(starts_with("PC")))
-#covars <- cbind(1, covars)
-print("got covars")
+covars_with_intercept <- cbind(1, covars)
 
-# Make psam file
-#dfPSAM <- dfPCs %>% select("FID", "IID")
-#dfPSAM$PAT <- 0
-#dfPSAM$MISS <- 0
-#dfPSAM$MAT <- 0
-#dfPSAM$SEX <- 0
-#dfPSAM$PHENO <- 0
-#fwrite(dfPSAM, out_psam, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+# Precompute QR decomposition for speed
+qr_covars <- qr(covars_with_intercept)
+
+print("Got covariates")
+
+#-------------------------------
+# Write header to output file
+#-------------------------------
+header <- c("SNP", "A1", "A2", ind_ids)
+fwrite(as.list(header), out_file, col.names = FALSE, sep = "\t", quote = FALSE)
 
 
-# Initialize an empty list to store results
-results_list <- list()
-index <- 1
-
+#-------------------------------
+# Process SNP file line-by-line
+#-------------------------------
 con <- file(snp_file, open = "r")
+readLines(con, n = 1, warn = FALSE)  # skip header
 
-# Read and discard the first line to skip it
-readLines(con, n = 1, warn = FALSE)
-
-# Read and process each line
-while(TRUE) {
-
-  print(index)
+line_count <- 0
+while(line_count < 10) {
   line <- readLines(con, n = 1, warn = FALSE)
-  if (length(line) == 0) break  # Exit loop if end of file
+  if (length(line) == 0) break  # EOF
 
-  # Get fields
   fields <- strsplit(line, "\\s+")[[1]]
-  dosages <- matrix(as.numeric(fields[7:length(fields)]), ncol = 1)
+  dosages <- as.numeric(fields[7:length(fields)])
   ID <- fields[2]
   REF <- fields[5]
   ALT <- fields[6]
 
-  # Convert to dosage of ALT allele
-  #resids <- resid(lm.fit(x=covars, y=dosages))
-  resids <- resid(lm(dosages ~ covars))
+  # Compute residuals using precomputed QR
+  #resids <- resid(lm(dosages ~ covars))
 
-  # Save results to list
-  results_list[[index]] <- data.table(ID = ID, REF=REF, ALT=ALT, t(resids))
-  index <- 1+ index
+  #fit <- lm.fit(x = covars_with_intercept, y = dosages)
+  #resids <- fit$residuals
+
+  fitted_vals <- qr.fitted(qr_covars, dosages)
+  resids <- dosages - fitted_vals
+
+  # Prepare and write row
+  row_out <- data.table(ID, REF, ALT, t(resids))
+  setnames(row_out, c("SNP", "A1", "A2", ind_ids))
+  fwrite(row_out, out_file, append = TRUE, col.names = FALSE, sep = "\t", quote = FALSE)
+
+  #line_count <- line_count + 1
+  #if (line_count %% 1000 == 0) {
+  #  print(paste("Processed", line_count, "SNPs"))
+  #}
+  print(line_count)
 }
 
-# Close the connection
 close(con)
-
-# Combine the list into a data.table and save the output
-dfOut <- rbindlist(results_list)
-colnames(dfOut) <- c("ID", "REF", "ALT", ind_ids)
-colnames(dfOut)[1] <- "SNP"
-colnames(dfOut)[2] <- "A1"
-colnames(dfOut)[3] <- "A2"
-fwrite(dfOut, out_file, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
-
-# Save pvar. file
-#dfPVAR <- dfOut %>% select("CHROM", "POS", "ID", "REF", "ALT")
-#fwrite(dfPVAR, out_pvar, row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
-
-
-
+print(paste("Finished processing", line_count, "SNPs"))
 
