@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=main
-#SBATCH --output=logs/main.out
-#SBATCH --error=logs/main.err
-#SBATCH --time=25:00:00
+#SBATCH --job-name=PCA
+#SBATCH --output=logs/PCA.out
+#SBATCH --error=logs/PCA.err
+#SBATCH --time=50:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem-per-cpu=40000
@@ -17,7 +17,7 @@ module load regenie
 #source ../myVilma/bin/activate 
 
 echo "SLURM_JOBID="$SLURM_JOBID
-rm -r .snakemake/
-cat snakefile_main2
-snakemake --unlock -s snakefile_main2
-snakemake --profile cluster-setup/ -s snakefile_main2 --rerun-incomplete
+#rm -r .snakemake/
+cat snakefile_UKBB
+snakemake --unlock -s snakefile_UKBB
+snakemake --profile cluster-setup2/ -s snakefile_UKBB --rerun-incomplete
