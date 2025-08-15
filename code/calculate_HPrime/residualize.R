@@ -1,4 +1,4 @@
-uppressWarnings(suppressMessages({
+suppressWarnings(suppressMessages({
   library(data.table)
   library(tidyverse)
 }))
@@ -58,7 +58,7 @@ con <- file(snp_file, open = "r")
 readLines(con, n = 1, warn = FALSE)  # skip header
 
 line_count <- 0
-while(line_count < 10) {
+while(TRUE) {
   line <- readLines(con, n = 1, warn = FALSE)
   if (length(line) == 0) break  # EOF
 
@@ -82,11 +82,11 @@ while(line_count < 10) {
   setnames(row_out, c("SNP", "A1", "A2", ind_ids))
   fwrite(row_out, out_file, append = TRUE, col.names = FALSE, sep = "\t", quote = FALSE)
 
-  #line_count <- line_count + 1
-  #if (line_count %% 1000 == 0) {
-  #  print(paste("Processed", line_count, "SNPs"))
-  #}
-  print(line_count)
+  line_count <- line_count + 1
+  if (line_count %% 1000 == 0) {
+    print(paste("Processed", line_count, "SNPs"))
+  }
+
 }
 
 close(con)
