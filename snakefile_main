@@ -5,8 +5,8 @@ for i in range(1, 23):
 #CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 DATASET = ["InUKBB"]
-GWAS = ["WBS-R", "ALL-R","e5", "e10", "e50", "e200", "ALL", "WBS"]
-#GWAS = ["e5"]
+#GWAS = ["WBS-R", "ALL-R","e5", "e10", "e50", "e200", "ALL", "WBS"]
+GWAS = ["e5"]
 #GWAS = ["WBS", "ALL","e5", "e10", "e50", "e200"]
 COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
@@ -97,11 +97,11 @@ rule remake_plink_files:
 
 # Concat residual SNP plink files
 
-rule concat_chr:
+rule concat_chr_residuals:
     input:
-        pgen=expand("output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pgen", chr=CHR),
-        pvar=expand("/output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pvar", chr=CHR),
-        psam=expand("output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam", chr=CHR),
+        pgen=expand("output/calculate_HPrime/{{gwas}}/plink_residuals_chr{chr}.pgen", chr=CHR),
+        pvar=expand("output/calculate_HPrime/{{gwas}}/plink_residuals_chr{chr}.pvar", chr=CHR),
+        psam=expand("output/calculate_HPrime/{{gwas}}/plink_residuals_chr{chr}.psam", chr=CHR),
         snps="data/ukbb/ukbb_pc_snps.txt"
     output:
         "output/calculate_HPrime/{gwas}/plink_residuals_ALL.pgen",
@@ -109,7 +109,7 @@ rule concat_chr:
         "output/calculate_HPrime/{gwas}/plink_residuals_ALL.psam",
     params:
         prefix_out="output/calculate_HPrime/{gwas}/plink_residuals_ALL",
-        merge_prefix=expand("output/calculate_HPrime/{gwas}/plink_residuals_ALL", chr=CHR, newline="\n")
+        merge_prefix=expand("output/calculate_HPrime/{{gwas}}/plink_residuals_chr{chr}", chr=CHR, newline="\n")
     threads: 16
     resources:
         mem_mb=60000,
