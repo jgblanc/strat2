@@ -6,7 +6,7 @@ GWAS = ["WBS-R", "ALL-R", "e5", "e10", "e50", "e200", "WBS", "ALL"]
 
 rule all:
     input:
-        expand("/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/pcSNPs_ALL.pgen" ,chr=CHR, gwas=GWAS)
+        expand("output/calculate_PCA/{gwas}/rare_even_PCA.eigenvec" ,chr=CHR, gwas=GWAS)
 
 
 ## UKBB Genotype data processing
@@ -134,3 +134,28 @@ rule concat_chr:
         --out {params.prefix_out}
          """
 
+
+rule calc_even_PCA_rare:
+    input:
+        IDs="data/ids/gwas_ids/{gwas}.txt"
+    output:
+        "output/calculate_PCA/{gwas}/rare_even_PCA.eigenvec",
+        "output/calculate_PCA/{gwas}/rare_even_PCA.eigenval"
+    params:
+        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/RareVariants/{gwas}/pcSNPs_ALL",
+        out_prefix="output/calculate_PCA/{gwas}/rare_even_PCA"
+    threads: 16
+    resources:
+        mem_mb=400000,
+        time="36:00:00"
+    shell:
+        """
+        plink2 --pfile {params.plink_prefix} \
+        --keep {input.IDs} \
+	--thin-count 1000000 \
+        --chr 2,4,6,8,10,12,14,16,18,20,22 \
+        --threads 16 \
+        --pca 40 approx \
+        --memory 400000 \
+        --out {params.out_prefix}
+	      """
