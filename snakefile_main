@@ -23,7 +23,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_PCA/{gwas}/rare_even_PCA.eigenvec", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("output/calculate_HPrime/{gwas}/plink_residuals_ALL.pgen", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -94,6 +94,40 @@ rule remake_plink_files:
         --make-pgen \
         --out {params.out_prefix}
         """
+
+# Concat residual SNP plink files
+
+rule concat_chr:
+    input:
+        pgen=expand("output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pgen", chr=CHR),
+        pvar=expand("/output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pvar", chr=CHR),
+        psam=expand("output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam", chr=CHR),
+        snps="data/ukbb/ukbb_pc_snps.txt"
+    output:
+        "output/calculate_HPrime/{gwas}/plink_residuals_ALL.pgen",
+        "output/calculate_HPrime/{gwas}/plink_residuals_ALL.pvar",
+        "output/calculate_HPrime/{gwas}/plink_residuals_ALL.psam",
+    params:
+        prefix_out="output/calculate_HPrime/{gwas}/plink_residuals_ALL",
+        merge_prefix=expand("output/calculate_HPrime/{gwas}/plink_residuals_ALL", chr=CHR, newline="\n")
+    threads: 16
+    resources:
+        mem_mb=60000,
+        time="12:00:00"
+    shell:
+        """
+        echo {params.merge_prefix} > {params.prefix_out}-tmp.txt
+	tr ' ' '\n' < "{params.prefix_out}-tmp.txt" > "{params.prefix_out}-tmp_chr_list.txt"
+        plink2 --pmerge-list {params.prefix_out}-tmp_chr_list.txt \
+        --extract {input.snps} \
+	      --threads 16 \
+        --memory 60000 \
+        --make-pgen \
+        --freq \
+        --out {params.prefix_out}
+         """
+
+
 
 ##### Calculate H #####
 
