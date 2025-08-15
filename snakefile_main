@@ -24,14 +24,14 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_HPrime/{gwas}/chr{chr}_residual.traw", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("output/calculate_HPrime/{dataset}/{gwas}/H_BJ_{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
 
 ##### Calculate H' #####
 
-# Residualize even SNPs
+# Get raw dosages
 
 rule dosage_chr_snps:
     input:
@@ -57,6 +57,8 @@ rule dosage_chr_snps:
         --out {params.out_prefix}
         """
 
+# Residualize against PCs
+
 rule resdulize_snps:
     input:
         SNPs="output/calculate_HPrime/{gwas}/chr{chr}_dosage.traw",
@@ -74,72 +76,18 @@ rule resdulize_snps:
         Rscript code/calculate_HPrime/residualize.R {input.SNPs} {params.pca_prefix} {wildcards.chr} {output.traw}
         """
 
-rule remake_plink_files:
-    input:
-        resids="output/calculate_HPrime/{gwas}/chr{chr}_residual.traw",
-    output:
-        pgen="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.pgen",
-	psam="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}.psam"
-    params:
-        out_prefix="output/calculate_HPrime/{gwas}/plink_residuals_chr{chr}"
-    shell:
-        """
-        head -n1 {input.resids} | cut -f4- | tr '\t' '\n' | \
-	awk '{{ split($1, arr, ":"); print arr[1], arr[2], 0, 0, 0, -9 }}' > {params.out_prefix}.fam
-
-        plink2 \
-        --import-dosage {input.resids} ref-first id-delim=: \
-        --threads 8 \
-	--fam {params.out_prefix}.fam \
-        --memory 38000 \
-        --make-pgen \
-        --out {params.out_prefix}
-        """
-
-# Concat residual SNP plink files
-
-rule concat_chr_residuals:
-    input:
-        pgen=expand("output/calculate_HPrime/{{gwas}}/plink_residuals_chr{chr}.pgen", chr=CHR),
-        pvar=expand("output/calculate_HPrime/{{gwas}}/plink_residuals_chr{chr}.pvar", chr=CHR),
-        psam=expand("output/calculate_HPrime/{{gwas}}/plink_residuals_chr{chr}.psam", chr=CHR),
-        snps="data/ukbb/ukbb_pc_snps.txt"
-    output:
-        "output/calculate_HPrime/{gwas}/plink_residuals_ALL.pgen",
-        "output/calculate_HPrime/{gwas}/plink_residuals_ALL.pvar",
-        "output/calculate_HPrime/{gwas}/plink_residuals_ALL.psam",
-    params:
-        prefix_out="output/calculate_HPrime/{gwas}/plink_residuals_ALL",
-        merge_prefix=expand("output/calculate_HPrime/{{gwas}}/plink_residuals_chr{chr}", chr=CHR, newline="\n")
-    threads: 16
-    resources:
-        mem_mb=60000,
-        time="12:00:00"
-    shell:
-        """
-        echo {params.merge_prefix} > {params.prefix_out}-tmp.txt
-	tr ' ' '\n' < "{params.prefix_out}-tmp.txt" > "{params.prefix_out}-tmp_chr_list.txt"
-        plink2 --pmerge-list {params.prefix_out}-tmp_chr_list.txt \
-        --extract {input.snps} \
-	      --threads 16 \
-        --memory 60000 \
-        --make-pgen \
-        --freq \
-        --out {params.prefix_out}
-         """
-
-# Calculate H
+# Calculate HPrime
 
 rule calcPrime_H_Jacknife:
     input:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         IDs="data/ids/gwas_ids/{gwas}.txt",
         snps="data/ukbb/ukbb_pc_snps_block.txt"
+        resids=expand("output/calculate_HPrime/{{gwas}}/chr{chr}_residual.traw", chr=CHR)
     output:
         H = "output/calculate_HPrime/{dataset}/{gwas}/H_BJ_{contrasts}.txt"
     params:
-        plink_prefix="output/calculate_HPrime/{gwas}/plink_residuals_ALL",
-        out_prefix="output/calculate_HPrime/{dataset}/{gwas}/BJ_{contrasts}",
+        resid_prefix="output/calculate_HPrime/{gwas}/chr",
         r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
     threads: 8
     resources:
@@ -147,7 +95,7 @@ rule calcPrime_H_Jacknife:
         time="02:00:00"
     shell:
         """
-        Rscript code/calculate_HPrime/calc_H.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H}
+        Rscript code/calculate_HPrime/calc_H.R {params.resid_prefix} {params.r_prefix} {input.snps} {input.IDs} {output.H}
 	      """
 
 ##### Calculate H #####

@@ -2,19 +2,18 @@
 
 args=commandArgs(TRUE)
 
-if(length(args)<6){stop("Rscript calc_H.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
+if(length(args)<5){stop("Rscript calc_H.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
   library(tidyverse)
 }))
 
-plink_prefix = args[1]
+resid_prefix = args[1]
 r_prefix = args[2]
-out_prefix = args[3]
-snp_file = args[4]
-id_file = args[5]
-out_file = args[6]
+snp_file = args[3]
+id_file = args[4]
+out_file = args[5]
 
 
 # Read in IDs
@@ -26,29 +25,27 @@ M <- nrow(dfIDs)
 # Read in all values of r
 
 ## First Chr
-r_file_name <- paste0(r_prefix, 1, ".rvec")
+r_file_name <- paste0(r_prefix, 22, ".rvec")
 df <- fread(r_file_name)
-df$CHR <- 1
+df$CHR <- 22
 
 ## All other Chrs
-for (i in 2:22) {
+#for (i in 2:22) {
 
   # Read in R file
-  r_file_name <- paste0(r_prefix, i, ".rvec")
-  tmp <- fread(r_file_name)
-  tmp$CHR <- i
+#  r_file_name <- paste0(r_prefix, i, ".rvec")
+#  tmp <- fread(r_file_name)
+#  tmp$CHR <- i
 
   # Combine
-  df <- rbind(df, tmp)
-}
+#  df <- rbind(df, tmp)
+#}
 print(paste0("There are ", nrow(df), " SNPs in all the R files"))
-
-# Read in Pvar file
-dfPvar <- fread(paste0(plink_prefix, ".pvar"))
 
 # Read in SNP file
 dfSNP <- fread(snp_file) %>% select("ID", "block")
-dfSNP <- inner_join(dfPvar, dfSNP) %>% select("ID", "block")
+dfSNP <- dfSNP %>%
+  separate(id, into = c("CHR", "POS"), sep = ":", remove = FALSE)
 print(paste0("Number of PC SNPs ", nrow(dfSNP)))
 
 # Combine SNP and R files
@@ -57,7 +54,7 @@ print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with 
 L <- nrow(dfALL)
 print(L)
 
-# Standardize r values and divide by GWAS variance
+# Standardize r values variance
 dfALL$r <- dfALL$r / sd(dfALL$r)
 print(paste0("The variance of r is ", var(dfALL$r)))
 print(paste0("The mean of r is ", mean(dfALL$r)))
@@ -69,52 +66,53 @@ colnames(dfSNPs) <- c("Block", "nSNP")
 print(paste0("The total number of blocks is ", numBlocks))
 dfFGr_mat <- matrix(NA, nrow = M, ncol = numBlocks)
 
-# Subset SNP IDs
-dfSNP_tmp <- dfALL %>% select("ID")
-snp_name <- paste0(out_prefix, ".snp")
-fwrite(dfSNP_tmp, snp_name, quote = F, row.names = F, sep = "\t")
 
 
-# Get freq file
-plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 ",
-                      " --freq --out ", out_prefix)
-system(plink_cmd)
 
-# Set up plink command
-freq_file <- paste0(out_prefix, ".afreq")
-tmp_r_name <- paste0(out_prefix, ".rvec")
-plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 --read-freq ", freq_file,
-                      " --score ", tmp_r_name, " header-read variance-standardize cols=dosagesum,scoresums --out ", out_prefix)
+for (i in 22:22) {
 
-# Individually score each of the 581 blocks
-for (i in 1:numBlocks) {
+  # Get r values on Chr i
+  dfR_chr <- dfALL %>% filter(CHR == i)
+  chr_blocks <- unique(dfR_chr$block)
+  num_blocks_chr <- length(chr_blocks)
+  print(paste0("The number of blocks on chr ", i, " is ", num_blocks_chr))
 
-  # Block num
-  blockNum <- unique(dfALL$block)[i]
-  print(blockNum)
+  # Get SNP ids on Chr i
+  traw_file <- paste0(resid_prefix, i, ".traw")
+  cmd_file<- paste0( "cut -f1 ",traw_file)
+  dfSNPchr <- fread(cmd_file,header = TRUE)
 
-  # Subset Rs and save
-  dfR_tmp <- dfALL %>% filter(block == blockNum) %>% select("ID", "ALT", "r")
-  fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
+  for (b in chr_blocks) {
 
-  # Save number of SNPs
-  nsnp_in_block <- nrow(dfR_tmp)
-  dfSNPs[i,1] <- blockNum
-  dfSNPs[i,2] <- nrow(dfR_tmp)
+    print(paste0("We are on block", b))
+    # Select r values on block b
+    dfR_block <- dfR_chr %>% filter(block == b)
+    r_ids <- dfR_block$ID
 
-  # Run plink
-  system(plink_cmd)
+    # Get the right row values
+    row_ids <- which(dfSNPchr$SNP %in% r_ids)
+    print(paste0("There are ", length(row_ids), " SNPs on the block" ))
+    print(head(row_ids))
 
-  # Read in plink output
-  df <- fread(paste0(out_prefix, ".sscore"))
-  rawFGr <- as.matrix(df[,3])
-  dfFGr_mat[,i] <- rawFGr
+    # read only correct row IDs
+    row_nums_str <- paste(row_ids + 1, collapse = ",")  # +1 for header row
+    cmd_block <- paste0("awk 'NR==1 || NR==", gsub(",", " || NR==", row_nums_str), "' ", traw_file)
+    dfBlock <- fread(cmd_block)
 
+    # do matrix multiplication
+    matBlock <- t(as.matrix(dfBlock))
+    print(paste0("The dim of matBlock is ", dim(matBlock)))
+
+    rawFGr <- matBlock %*% dfR_block$r
+    dfFGr_mat[,b] <- rawFGr
+
+    # Save number of SNPs
+    nsnp_in_block <- nrow(dfR_block)
+    dfSNPs[b,1] <- blockNum
+    dfSNPs[b,2] <- nrow(dfR_block)
+
+  }
 }
-
-# Remove tmp files
-rm_cmd <- paste0("rm ", out_prefix, ".*")
-system(rm_cmd)
 
 # Calculate FGr
 FGr_raw <- apply(dfFGr_mat, 1, sum)
