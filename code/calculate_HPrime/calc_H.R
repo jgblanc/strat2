@@ -25,27 +25,25 @@ M <- nrow(dfIDs)
 # Read in all values of r
 
 ## First Chr
-r_file_name <- paste0(r_prefix, 22, ".rvec")
+r_file_name <- paste0(r_prefix, 1, ".rvec")
 df <- fread(r_file_name)
-df$CHR <- 22
+df$CHR <- 1
 
 ## All other Chrs
-#for (i in 2:22) {
+for (i in 2:22) {
 
   # Read in R file
-#  r_file_name <- paste0(r_prefix, i, ".rvec")
-#  tmp <- fread(r_file_name)
-#  tmp$CHR <- i
+  r_file_name <- paste0(r_prefix, i, ".rvec")
+  tmp <- fread(r_file_name)
+  tmp$CHR <- i
 
   # Combine
-#  df <- rbind(df, tmp)
-#}
+  df <- rbind(df, tmp)
+}
 print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 
 # Read in SNP file
 dfSNP <- fread(snp_file) %>% select("ID", "block")
-dfSNP <- dfSNP %>%
-  separate(id, into = c("CHR", "POS"), sep = ":", remove = FALSE)
 print(paste0("Number of PC SNPs ", nrow(dfSNP)))
 
 # Combine SNP and R files
@@ -68,8 +66,8 @@ dfFGr_mat <- matrix(NA, nrow = M, ncol = numBlocks)
 
 
 
-
-for (i in 22:22) {
+counter <- 1
+for (i in 1:22) {
 
   # Get r values on Chr i
   dfR_chr <- dfALL %>% filter(CHR == i)
@@ -78,9 +76,9 @@ for (i in 22:22) {
   print(paste0("The number of blocks on chr ", i, " is ", num_blocks_chr))
 
   # Get SNP ids on Chr i
-  traw_file <- paste0(resid_prefix, i, ".traw")
+  traw_file <- paste0(resid_prefix, i, "_residual.traw ")
   cmd_file<- paste0( "cut -f1 ",traw_file)
-  dfSNPchr <- fread(cmd_file,header = TRUE)
+  dfSNPchr <- fread(cmd = cmd_file,header = TRUE)
 
   for (b in chr_blocks) {
 
@@ -97,19 +95,22 @@ for (i in 22:22) {
     # read only correct row IDs
     row_nums_str <- paste(row_ids + 1, collapse = ",")  # +1 for header row
     cmd_block <- paste0("awk 'NR==1 || NR==", gsub(",", " || NR==", row_nums_str), "' ", traw_file)
-    dfBlock <- fread(cmd_block)
+    dfBlock <- fread(cmd = cmd_block)
+    head(dfBlock)
 
     # do matrix multiplication
-    matBlock <- t(as.matrix(dfBlock))
+    matBlock <- t(as.matrix(dfBlock[,4:ncol(dfBlock)]))
     print(paste0("The dim of matBlock is ", dim(matBlock)))
 
-    rawFGr <- matBlock %*% dfR_block$r
-    dfFGr_mat[,b] <- rawFGr
+    matf <- matBlock %*% as.matrix(dfR_block$r)
+    matf_raw <- apply(matf, 1, sum)
+    dfFGr_mat[,counter] <- matf_raw
 
     # Save number of SNPs
     nsnp_in_block <- nrow(dfR_block)
-    dfSNPs[b,1] <- blockNum
-    dfSNPs[b,2] <- nrow(dfR_block)
+    dfSNPs[counter,1] <- b
+    dfSNPs[counter,2] <- nrow(dfR_block)
+    counter <- counter + 1
 
   }
 }

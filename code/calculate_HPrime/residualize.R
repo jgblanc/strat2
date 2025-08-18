@@ -30,7 +30,7 @@ if (chr_num %in% c(1,3,5,7,9,11,13,15,17,19,21)) {
 
 dfPCs <- fread(pca_file_path)
 colnames(dfPCs)[1] <- "FID"
-ind_ids <- paste(dfPCs$FID, dfPCs$FID, sep=":")
+ind_ids <- dfPCs$FID
 
 
 #-------------------------------
