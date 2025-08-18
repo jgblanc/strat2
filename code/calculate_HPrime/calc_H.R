@@ -94,8 +94,9 @@ for (i in 1:22) {
     # read only correct row IDs
     row_nums_str <- paste(row_ids + 1, collapse = ",")  # +1 for header row
     cmd_block <- paste0("awk 'NR==1 || NR==", gsub(",", " || NR==", row_nums_str), "' ", traw_file)
-    dfBlock <- fread(cmd = cmd_block)
-    head(dfBlock)
+    dfBlock <- fread(cmd = cmd_block, header=TRUE)
+    print(nrow(dfBlock))
+    print(dfBlock[1,1:10])
 
     # do matrix multiplication
     matBlock <- t(as.matrix(dfBlock[,4:ncol(dfBlock)]))

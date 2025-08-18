@@ -87,7 +87,7 @@ rule calcPrime_H_Jacknife:
     output:
         H = "output/calculate_HPrime/{dataset}/{gwas}/H_BJ_{contrasts}.txt"
     params:
-        resid_prefix="output/calculate_HPrime/{gwas}/chr",
+        resid_prefix="/scratch/jgblanc/ukbb/dosages/{gwas}/chr",
         r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
     threads: 8
     resources:

@@ -17,7 +17,7 @@ module load regenie
 #source ../myVilma/bin/activate 
 
 echo "SLURM_JOBID="$SLURM_JOBID
-#rm -r .snakemake/
+rm -r .snakemake/
 cat snakefile_main
 snakemake --unlock -s snakefile_main
 snakemake --profile cluster-setup/ -s snakefile_main --rerun-incomplete
