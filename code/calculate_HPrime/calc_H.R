@@ -90,7 +90,6 @@ for (i in 1:22) {
     # Get the right row values
     row_ids <- which(dfSNPchr$SNP %in% r_ids)
     print(paste0("There are ", length(row_ids), " SNPs on the block" ))
-    print(head(row_ids))
 
     # read only correct row IDs
     row_nums_str <- paste(row_ids + 1, collapse = ",")  # +1 for header row
@@ -100,6 +99,7 @@ for (i in 1:22) {
 
     # do matrix multiplication
     matBlock <- t(as.matrix(dfBlock[,4:ncol(dfBlock)]))
+    matBlock <- scale(matBlock)
     print(paste0("The dim of matBlock is ", dim(matBlock)))
 
     matf <- matBlock %*% as.matrix(dfR_block$r)
