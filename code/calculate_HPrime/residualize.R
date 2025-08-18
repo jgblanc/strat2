@@ -20,16 +20,23 @@ out_file = args[4]
 #-------------------------------
 if (chr_num %in% c(1,3,5,7,9,11,13,15,17,19,21)) {
   print("Odd Chr")
-  pca_file_path <- paste0(pc_prefix, "even_PCA.eigenvec")
+  pca_file_path_common <- paste0(pc_prefix, "even_PCA.eigenvec")
+  pca_file_path_rare <- paste0(pc_prefix, "rare_even_PCA.eigenvec")
 } else if (chr_num %in% c(2,4,6,8,10,12,14,16,18,20,22)) {
   print("Even Chr")
-  pca_file_path <- paste0(pc_prefix, "odd_PCA.eigenvec")
+  pca_file_path_common <- paste0(pc_prefix, "odd_PCA.eigenvec")
+  pca_file_path_rare <- paste0(pc_prefix, "rare_odd_PCA.eigenvec")
 } else {
   stop("Chromosome number not recognized.")
 }
 
-dfPCs <- fread(pca_file_path)
-colnames(dfPCs)[1] <- "FID"
+dfPCs_common <- fread(pca_file_path_common)
+colnames(dfPCs_common)[1] <- "FID"
+
+dfPCs_rare <- fread(pca_file_path_rare)
+colnames(dfPCs_rare)[1] <- "FID"
+
+dfPCs <- inner_join(dfPCs_common, dfPCs_rare)
 ind_ids <- dfPCs$FID
 
 
@@ -38,6 +45,8 @@ ind_ids <- dfPCs$FID
 #-------------------------------
 covars <- as.matrix(dfPCs %>% select(starts_with("PC")))
 covars_with_intercept <- cbind(1, covars)
+print(paste0("The number of cols in covars_with_intercept ", ncol(covars_with_intercept)))
+
 
 # Precompute QR decomposition for speed
 qr_covars <- qr(covars_with_intercept)
