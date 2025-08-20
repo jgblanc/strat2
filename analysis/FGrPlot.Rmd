@@ -40,6 +40,10 @@ tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c
 tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
 df <- rbind(tmp1, tmp2, tmp3)
 df$gwas <- factor(df$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+df$contrasts <- str_replace_all(df$contrasts, rep_str)
 ```
 
 ```{r}
@@ -48,8 +52,46 @@ pl
 #ggsave("~/Desktop/Error.png", pl, height = 4, width = 6)
 ```
 
+## Solve for Rho 
+
 ```{r}
-table(df$error > 0.1)
+df$rho <- (df$H * ((1/df$signal) - 1)) - (1/df$L)
+df$null <- 1/df$L + df$rho
+
+# Bonferonni correction 
+ci <- qnorm(1 -(0.025/nrow(df)))
+df$lc <- df$H - (ci * sqrt(df$varH)) 
+df$uc <- df$H + (ci * sqrt(df$varH)) 
+```
+
+HGDP1KG - Continental
+```{r}
+dfPlot <- df %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
+
+plCont <- dfPlot %>% ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 6)) + ylab(TeX("$\\hat{H}$")) + scale_y_log10(breaks = c(1e-5, 1e-4, 1e-3, 1e-2)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = null, yend = null), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5))
+
+plCont
+```
+
+HGDP1KG - Lat
+```{r}
+dfPlot <- df %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-long","eur-lat", "eur-long", "sdi-eur")) 
+
+
+plLat <- dfPlot %>% ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 8)) + ylab(TeX("$\\hat{H}$")) + scale_y_log10(breaks = c(1e-5, 1e-4, 1e-3, 1e-2),  limits = c(7e-6, 1e-2)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = null, yend = null), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5)) 
+plLat
+```
+
+InUKBB
+```{r}
+dfPlot <- df %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
+
+
+plInUKBB <- dfPlot %>% ggplot(aes(x =gwas, y =H, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 6)) + ylab(TeX("$\\hat{H}$")) + scale_y_log10(breaks = c(1e-5, 1e-4, 1e-3),  limits = c(5e-6, 1e-3)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = null, yend = null), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5))
+plInUKBB
 ```
 
 
