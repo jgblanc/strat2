@@ -94,9 +94,30 @@ for (i in 1:22) {
     # read only correct row IDs
     row_nums_str <- paste(row_ids + 1, collapse = ",")  # +1 for header row
     cmd_block <- paste0("awk 'NR==1 || NR==", gsub(",", " || NR==", row_nums_str), "' ", traw_file)
-    dfBlock <- fread(cmd = cmd_block, header=TRUE)
+    tmpfile <- paste0(out_file, "_tmp.txt")
+    system(paste(cmd_block, ">", tmpfile))
+    k <- floor(length(row_ids)/3)
+    print(k)
+    dfBlock1 <- fread(tmpfile,nrow=k, header=TRUE)
+    dfBlock2 <- fread(tmpfile, skip=k+1, nrow=k, header=FALSE)
+    dfBlock3 <- fread(tmpfile, skip=(2*k)+1, header=FALSE)
+    setnames(dfBlock2, names(dfBlock1))
+    setnames(dfBlock3, names(dfBlock1))
+    dfBlock <- rbind(dfBlock1, dfBlock2)
+    dfBlock <- rbind(dfBlock, dfBlock3)
     print(nrow(dfBlock))
-    print(dfBlock[1,1:10])
+    system(paste("rm", tmpfile))
+    
+
+    # read only correct row IDs
+    #row_nums_str <- paste(row_ids + 1, collapse = ",")  # +1 for header row
+    #cmd_block <- paste0("awk 'NR==1 || NR==", gsub(",", " || NR==", row_nums_str), "' ", traw_file)
+    #tmpfile <-  "test.txt"
+    #system(paste(cmd_block, ">", tmpfile))
+    #dfBlock <- fread(tmpfile, header = TRUE)
+    ##dfBlock <- fread(cmd = cmd_block, header=TRUE)
+    #print(nrow(dfBlock))
+    #print(dfBlock[1,1:10])
 
     # do matrix multiplication
     matBlock <- t(as.matrix(dfBlock[,4:ncol(dfBlock)]))

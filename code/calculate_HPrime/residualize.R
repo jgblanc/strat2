@@ -36,7 +36,7 @@ colnames(dfPCs_common)[1] <- "FID"
 dfPCs_rare <- fread(pca_file_path_rare)
 colnames(dfPCs_rare)[1] <- "FID"
 
-dfPCs <- inner_join(dfPCs_common, dfPCs_rare)
+dfPCs <- inner_join(dfPCs_common, dfPCs_rare, by = c("IID", "FID"))
 ind_ids <- dfPCs$FID
 
 
@@ -92,9 +92,10 @@ while(TRUE) {
   fwrite(row_out, out_file, append = TRUE, col.names = FALSE, sep = "\t", quote = FALSE)
 
   line_count <- line_count + 1
-  if (line_count %% 1000 == 0) {
-    print(paste("Processed", line_count, "SNPs"))
-  }
+  #if (line_count %% 1000 == 0) {
+  #  print(paste("Processed", line_count, "SNPs"))
+  #}
+  print(line_count)
 
 }
 
