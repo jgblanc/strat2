@@ -17,10 +17,12 @@ out_sd = args[4]
 # Read in Fmat
 dfMat <- as.matrix(fread(FGr_file))
 fhat_raw <- apply(dfMat, 1, sum)
+print(length(fhat_raw))
 
 # Scale
 dfSNP <- fread(SNP_file)
-L <- dfSNP$nSNP
+L <- sum(dfSNP$nSNP)
+print(L)
 fhat <- fhat_raw / (L -1)
 
 # Get SD
