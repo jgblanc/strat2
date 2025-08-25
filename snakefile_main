@@ -2,13 +2,11 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-#CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 #CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
-CONTRASTS = ["eurasia-lat"]
 DATASET = ["HGDP1KG"]
 #GWAS = ["WBS-R", "ALL-R", "e5", "e10", "e50", "e200"]
-#GWAS = ["WBS", "ALL","e5", "e10", "e50", "e200"]
-GWAS = ["e5"]
+GWAS = ["WBS", "ALL","e5", "e10", "e50", "e200"]
 COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 GTYPE = ["LR", "LMM"]
@@ -24,7 +22,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_FGr/{dataset}/{gwas}/sdFhat_{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("plots/overlap_stats/sdFhat_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -61,6 +59,16 @@ rule calc_FGr:
     shell:
         """
         Rscript code/calculate_FGr/calc_fhat_sd.R {input.FGr_block} {input.SNPs} {output.FGr} {output.sd}
+	      """
+
+rule concat_sdFhat:
+    input:
+        expand("output/calculate_FGr/{dataset}/{gwas}/sdFhat_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS)
+    output:
+        "plots/overlap_stats/sdFhat_{dataset}.txt"
+    shell:
+        """
+        Rscript code/summarize/concat_sdFhat.R {output} {input}
 	      """
 
 
