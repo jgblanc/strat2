@@ -22,7 +22,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("plots/overlap_stats/varT_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("plots/overlap_stats_prime/sdFhat_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -90,6 +90,16 @@ rule calcPrime_FGr:
     shell:
         """
         Rscript code/calculate_FGr/calc_FGr_prime.R {params.resid_prefix} {params.r_prefix} {input.snps} {input.IDs} {output.FGr} {output.SNPNum}
+	      """
+
+rule concat_sdFhatPrimt:
+    input:
+        expand("output/calculate_FGr/{{dataset}}/{gwas}/sdFhat_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS)
+    output:
+        "plots/overlap_stats_prime/sdFhat_{dataset}.txt"
+    shell:
+        """
+        Rscript code/summarize/concat_sdFhat.R {output} {input}
 	      """
 
 
