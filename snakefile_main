@@ -2,11 +2,11 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-#CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
-CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
-DATASET = ["InUKBB"]
-GWAS = ["WBS-R", "ALL-R", "e5", "e10", "e50", "e200"]
-#GWAS = ["WBS", "ALL","e5", "e10", "e50", "e200"]
+CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+#CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
+DATASET = ["HGDP1KG"]
+#GWAS = ["WBS-R", "ALL-R", "e5", "e10", "e50", "e200"]
+GWAS = ["WBS", "ALL","e5", "e10", "e50", "e200"]
 COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 GTYPE = ["LR", "LMM"]
@@ -178,7 +178,7 @@ rule concat_H:
 
 rule concat_varT:
     input:
-        varT = expand("data/{dataset}/TestVecs/{gwas}/{contrasts}_Var.txt", gwas=GWAS, contrasts=CONTRASTS)
+        varT = expand("data/{{dataset}}/TestVecs/{gwas}/{contrasts}_Var.txt", gwas=GWAS, contrasts=CONTRASTS)
     output:
         "plots/overlap_stats/varT_{dataset}.txt"
     shell:
