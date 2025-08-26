@@ -298,7 +298,7 @@ rule rename_overlap_snps_sdi:
         cp {input} {output}
         """
 
-rule make_test_vectors_all:
+rule make_test_vectors_sdi:
     input:
         "data/HGDP1KG/r/{gwas}/sdi-eur_chr1.rvec"
     output:
@@ -308,7 +308,7 @@ rule make_test_vectors_all:
         out_prefix = "data/HGDP1KG/TestVecs/{gwas}/"
     shell:
         """
-        Rscript code/HGDP1KG/compute_test_vec_sdi.R {input.p1} {params.out_prefix}
+        Rscript code/HGDP1KG/compute_test_vec_sdi.R {input} {params.out_prefix}
         """
 
 
