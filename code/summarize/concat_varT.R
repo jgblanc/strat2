@@ -23,7 +23,7 @@ for (i in 2:length(args)) {
   filename = args[i]
 
   # Extract dataset
-  dataset <- strsplit(filename, "/")[[1]][3]
+  dataset <- strsplit(filename, "/")[[1]][2]
 
   # Extract which GWAS
   gwas <- strsplit(filename, "/")[[1]][4]
@@ -31,8 +31,7 @@ for (i in 2:length(args)) {
 
   # Extract constrasts
   tmp <- strsplit(filename, "/")[[1]][5]
-  tmp2 <- strsplit(tmp, "sdFhat_")[[1]][2]
-  constrasts <- strsplit(tmp2, ".txt")[[1]][1]
+  tmp2 <- strsplit(tmp, "_Var.txt")[[1]][1]
 
   # Read in results
   df <- fread(filename)
