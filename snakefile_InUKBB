@@ -3,7 +3,7 @@ CHR =[]
 for i in range(1, 23):
   CHR.append(str(i))
 CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
-GWAS=["WBS-R_500", "ALL-R_500", "e5_500", "e10_500", "e50_500", "e200_500"]
+GWAS=["WBS-R", "ALL-R", "e5", "e10", "e50", "e200"]
 COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 #PHENOTYPE = ["Standing_Height"]
@@ -293,16 +293,16 @@ rule rename_overlap_snps_all:
 
 rule make_test_vectors:
     input:
-        p1 = "data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec",
-        p2 = "data/InUKBB/r/{gwas}/England-RepublicOfIrelend_chr{chr}.rvec",
-        p3 = "data/InUKBB/r/{gwas}/England-Scotland_chr{chr}.rvec",
-        p4 = "data/InUKBB/r/{gwas}/England-Wales_chr{chr}.rvec",
-        p5 = "data/InUKBB/r/{gwas}/NorthernIreland-RepublicOfIrelend_chr{chr}.rvec",
-        p6 = "data/InUKBB/r/{gwas}/NorthernIreland-Scotland_chr{chr}.rvec",
-        p7 = "data/InUKBB/r/{gwas}/NorthernIreland-Wales_chr{chr}.rvec",
-        p8 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Scotland_chr{chr}.rvec",
-        p9 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Wales_chr{chr}.rvec",
-        p10 = "data/InUKBB/r/{gwas}/Scotland-Wales_chr{chr}.rvec"
+        p1 = "data/InUKBB/r/{gwas}/England-NorthernIreland_chr1.rvec",
+        p2 = "data/InUKBB/r/{gwas}/England-RepublicOfIrelend_chr1.rvec",
+        p3 = "data/InUKBB/r/{gwas}/England-Scotland_chr1.rvec",
+        p4 = "data/InUKBB/r/{gwas}/England-Wales_chr1.rvec",
+        p5 = "data/InUKBB/r/{gwas}/NorthernIreland-RepublicOfIrelend_chr1.rvec",
+        p6 = "data/InUKBB/r/{gwas}/NorthernIreland-Scotland_chr1.rvec",
+        p7 = "data/InUKBB/r/{gwas}/NorthernIreland-Wales_chr1.rvec",
+        p8 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Scotland_chr1.rvec",
+        p9 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Wales_chr1.rvec",
+        p10 = "data/InUKBB/r/{gwas}/Scotland-Wales_chr1.rvec"
     output:
         "data/InUKBB/TestVecs/{gwas}/England-NorthernIreland.txt",
         "data/InUKBB/TestVecs/{gwas}/England-RepublicOfIrelend.txt",
@@ -324,7 +324,7 @@ rule make_test_vectors:
         "data/InUKBB/TestVecs/{gwas}/RepublicOfIrelend-Scotland_Var.txt",
         "data/InUKBB/TestVecs/{gwas}/RepublicOfIrelend-Wales_Var.txt",
         "data/InUKBB/TestVecs/{gwas}/Scotland-Wales_Var.txt"
-    parms:
+    params:
         out_prefix = "data/InUKBB/TestVecs/{gwas}/"
     shell:
         """
