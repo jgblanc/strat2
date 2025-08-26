@@ -19,7 +19,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("data/HGDP1KG/TestVecs/{gwas}/eas-nfe.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
+        expand("data/HGDP1KG/TestVecs/{gwas}/sdi-eur.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps,combine_clumps_betas
 
 
@@ -297,6 +297,20 @@ rule rename_overlap_snps_sdi:
         """
         cp {input} {output}
         """
+
+rule make_test_vectors_all:
+    input:
+        "data/HGDP1KG/r/{gwas}/sdi-eur_chr1.rvec"
+    output:
+        "data/HGDP1KG/TestVecs/{gwas}/sdi-eur.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/sdi-eur_Var.txt"
+    params:
+        out_prefix = "data/HGDP1KG/TestVecs/{gwas}/"
+    shell:
+        """
+        Rscript code/HGDP1KG/compute_test_vec_sdi.R {input.p1} {params.out_prefix}
+        """
+
 
 ## Lat Long Eurasia ##
 
