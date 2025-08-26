@@ -12,7 +12,7 @@ THRESHOLD = ["loose", "strict"]
 
 rule all:
     input:
-        expand("data/InUKBB/variants/{gwas}/England-NorthernIreland/overlappingSNPs_chr{chr}.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
+        expand("data/InUKBB/TestVecs/{gwas}/England-NorthernIreland.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps, combine_clumps_betas
 
 ## Clump Regenie Results
@@ -289,5 +289,47 @@ rule rename_overlap_snps_all:
         cp {input} {output.p10}
 	rm {input}
         """
+
+
+rule make_test_vectors:
+    input:
+        p1 = "data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec",
+        p2 = "data/InUKBB/r/{gwas}/England-RepublicOfIrelend_chr{chr}.rvec",
+        p3 = "data/InUKBB/r/{gwas}/England-Scotland_chr{chr}.rvec",
+        p4 = "data/InUKBB/r/{gwas}/England-Wales_chr{chr}.rvec",
+        p5 = "data/InUKBB/r/{gwas}/NorthernIreland-RepublicOfIrelend_chr{chr}.rvec",
+        p6 = "data/InUKBB/r/{gwas}/NorthernIreland-Scotland_chr{chr}.rvec",
+        p7 = "data/InUKBB/r/{gwas}/NorthernIreland-Wales_chr{chr}.rvec",
+        p8 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Scotland_chr{chr}.rvec",
+        p9 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Wales_chr{chr}.rvec",
+        p10 = "data/InUKBB/r/{gwas}/Scotland-Wales_chr{chr}.rvec"
+    output:
+        "data/InUKBB/TestVecs/{gwas}/England-NorthernIreland.txt",
+        "data/InUKBB/TestVecs/{gwas}/England-RepublicOfIrelend.txt",
+        "data/InUKBB/TestVecs/{gwas}/England-Scotland.txt",
+        "data/InUKBB/TestVecs/{gwas}/England-Wales.txt",
+        "data/InUKBB/TestVecs/{gwas}/NorthernIreland-RepublicOfIrelend.txt",
+        "data/InUKBB/TestVecs/{gwas}/NorthernIreland-Scotland.txt",
+        "data/InUKBB/TestVecs/{gwas}/NorthernIreland-Wales.txt",
+        "data/InUKBB/TestVecs/{gwas}/RepublicOfIrelend-Scotland.txt",
+        "data/InUKBB/TestVecs/{gwas}/RepublicOfIrelend-Wales.txt",
+        "data/InUKBB/TestVecs/{gwas}/Scotland-Wales.txt",
+        "data/InUKBB/TestVecs/{gwas}/England-NorthernIreland_Var.txt",
+        "data/InUKBB/TestVecs/{gwas}/England-RepublicOfIrelend_Var.txt",
+        "data/InUKBB/TestVecs/{gwas}/England-Scotland_Var.txt",
+        "data/InUKBB/TestVecs/{gwas}/England-Wales_Var.txt",
+        "data/InUKBB/TestVecs/{gwas}/NorthernIreland-RepublicOfIrelend_Var.txt",
+        "data/InUKBB/TestVecs/{gwas}/NorthernIreland-Scotland_Var.txt",
+        "data/InUKBB/TestVecs/{gwas}/NorthernIreland-Wales_Var.txt",
+        "data/InUKBB/TestVecs/{gwas}/RepublicOfIrelend-Scotland_Var.txt",
+        "data/InUKBB/TestVecs/{gwas}/RepublicOfIrelend-Wales_Var.txt",
+        "data/InUKBB/TestVecs/{gwas}/Scotland-Wales_Var.txt"
+    parms:
+        out_prefix = "data/InUKBB/TestVecs/{gwas}/"
+    shell:
+        """
+        Rscript code/InUKBB/compute_test_vec.R {input.p1} {input.p2} {input.p3} {input.p4} {input.p5} {input.p6} {input.p7} {input.p8} {input.p9} {input.p10} {params.out_prefix}
+        """
+
 
 
