@@ -27,7 +27,8 @@ out_prefix <- args[11]
 # ENG-NI
 nA <- 142215
 nB <- 1120
-tvec <- c(rep(1/(2*nA), nA) , rep(-1 * (1/(2*nB))))
+N <- nA + nB
+tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, eng_ni, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 fwrite(as.data.frame(varTvec),paste0(out_prefix, eng_ni, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
@@ -35,7 +36,8 @@ fwrite(as.data.frame(varTvec),paste0(out_prefix, eng_ni, "_Var.txt") ,row.names=
 # ENG-ROI
 nA <- 142215
 nB <- 1802
-tvec <- c(rep(1/(2*nA), nA) , rep(-1 * (1/(2*nB))))
+N <- nA + nB
+tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, eng_roi, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 fwrite(as.data.frame(varTvec),paste0(out_prefix, eng_roi, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
@@ -43,7 +45,8 @@ fwrite(as.data.frame(varTvec),paste0(out_prefix, eng_roi, "_Var.txt") ,row.names
 # ENG-SCT
 nA <- 142215
 nB <- 14591
-tvec <- c(rep(1/(2*nA), nA) , rep(-1 * (1/(2*nB))))
+N <- nA + nB
+tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, eng_sct, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 fwrite(as.data.frame(varTvec),paste0(out_prefix, eng_sct, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
@@ -51,7 +54,8 @@ fwrite(as.data.frame(varTvec),paste0(out_prefix, eng_sct, "_Var.txt") ,row.names
 # ENG-WAL
 nA <- 142215
 nB <- 8125
-tvec <- c(rep(1/(2*nA), nA) , rep(-1 * (1/(2*nB))))
+N <- nA + nB
+tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, eng_wal, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 fwrite(as.data.frame(varTvec),paste0(out_prefix, eng_wal, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
@@ -59,7 +63,8 @@ fwrite(as.data.frame(varTvec),paste0(out_prefix, eng_wal, "_Var.txt") ,row.names
 # NI-ROI
 nA <- 1120
 nB <- 1802
-tvec <- c(rep(1/(2*nA), nA) , rep(-1 * (1/(2*nB))))
+N <- nA + nB
+tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, ni_roi, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 fwrite(as.data.frame(varTvec),paste0(out_prefix, ni_roi, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
@@ -67,7 +72,8 @@ fwrite(as.data.frame(varTvec),paste0(out_prefix, ni_roi, "_Var.txt") ,row.names=
 # NI-SCT
 nA <- 1120
 nB <- 14591
-tvec <- c(rep(1/(2*nA), nA) , rep(-1 * (1/(2*nB))))
+N <- nA + nB
+tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, ni_sct, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 fwrite(as.data.frame(varTvec),paste0(out_prefix, ni_sct, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
@@ -75,7 +81,8 @@ fwrite(as.data.frame(varTvec),paste0(out_prefix, ni_sct, "_Var.txt") ,row.names=
 # NI-WAL
 nA <- 1120
 nB <- 8125
-tvec <- c(rep(1/(2*nA), nA) , rep(-1 * (1/(2*nB))))
+N <- nA + nB
+tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, ni_wal, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 fwrite(as.data.frame(varTvec),paste0(out_prefix, ni_wal, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
@@ -83,7 +90,8 @@ fwrite(as.data.frame(varTvec),paste0(out_prefix, ni_wal, "_Var.txt") ,row.names=
 # ROI-SCT
 nA <- 1802
 nB <- 14591
-tvec <- c(rep(1/(2*nA), nA) , rep(-1 * (1/(2*nB))))
+N <- nA + nB
+tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, roi_sct, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 fwrite(as.data.frame(varTvec),paste0(out_prefix, roi_sct, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
@@ -91,7 +99,8 @@ fwrite(as.data.frame(varTvec),paste0(out_prefix, roi_sct, "_Var.txt") ,row.names
 # ROI-WAL
 nA <- 1802
 nB <- 8125
-tvec <- c(rep(1/(2*nA), nA) , rep(-1 * (1/(2*nB))))
+N <- nA + nB
+tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, roi_wal, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 fwrite(as.data.frame(varTvec),paste0(out_prefix, roi_wal, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
@@ -99,7 +108,8 @@ fwrite(as.data.frame(varTvec),paste0(out_prefix, roi_wal, "_Var.txt") ,row.names
 # SCT-WAL
 nA <- 14591
 nB <- 8125
-tvec <- c(rep(1/(2*nA), nA) , rep(-1 * (1/(2*nB))))
+N <- nA + nB
+tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, sct_wal, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 fwrite(as.data.frame(varTvec),paste0(out_prefix, sct_wal, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
