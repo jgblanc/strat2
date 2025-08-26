@@ -22,6 +22,6 @@ N <- nA+nB
 tvec <- c(rep(N/(2*nA), nA) , rep(-1 * (N/(2*nB))))
 varTvec <- var(tvec)
 fwrite(as.data.frame(tvec),paste0(out_prefix, sdi_eur, ".txt") ,row.names=F,quote=F,sep="\t", col.names = T)
-fwrite(as.data.frame(varTvec),paste0(out_prefix, sdi_eur, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
+fwrite(data.frame(varTvec = varTvec, N = N),paste0(out_prefix, sdi_eur, "_Var.txt") ,row.names=F,quote=F,sep="\t", col.names = T)
 
 

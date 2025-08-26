@@ -17,12 +17,14 @@ outfile_long = args[4]
 
 # Read in lat
 dfLat <- fread(infile_lat)
+N_lat <- nrow(dfLat)
 varTvec_lat <- var(dfLat$lat)
 
 # Read in lat
 dfLong <- fread(infile_long)
 varTvec_long <- var(dfLong$long)
+N_long <- nrow(dfLong)
 
 # Save output
-fwrite(data.frame(varTvec = varTvec_lat),outfile_lat, row.names = F, col.names = T, quote = F, sep = "\t")
-fwrite(data.frame(varTvec = varTvec_long),outfile_long, row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(data.frame(varTvec = varTvec_lat, N = N_lat),outfile_lat, row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(data.frame(varTvec = varTvec_long, N = N_long),outfile_long, row.names = F, col.names = T, quote = F, sep = "\t")
