@@ -19,7 +19,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("data/HGDP1KG/TestVecs/{gwas}/eurasia-lat_Var.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
+        expand("data/HGDP1KG/TestVecs/{gwas}/eur-lat_Var.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps,combine_clumps_betas
 
 
@@ -379,6 +379,19 @@ rule get_TestVector_Eur:
         """
         Rscript code/HGDP1KG/get_LatLong_Tvec.R {input.testids} {output.Lat} {output.Long}
         """
+
+rule get_TestVector_Var_Eur:
+    input:
+        Lat="data/HGDP1KG/TestVecs/eur-lat.txt",
+        Long="data/HGDP1KG/TestVecs/eur-long.txt"
+    output:
+        Lat="data/HGDP1KG/TestVecs/{gwas}/eur-lat_Var.txt",
+        Long="data/HGDP1KG/TestVecs/{gwas}/eur-long_Var.txt"
+    shell:
+        """
+        Rscript code/HGDP1KG/get_Tvec_var.R {input.Lat} {output.Lat} {input.Long} {output.Long}
+        """
+
 
 rule compute_r_eur:
     input:
