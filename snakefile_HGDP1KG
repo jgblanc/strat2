@@ -4,7 +4,7 @@ for i in range(1, 23):
   CHR.append(str(i))
 CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 SUBDATASET = ["eurasia", "all", "nfe", "nfe_no_ceu"]
-GWAS=["WBS_500", "ALL_500", "e5_500", "e10_500", "e50_500", "e200_500"]
+GWAS=["WBS", "ALL", "e5", "e10", "e50", "e200"]
 COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 #PHENOTYPE = ["Alkaline_Phosphate"]
@@ -19,8 +19,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("data/HGDP1KG/variants/{gwas}/eur-lat/overlappingSNPs_chr{chr}.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET),
-	expand("data/HGDP1KG/r/{gwas}/eur-lat_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
+        expand("data/HGDP1KG/TestVecs/{gwas}/eas-nfe.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps,combine_clumps_betas
 
 ## Clump Regenie Results
@@ -355,6 +354,47 @@ rule rename_overlap_snps_all:
         cp {input} {output.p9}
         cp {input} {output.p10}
         """
+
+rule make_test_vectors_all:
+    input:
+        p1 = "data/HGDP1KG/r/{gwas}/eas-nfe_chr1.rvec",
+        p2 = "data/HGDP1KG/r/{gwas}/eas-sas_chr1.rvec",
+        p3 = "data/HGDP1KG/r/{gwas}/eas-afr_chr1.rvec",
+        p4 = "data/HGDP1KG/r/{gwas}/eas-amr_chr1.rvec",
+        p5 = "data/HGDP1KG/r/{gwas}/nfe-sas_chr1.rvec",
+        p6 = "data/HGDP1KG/r/{gwas}/nfe-afr_chr1.rvec",
+        p7 = "data/HGDP1KG/r/{gwas}/nfe-amr_chr1.rvec",
+        p8 = "data/HGDP1KG/r/{gwas}/sas-afr_chr1.rvec",
+        p9 = "data/HGDP1KG/r/{gwas}/sas-amr_chr1.rvec",
+        p10 = "data/HGDP1KG/r/{gwas}/afr-amr_chr1.rvec"
+    output:
+        "data/HGDP1KG/TestVecs/{gwas}/eas-nfe.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/eas-sas.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/eas-afr.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/eas-amr.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/nfe-sas.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/nfe-afr.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/nfe-amr.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/sas-afr.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/sas-amr.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/afr-amr.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/eas-nfe_Var.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/eas-sas_Var.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/eas-afr_Var.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/eas-amr_Var.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/nfe-sas_Var.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/nfe-afr_Var.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/nfe-amr_Var.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/sas-afr_Var.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/sas-amr_Var.txt",
+        "data/HGDP1KG/TestVecs/{gwas}/afr-amr_Var.txt"
+    params:
+        out_prefix = "data/HGDP1KG/TestVecs/{gwas}/"
+    shell:
+        """
+        Rscript code/HGDP1KG/compute_test_vec.R {input.p1} {input.p2} {input.p3} {input.p4} {input.p5} {input.p6} {input.p7} {input.p8} {input.p9} {input.p10} {params.out_prefix}
+        """
+
 
 ## Sardinia Frequency contrasts ##
 
