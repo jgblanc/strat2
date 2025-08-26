@@ -24,5 +24,5 @@ dfLong <- fread(infile_long)
 varTvec_long <- var(dfLong$long)
 
 # Save output
-fwrite(as.data.frame(varTvec = varTvec_lat),outfile_lat, row.names = F, col.names = T, quote = F, sep = "\t")
-fwrite(as.data.frame(varTvec = varTvec_long),outfile_long, row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(data.frame(varTvec = varTvec_lat),outfile_lat, row.names = F, col.names = T, quote = F, sep = "\t")
+fwrite(data.frame(varTvec = varTvec_long),outfile_long, row.names = F, col.names = T, quote = F, sep = "\t")
