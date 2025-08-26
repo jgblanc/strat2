@@ -14,8 +14,8 @@ r_prefix = args[2]
 snp_file = args[3]
 id_file = args[4]
 out_file_FGr = args[5]
-out_file_SNP - args[6]
-
+out_file_SNP = args[6]
+out_file = out_file_FGr
 
 # Read in IDs
 dfIDs <- fread(id_file)

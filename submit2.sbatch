@@ -2,7 +2,7 @@
 #SBATCH --job-name=two
 #SBATCH --output=logs/two.out
 #SBATCH --error=logs/two.err
-#SBATCH --time=36:00:00
+#SBATCH --time=24:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem-per-cpu=40000
@@ -17,7 +17,7 @@ module load regenie
 #source ../myVilma/bin/activate 
 
 echo "SLURM_JOBID="$SLURM_JOBID
-rm -r .snakemake/
+#rm -r .snakemake/
 cat snakefile_main2
 snakemake --unlock -s snakefile_main2
 snakemake --profile cluster-setup2/ -s snakefile_main2 --rerun-incomplete
