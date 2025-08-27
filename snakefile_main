@@ -2,7 +2,7 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 #CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 DATASET = ["HGDP1KG"]
 #GWAS = ["WBS-R", "ALL-R", "e5", "e10", "e50", "e200"]
@@ -71,7 +71,7 @@ rule concat_sdFhat:
         Rscript code/summarize/concat_sdFhat.R {output} {input}
 	      """
 
-rule calcPrime_FGr:
+rule calcPrime_FGrMat:
     input:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         IDs="data/ids/gwas_ids/{gwas}.txt",
@@ -92,9 +92,23 @@ rule calcPrime_FGr:
         Rscript code/calculate_FGr/calc_FGr_prime.R {params.resid_prefix} {params.r_prefix} {input.snps} {input.IDs} {output.FGr} {output.SNPNum}
 	      """
 
-rule concat_sdFhatPrimt:
+
+rule calcPrime_FGr:
     input:
-        expand("output/calculate_FGr/{{dataset}}/{gwas}/sdFhat_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS)
+        FGr_block = "output/calculate_HPrime/{dataset}/{gwas}/FGrMat_{contrasts}.txt",
+        SNPs = "output/calculate_HPrime/{dataset}/{gwas}/SNPNum_{contrasts}.txt"
+    output:
+        FGr = "output/calculate_HPrime/{dataset}/{gwas}/fhat_{contrasts}.txt",
+        sd = "output/calculate_HPrime/{dataset}/{gwas}/sdFhat_{contrasts}.txt"
+    shell:
+        """
+        Rscript code/calculate_FGr/calc_fhat_sd.R {input.FGr_block} {input.SNPs} {output.FGr} {output.sd}
+              """
+
+
+rule concatPrime_sdFhat:
+    input:
+        expand("output/calculate_HPrime/{{dataset}}/{gwas}/sdFhat_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS)
     output:
         "plots/overlap_stats_prime/sdFhat_{dataset}.txt"
     shell:
