@@ -19,7 +19,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("data/HGDP1KG/TestVecs/{gwas}/eur-lat_Var.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
+        expand("data/HGDP1KG/TestVecs/eas-nfe.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps,combine_clumps_betas
 
 
@@ -128,33 +128,22 @@ rule get_overlapping_snps:
 
 ## ALL Frequency constrasts ##
 
-rule get_popAF_all:
-    input:
-        test="data/HGDP1KG/ids/test_ids/all.txt",
-        snps="data/HGDP1KG/variants/{gwas}/all/overlappingSNPs_chr{chr}.txt"
+
+rule make_test_vectors_all:
     output:
-        "data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.afr.afreq",
-        "data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.amr.afreq",
-        "data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.eas.afreq",
-        "data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.nfe.afreq",
-        "data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}.sas.afreq"
-    params:
-        prefix_in="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}",
-        prefix_out="data/HGDP1KG/popAF/{gwas}/all/popAF_{chr}"
-    resources:
-        mem_mb=38000,
-        time="00:30:00"
+        p1="data/HGDP1KG/TestVecs/eas-nfe.txt",
+        p2="data/HGDP1KG/TestVecs/eas-sas.txt",
+        p3="data/HGDP1KG/TestVecs/eas-afr.txt",
+        p4="data/HGDP1KG/TestVecs/eas-amr.txt",
+        p5="data/HGDP1KG/TestVecs/nfe-sas.txt",
+        p6="data/HGDP1KG/TestVecs/nfe-afr.txt",
+        p7="data/HGDP1KG/TestVecs/nfe-amr.txt",
+        p8="data/HGDP1KG/TestVecs/sas-afr.txt",
+        p9="data/HGDP1KG/TestVecs/sas-amr.txt",
+        p10"data/HGDP1KG/TestVecs/afr-amr.txt",
     shell:
         """
-        plink2 --pfile {params.prefix_in} \
-	      --extract {input.snps} \
-        --keep {input.test} \
-	      --freq \
-        --within {input.test} POP \
-	      --loop-cats POP \
-	      --threads 8 \
-        --memory 38000 \
-        --out {params.prefix_out}
+        Rscript code/HGDP1KG/get_Tvec_all.R {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10}
         """
 
 rule compute_r_all:
@@ -174,7 +163,8 @@ rule compute_r_all:
         p7 = "data/HGDP1KG/r/{gwas}/nfe-amr_chr{chr}.rvec",
         p8 = "data/HGDP1KG/r/{gwas}/sas-afr_chr{chr}.rvec",
         p9 = "data/HGDP1KG/r/{gwas}/sas-amr_chr{chr}.rvec",
-        p10 = "data/HGDP1KG/r/{gwas}/afr-amr_chr{chr}.rvec"
+        p10 = "data/HGDP1KG/r/{gwas}/afr-amr_chr{chr}.rvec",
+        test="data/HGDP1KG/ids/test_ids/all.txt"
     shell:
         """
         Rscript code/HGDP1KG/compute_pairwase_contrasts.R {input.eas} {input.nfe} {input.sas} {input.afr} {input.amr} {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10}
@@ -206,46 +196,6 @@ rule rename_overlap_snps_all:
         cp {input} {output.p8}
         cp {input} {output.p9}
         cp {input} {output.p10}
-        """
-
-rule make_test_vectors_all:
-    input:
-        p1 = "data/HGDP1KG/r/{gwas}/eas-nfe_chr1.rvec",
-        p2 = "data/HGDP1KG/r/{gwas}/eas-sas_chr1.rvec",
-        p3 = "data/HGDP1KG/r/{gwas}/eas-afr_chr1.rvec",
-        p4 = "data/HGDP1KG/r/{gwas}/eas-amr_chr1.rvec",
-        p5 = "data/HGDP1KG/r/{gwas}/nfe-sas_chr1.rvec",
-        p6 = "data/HGDP1KG/r/{gwas}/nfe-afr_chr1.rvec",
-        p7 = "data/HGDP1KG/r/{gwas}/nfe-amr_chr1.rvec",
-        p8 = "data/HGDP1KG/r/{gwas}/sas-afr_chr1.rvec",
-        p9 = "data/HGDP1KG/r/{gwas}/sas-amr_chr1.rvec",
-        p10 = "data/HGDP1KG/r/{gwas}/afr-amr_chr1.rvec"
-    output:
-        "data/HGDP1KG/TestVecs/{gwas}/eas-nfe.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/eas-sas.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/eas-afr.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/eas-amr.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/nfe-sas.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/nfe-afr.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/nfe-amr.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/sas-afr.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/sas-amr.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/afr-amr.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/eas-nfe_Var.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/eas-sas_Var.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/eas-afr_Var.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/eas-amr_Var.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/nfe-sas_Var.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/nfe-afr_Var.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/nfe-amr_Var.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/sas-afr_Var.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/sas-amr_Var.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/afr-amr_Var.txt"
-    params:
-        out_prefix = "data/HGDP1KG/TestVecs/{gwas}/"
-    shell:
-        """
-        Rscript code/HGDP1KG/compute_test_vec.R {input.p1} {input.p2} {input.p3} {input.p4} {input.p5} {input.p6} {input.p7} {input.p8} {input.p9} {input.p10} {params.out_prefix}
         """
 
 

@@ -300,17 +300,37 @@ dfsdF$gwas <- factor(dfsdF$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"
 rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
 dfsdF$contrasts <- str_replace_all(dfsdF$contrasts, rep_str)
 
+
+# Combine all VarT data
+tmp1 <- fread("../plots/overlap_stats/varR_HGDP1KG.txt")
+tmp2 <- fread("../plots/overlap_stats/varR_InUKBB.txt")
+
+# Format Data
+df <- rbind(tmp1, tmp2)
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
+dfVarR <- rbind(tmp1, tmp2, tmp3)
+dfVarR$gwas <- factor(dfVarR$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+dfVarR$contrasts <- str_replace_all(dfVarR$contrasts, rep_str)
+
+
 ### Join all DF's
 dfBias <- inner_join(dfAllOverlap, dfVarT)
 dfBias <- inner_join(dfBias, dfsdF)
+dfBias <- inner_join(dfBias, dfVarR)
 
 # Compute Bias 
 #dfBias <- dfBias %>% mutate(biasH = ((sigmaF2 *varTvec) / N) + (1 / L)) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
 #dfBias <- dfBias %>% mutate(biasH = ((1 / L))) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
-dfBias <- dfBias %>% mutate(biasH = ((sigmaF2 *varTvec) / N)) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
+dfBias <- dfBias %>% mutate(biasH = ((sigmaF2 *varTvec) / (N * varR) )) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
 
 
-ggplot(data = dfBias, aes(x = H, y = Hcorrected)) + geom_point() + geom_abline(color = "red") + scale_x_log10() + scale_y_log10()
+ggplot(data = dfBias, aes(x = H, y = Hcorrected)) + geom_point() + geom_abline(color = "red") 
 ```
 
 HGDP1KG - Continental

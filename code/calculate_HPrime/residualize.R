@@ -84,7 +84,7 @@ while(TRUE) {
   #resids <- fit$residuals
 
   fitted_vals <- qr.fitted(qr_covars, dosages)
-  resids <- dosages - fitted_vals
+  resids <- (dosages - fitted_vals) / sd(dosages)
 
   # Prepare and write row
   row_out <- data.table(ID, REF, ALT, t(resids))
