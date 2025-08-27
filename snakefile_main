@@ -22,7 +22,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_H/{dataset}/{gwas}/rVar_{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("plots/overlap_stats_prime/varR_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -130,6 +130,16 @@ rule calc_var_r:
         Rscript code/calculate_H/calc_rVar.R {params.r_prefix} {input.snps} {output}
 	      """
 
+
+rule concatPrime_varR:
+    input:
+        expand("output/calculate_H/{{dataset}}/{gwas}/rVar_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS)
+    output:
+        "plots/overlap_stats_prime/varR_{dataset}.txt"
+    shell:
+        """
+        Rscript code/summarize/concat_varR.R {output} {input}
+	      """
 
 
 ##### Calculate H #####
