@@ -2,11 +2,11 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-CONTRASTS = ["sdi-eur", "eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
-#CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
-DATASET = ["HGDP1KG"]
-#GWAS = ["WBS-R", "ALL-R", "e5", "e10", "e50", "e200"]
-GWAS = ["WBS", "ALL","e5", "e10", "e50", "e200"]
+#CONTRASTS = ["sdi-eur", "eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
+DATASET = ["InUKBB"]
+GWAS = ["WBS-R", "ALL-R", "e5", "e10", "e50", "e200"]
+#GWAS = ["WBS", "ALL","e5", "e10", "e50", "e200"]
 COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 GTYPE = ["LR", "LMM"]
