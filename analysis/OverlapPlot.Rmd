@@ -263,6 +263,120 @@ ggsave("~/Desktop/HPrime.png", pl, height = 8, width = 11)
 ```
 
 
+## Plot H Bias 
+
+```{r}
+# Combine all VarT data
+tmp1 <- fread("../plots/overlap_stats/varT_HGDP1KG.txt")
+tmp2 <- fread("../plots/overlap_stats/varT_InUKBB.txt")
+
+# Format Data
+df <- rbind(tmp1, tmp2)
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
+dfVarT <- rbind(tmp1, tmp2, tmp3)
+dfVarT$gwas <- factor(dfVarT$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+dfVarT$contrasts <- str_replace_all(dfVarT$contrasts, rep_str)
+
+# Combine all sdF data
+tmp1 <- fread("../plots/overlap_stats/sdFhat_HGDP1KG.txt")
+tmp2 <- fread("../plots/overlap_stats/sdFhat_InUKBB.txt")
+
+# Format Data
+df <- rbind(tmp1, tmp2)
+tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
+tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
+tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
+tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
+dfsdF <- rbind(tmp1, tmp2, tmp3)
+dfsdF$gwas <- factor(dfsdF$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
+
+# Shorten Names
+rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
+dfsdF$contrasts <- str_replace_all(dfsdF$contrasts, rep_str)
+
+### Join all DF's
+dfBias <- inner_join(dfAllOverlap, dfVarT)
+dfBias <- inner_join(dfBias, dfsdF)
+
+# Compute Bias 
+#dfBias <- dfBias %>% mutate(biasH = ((sigmaF2 *varTvec) / N) + (1 / L)) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
+#dfBias <- dfBias %>% mutate(biasH = ((1 / L))) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
+dfBias <- dfBias %>% mutate(biasH = ((sigmaF2 *varTvec) / N)) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
+
+
+ggplot(data = dfBias, aes(x = H, y = Hcorrected)) + geom_point() + geom_abline(color = "red") + scale_x_log10() + scale_y_log10()
+```
+
+HGDP1KG - Continental
+```{r}
+dfPlot <- dfBias %>% filter(contrasts %in%c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas-afr", "eas-amr", "nfe-sas","nfe-afr", "nfe-amr","sas-afr", "sas-amr", "afr-amr"))  
+
+plCont <- dfPlot %>% ggplot(aes(x =gwas, y =Hcorrected, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 6)) + ylab(TeX("$\\hat{H}$")) + scale_y_log10(breaks = c(1e-5, 1e-4, 1e-3, 1e-2)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5))  + geom_point(data = dfPlot, aes(x =gwas, y =H, color = gwas), alpha = 0.35) + geom_errorbar(data = dfPlot, aes(x = gwas, ymin = lc, ymax = uc), width = 0.6, alpha = 0.35)
+
+plCont
+```
+
+HGDP1KG - Lat
+```{r}
+dfPlot <- dfBias %>% filter(contrasts %in%c("eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "sdi-eur"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eurasia-lat", "eurasia-long","eur-lat", "eur-long", "sdi-eur")) 
+
+
+plLat <- dfPlot %>% ggplot(aes(x =gwas, y =Hcorrected, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 8)) + ylab(TeX("$\\hat{H}$")) + scale_y_log10(breaks = c(1e-6,1e-5, 1e-4, 1e-3, 1e-2)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5))  + geom_point(data = dfPlot, aes(x =gwas, y =H, color = gwas), alpha = 0.35) + geom_errorbar(data = dfPlot, aes(x = gwas, ymin = lc, ymax = uc), width = 0.6, alpha = 0.35)
+plLat
+```
+
+InUKBB
+```{r}
+dfPlot <- dfBias %>% filter(contrasts %in%c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))
+dfPlot$contrasts <- factor(dfPlot$contrasts, levels =c("ENG-NI", "ENG-RoI", "ENG-SCT", "ENG-WAL", "NI-RoI", "NI-SCT", "NI-WAL", "RoI-SCT", "RoI-WAL", "SCT-WAL"))  
+
+
+plInUKBB <- dfPlot %>% ggplot(aes(x =gwas, y =Hcorrected, color = gwas))  + geom_point(size =1.5) + facet_wrap(~contrasts, nrow =1) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 6)) + ylab(TeX("$\\hat{H}$")) + scale_y_log10(breaks = c(1e-6,1e-5, 1e-4, 1e-3),  limits = c(1e-6, 1e-3)) + xlab("") +geom_segment(aes(x = as.numeric(gwas) - 0.4, xend = as.numeric(gwas) + 0.4, y = 1/L, yend = 1/L), color = "red") + geom_errorbar(aes(x = gwas, ymin = lc, ymax = uc), width = 0.6) + theme(plot.margin = margin(t = 0.5, b = 0.5))  + geom_point(data = dfPlot, aes(x =gwas, y =H, color = gwas), alpha = 0.35) + geom_errorbar(data = dfPlot, aes(x = gwas, ymin = lc, ymax = uc), width = 0.6, alpha = 0.35)
+plInUKBB
+```
+
+
+
+Combine Overlap Figures 
+```{r}
+# Define label grobs
+label_a <- textGrob("a", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_b <- textGrob("b", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+label_c <- textGrob("c", x = unit(0, "npc"), y = unit(1, "npc"),
+                    just = c("left", "top"), gp = gpar(fontface = "bold", fontsize = 14))
+
+
+# Wrap other plots with labels
+row_a <- arrangeGrob(plCont, top = label_a)
+row_b <- arrangeGrob(plLat, top = label_b)
+row_c <- arrangeGrob(plInUKBB, top = label_c)
+
+# Final arrangement
+pl <- grid.arrange( row_a, row_b, row_c, ncol = 1, heights = c( 1, 1, 1))
+ggsave("~/Desktop/Corrected.png", pl, height = 8, width = 11)
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ```{r}
 plot(sqrt(dfAllOverlap2$H), sqrt(dfHPrime$H))

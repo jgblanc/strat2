@@ -2,7 +2,7 @@
 CHR = []
 for i in range(1, 23):
   CHR.append(str(i))
-CONTRASTS = ["eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
+CONTRASTS = ["sdi-eur", "eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "eas-nfe", "eas-sas", "eas-afr", "eas-amr", "nfe-sas", "nfe-afr", "nfe-amr", "sas-afr", "sas-amr", "afr-amr"]
 #CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 DATASET = ["HGDP1KG"]
 #GWAS = ["WBS-R", "ALL-R", "e5", "e10", "e50", "e200"]
@@ -22,7 +22,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("plots/overlap_stats_prime/sdFhat_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("output/calculate_H/{dataset}/{gwas}/rVar_{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -114,6 +114,19 @@ rule concatPrime_sdFhat:
     shell:
         """
         Rscript code/summarize/concat_sdFhat.R {output} {input}
+	      """
+
+
+rule calc_var_r:
+    input:
+        r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
+    output:
+        "output/calculate_H/{dataset}/{gwas}/rVar_{contrasts}.txt"
+    params:
+        r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
+    shell:
+        """
+        Rscript code/calculate_H/calc_rVar.R {params.r_prefix} {output}
 	      """
 
 
