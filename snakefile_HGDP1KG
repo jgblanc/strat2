@@ -130,6 +130,8 @@ rule get_overlapping_snps:
 
 
 rule make_test_vectors_all:
+    input:
+        "data/HGDP1KG/ids/test_ids/all.txt"
     output:
         p1="data/HGDP1KG/TestVecs/eas-nfe.txt",
         p2="data/HGDP1KG/TestVecs/eas-sas.txt",
@@ -140,10 +142,10 @@ rule make_test_vectors_all:
         p7="data/HGDP1KG/TestVecs/nfe-amr.txt",
         p8="data/HGDP1KG/TestVecs/sas-afr.txt",
         p9="data/HGDP1KG/TestVecs/sas-amr.txt",
-        p10"data/HGDP1KG/TestVecs/afr-amr.txt",
+        p10="data/HGDP1KG/TestVecs/afr-amr.txt"
     shell:
         """
-        Rscript code/HGDP1KG/get_Tvec_all.R {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10}
+        Rscript code/HGDP1KG/get_Tvec_all.R {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10} {input}
         """
 
 rule compute_r_all:
@@ -163,8 +165,7 @@ rule compute_r_all:
         p7 = "data/HGDP1KG/r/{gwas}/nfe-amr_chr{chr}.rvec",
         p8 = "data/HGDP1KG/r/{gwas}/sas-afr_chr{chr}.rvec",
         p9 = "data/HGDP1KG/r/{gwas}/sas-amr_chr{chr}.rvec",
-        p10 = "data/HGDP1KG/r/{gwas}/afr-amr_chr{chr}.rvec",
-        test="data/HGDP1KG/ids/test_ids/all.txt"
+        p10 = "data/HGDP1KG/r/{gwas}/afr-amr_chr{chr}.rvec"
     shell:
         """
         Rscript code/HGDP1KG/compute_pairwase_contrasts.R {input.eas} {input.nfe} {input.sas} {input.afr} {input.amr} {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10}
