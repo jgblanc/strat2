@@ -33,10 +33,21 @@ for (i in 2:22) {
 }
 print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 
-varR <- var(df$r)
+# Read in SNP file
+dfSNP <- fread(snp_file) %>% select("ID", "block")
+
+# Combine SNP and R files
+dfALL <- inner_join(df, dfSNP) %>% drop_na()
+print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
+L <- nrow(dfALL)
+print(L)
+
+# Get variance
+varR <- var(dfALL$r)
+sdR <- sd(dfALL$r)
 
 # Save SNP file
-fwrite(data.frame(varR = varR), out_file, quote = F, row.names = F, sep = "\t")
+fwrite(data.frame(varR = varR, sdR = sdR), out_file, quote = F, row.names = F, sep = "\t")
 
 
 
