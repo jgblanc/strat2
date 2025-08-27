@@ -120,13 +120,14 @@ rule concatPrime_sdFhat:
 rule calc_var_r:
     input:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
+        snps="data/ukbb/ukbb_pc_snps_block.txt"
     output:
         "output/calculate_H/{dataset}/{gwas}/rVar_{contrasts}.txt"
     params:
         r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
     shell:
         """
-        Rscript code/calculate_H/calc_rVar.R {params.r_prefix} {output}
+        Rscript code/calculate_H/calc_rVar.R {params.r_prefix} {input.snps} {output}
 	      """
 
 

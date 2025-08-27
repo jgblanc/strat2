@@ -10,7 +10,8 @@ suppressWarnings(suppressMessages({
 }))
 
 r_prefix = args[1]
-out_file = args[2]
+snp_file = args[2]
+out_file = args[3]
 
 
 # Read in all values of r
