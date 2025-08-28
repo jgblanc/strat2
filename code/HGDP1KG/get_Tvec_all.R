@@ -26,6 +26,7 @@ tvec <- scale(tvec)
 print(paste0("The mean of Tvec is ", mean(tvec)))
 print(paste0("The variance of Tvec is ", var(tvec)))
 dfOut <- cbind(df[,1:2], tvec)
+colnames(dfOut)[3] <- "tvec"
 fwrite(dfOut, args[1] ,row.names=F,quote=F,sep="\t", col.names = T)
 
 
@@ -38,6 +39,7 @@ tvec <- scale(tvec)
 print(paste0("The mean of Tvec is ", mean(tvec)))
 print(paste0("The variance of Tvec is ", var(tvec)))
 dfOut <- cbind(df[,1:2], tvec)
+colnames(dfOut)[3] <- "tvec"
 fwrite(dfOut, args[2] ,row.names=F,quote=F,sep="\t", col.names = T)
 
 # EAS-AFR
@@ -49,6 +51,7 @@ tvec <- scale(tvec)
 print(paste0("The mean of Tvec is ", mean(tvec)))
 print(paste0("The variance of Tvec is ", var(tvec)))
 dfOut <- cbind(df[,1:2], tvec)
+colnames(dfOut)[3] <- "tvec"
 fwrite(dfOut, args[3] ,row.names=F,quote=F,sep="\t", col.names = T)
 
 # EAS-AMR
@@ -60,6 +63,7 @@ tvec <- scale(tvec)
 print(paste0("The mean of Tvec is ", mean(tvec)))
 print(paste0("The variance of Tvec is ", var(tvec)))
 dfOut <- cbind(df[,1:2], tvec)
+colnames(dfOut)[3] <- "tvec"
 fwrite(dfOut, args[4] ,row.names=F,quote=F,sep="\t", col.names = T)
 
 
@@ -72,6 +76,7 @@ tvec <- scale(tvec)
 print(paste0("The mean of Tvec is ", mean(tvec)))
 print(paste0("The variance of Tvec is ", var(tvec)))
 dfOut <- cbind(df[,1:2], tvec)
+colnames(dfOut)[3] <- "tvec"
 fwrite(dfOut, args[5] ,row.names=F,quote=F,sep="\t", col.names = T)
 
 # NFE-AFR
@@ -83,6 +88,7 @@ tvec <- scale(tvec)
 print(paste0("The mean of Tvec is ", mean(tvec)))
 print(paste0("The variance of Tvec is ", var(tvec)))
 dfOut <- cbind(df[,1:2], tvec)
+colnames(dfOut)[3] <- "tvec"
 fwrite(dfOut, args[6] ,row.names=F,quote=F,sep="\t", col.names = T)
 
 # NFE-AMR
@@ -94,6 +100,7 @@ tvec <- scale(tvec)
 print(paste0("The mean of Tvec is ", mean(tvec)))
 print(paste0("The variance of Tvec is ", var(tvec)))
 dfOut <- cbind(df[,1:2], tvec)
+colnames(dfOut)[3] <- "tvec"
 fwrite(dfOut, args[7] ,row.names=F,quote=F,sep="\t", col.names = T)
 
 # SAS-AFR
@@ -105,6 +112,7 @@ tvec <- scale(tvec)
 print(paste0("The mean of Tvec is ", mean(tvec)))
 print(paste0("The variance of Tvec is ", var(tvec)))
 dfOut <- cbind(df[,1:2], tvec)
+colnames(dfOut)[3] <- "tvec"
 fwrite(dfOut, args[8] ,row.names=F,quote=F,sep="\t", col.names = T)
 
 # SAS-AMR
@@ -116,6 +124,7 @@ tvec <- scale(tvec)
 print(paste0("The mean of Tvec is ", mean(tvec)))
 print(paste0("The variance of Tvec is ", var(tvec)))
 dfOut <- cbind(df[,1:2], tvec)
+colnames(dfOut)[3] <- "tvec"
 fwrite(dfOut, args[9] ,row.names=F,quote=F,sep="\t", col.names = T)
 
 # AFR-AMR
@@ -127,6 +136,7 @@ tvec <- scale(tvec)
 print(paste0("The mean of Tvec is ", mean(tvec)))
 print(paste0("The variance of Tvec is ", var(tvec)))
 dfOut <- cbind(df[,1:2], tvec)
+colnames(dfOut)[3] <- "tvec"
 fwrite(dfOut, args[10] ,row.names=F,quote=F,sep="\t", col.names = T)
 
 
