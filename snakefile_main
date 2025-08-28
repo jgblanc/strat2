@@ -22,13 +22,13 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("plots/overlap_stats_prime/varR_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
 ##### Calculate \hat{f} ####
 
-rule calc_FGr_blocks:
+rule calc_GR_block:
     input:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         IDs="data/ids/gwas_ids/{gwas}.txt",

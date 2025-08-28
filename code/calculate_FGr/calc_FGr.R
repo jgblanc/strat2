@@ -51,13 +51,8 @@ dfSNP <- fread(snp_file) %>% select("ID", "block")
 dfALL <- inner_join(df, dfSNP) %>% drop_na()
 print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
-print(L)
-print(head(dfALL))
+print(paste0("There are ", L, " snps total"))
 
-# Standardize r values
-dfALL$r <- dfALL$r / sd(dfALL$r)
-print(paste0("The variance of r is ", var(dfALL$r)))
-print(paste0("The mean of r is ", mean(dfALL$r)))
 
 # Set up data frame to collect SNP numbers
 numBlocks <- length(unique(dfALL$block))
