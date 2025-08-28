@@ -2,7 +2,7 @@
 
 args=commandArgs(TRUE)
 
-if(length(args)<11){stop("Rscript compute_test_vec.R")}
+if(length(args)<2){stop("Rscript compute_test_vec.R")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
@@ -12,13 +12,14 @@ suppressWarnings(suppressMessages({
 
 ## Load in IDs
 dfIDs <- fread(args[1])
-dfIDs <- dfIDs %>% select(FID, IID, pop)
+dfIDs <- dfIDs %>% select(FID, IID, SDI)
 
 
 # Go through all pairwise comparisons
 
 # sdi-eur
-df <- dfIDs %>% filter(pop %in% c("sdi", "eur")) %>% mutate(tvec = case_when(pop == "sdi" ~ 1, pop == "eur" ~ -1))
+df <- dfIDs %>% filter(SDI %in% c("sdi", "eur")) %>% mutate(tvec = case_when(SDI == "sdi" ~ 1, SDI != "sdi" ~ -1))
+print(table(df$SDI))
 df$tvec<- scale(df$tvec)
 print(paste0("The mean of Tvec is ", mean(df$tvec)))
 print(paste0("The variance of Tvec is ", var(df$tvec)))

@@ -3,7 +3,7 @@
 
 args=commandArgs(TRUE)
 
-if(length(args)<6){stop("Rscript project_Tvec_chr.R <test panel prefix> <gwas panel prefix> <test vec file> <outfile>")}
+if(length(args)<4){stop("Rscript project_Tvec_chr.R <test panel prefix> <gwas panel prefix> <test vec file> <outfile>")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
