@@ -19,7 +19,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("data/HGDP1KG/r/{gwas}/eas-nfe_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
+        expand("data/HGDP1KG/TestVecs/sdi-eur.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps,combine_clumps_betas
 
 
@@ -208,31 +208,31 @@ rule rename_overlap_snps_all:
         """
 
 
+###################################################################
+
 ## Sardinia Frequency contrasts ##
 
 rule make_test_vectors_sdi:
     input:
-        "data/HGDP1KG/r/{gwas}/sdi-eur_chr1.rvec"
+        "data/HGDP1KG/ids/test_ids/nfe.txt"
     output:
-        "data/HGDP1KG/TestVecs/{gwas}/sdi-eur.txt",
-        "data/HGDP1KG/TestVecs/{gwas}/sdi-eur_Var.txt"
-    params:
-        out_prefix = "data/HGDP1KG/TestVecs/{gwas}/"
+        "data/HGDP1KG/TestVecs/sdi-eur.txt"
     shell:
         """
-        Rscript code/HGDP1KG/compute_test_vec_sdi.R {input} {params.out_prefix}
+        Rscript code/HGDP1KG/get_Tvec_sdi.R {input} {output}
         """
-
 
 rule compute_r_sdi:
     input:
-        sdi="data/HGDP1KG/popAF/{gwas}/nfe/popAF_{chr}.sdi.afreq",
-        eur="data/HGDP1KG/popAF/{gwas}/nfe/popAF_{chr}.eur.afreq"
+        p1="data/HGDP1KG/TestVecs/sdi-eur.txt",
+        SNPs="data/HGDP1KG/variants/{gwas}/all/overlappingSNPs_chr{chr}.txt"
     output:
-        "data/HGDP1KG/r/{gwas}/sdi-eur_chr{chr}.rvec"
+        p1 = "data/HGDP1KG/r/{gwas}/sdi-eur_chr{chr}.rvec",
+    params:
+        prefix_tp = "data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}"
     shell:
         """
-        Rscript code/HGDP1KG/compute_sdi_contrasts.R {input.sdi} {input.eur} {output}
+        Rscript code/HGDP1KG/get_contrasts_sdi.R {input.SNPs} {params.prefix_tp} {input.p1} {output.p1}
         """
 
 rule rename_overlap_snps_sdi:
