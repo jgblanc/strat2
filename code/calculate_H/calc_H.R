@@ -20,10 +20,21 @@ snp_file = args[6]
 ########## Functions ###############
 ####################################
 
+
+calc_fhat <- function(dfMat, r ) {
+
+  fhat_raw <- apply(dfMat, 1, sum)
+  rTr <- t(as.matrix(r)) %*% as.matrix(r)
+  fhat <- fhat_raw / c(rTr)
+
+  return(fhat)
+}
+
+
 calc_sigma2_f <- function(fhat, M) {
 
+
   numerator <- t(fhat) %*% fhat
-  print(numerator)
   out <- numerator / (M-1)
 
   return(out)
@@ -33,7 +44,6 @@ calc_sigma2_f <- function(fhat, M) {
 calc_sigma2_r <-function(r, L) {
 
   rTr <- t(as.matrix(r)) %*% as.matrix(r)
-  print(rTr)
   out <- rTr / (L - 1)
 
   return(out)
@@ -82,7 +92,7 @@ M <- nrow(dfMat)
 print(M)
 
 ### Calculate H Real
-fhat <- apply(dfMat, 1, sum)
+fhat <- calc_fhat(dfMat, dfALL$r)
 sigma2F <- as.numeric(calc_sigma2_f(fhat, M))
 print(paste0("Sigma2F is ", sigma2F))
 sigma2r <- as.numeric(calc_sigma2_r(dfALL$r, L))
@@ -92,7 +102,7 @@ print(paste0("H is ", H))
 
 # Read in block info
 dfSNPs <- fread(snpnum_file)
-num_blocks <- ncol(dfMat)
+numBlocks <- ncol(dfMat)
 
 #### Calculate SE via block jackknife
 allHs <- rep(NA, numBlocks)
@@ -106,6 +116,8 @@ for (i in 1:numBlocks) {
   print(paste0("The SNP number is ", mi))
 
   # Calc H
+  dfR_i <- dfALL %>% filter(block == blockNum)
+  fhat_i <- calc_fhat(dfFGr_mat[,i], dfR_i)
   fhat_i <- fhat - dfFGr_mat[,i]
   sigma2F_i <- calc_sigma2_f(fhat_i, M)
   dfR_i <- dfALL %>% filter(block == blockNum)
