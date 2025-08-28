@@ -22,13 +22,13 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("output/calculate_FGr/{dataset}/{gwas}/fhat_{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
 ##### Calculate \hat{f} ####
 
-rule calc_GR_block:
+rule calc_Gr_block:
     input:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         IDs="data/ids/gwas_ids/{gwas}.txt",
@@ -46,30 +46,23 @@ rule calc_GR_block:
         time="02:00:00"
     shell:
         """
-        Rscript code/calculate_FGr/calc_FGr.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.FGr} {output.SNPs}
+        Rscript code/calculate_FGr/calc_Gr.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.FGr} {output.SNPs}
 	      """
 
 rule calc_FGr:
     input:
         FGr_block = "output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt",
-        SNPs = "output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt"
+        r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
+        IDs="data/ids/gwas_ids/{gwas}.txt"
     output:
-        FGr = "output/calculate_FGr/{dataset}/{gwas}/fhat_{contrasts}.txt",
-        sd = "output/calculate_FGr/{dataset}/{gwas}/sdFhat_{contrasts}.txt"
+        FGr = "output/calculate_FGr/{dataset}/{gwas}/fhat_{contrasts}.txt"
+    params:
+        r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
     shell:
         """
-        Rscript code/calculate_FGr/calc_fhat_sd.R {input.FGr_block} {input.SNPs} {output.FGr} {output.sd}
+        Rscript code/calculate_FGr/calc_fhat_sd.R {input.FGr_block} {output.FGr} {params.r_prefix} {input.IDs}
 	      """
 
-rule concat_sdFhat:
-    input:
-        expand("output/calculate_FGr/{{dataset}}/{gwas}/sdFhat_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS)
-    output:
-        "plots/overlap_stats/sdFhat_{dataset}.txt"
-    shell:
-        """
-        Rscript code/summarize/concat_sdFhat.R {output} {input}
-	      """
 
 rule calcPrime_FGrMat:
     input:

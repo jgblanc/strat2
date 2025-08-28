@@ -1,4 +1,4 @@
-## Compute FGr using one PC SNPs
+## Compute FGr for each LD block
 
 args=commandArgs(TRUE)
 
