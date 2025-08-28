@@ -11,9 +11,37 @@ suppressWarnings(suppressMessages({
 
 r_prefix = args[1]
 FGr_prefix = args[2]
-snp_file = args[3]
+snpnum_file = args[3]
 tvec_file = args[4]
 out_file = args[5]
+snp_file = args[6]
+
+####################################
+########## Functions ###############
+####################################
+
+calc_sigma2_f <- function(fhat, M) {
+
+  numerator <- t(fhat) %*% fhat
+  out <- numerator / (M-1)
+
+  return(out)
+}
+
+
+calc_sigma2_r <-function(rmat, L) {
+
+  rTr <- t(as.matrix(r)) %*% as.matrix(r)
+  out <- rTr / (L - 1)
+
+  return(out)
+}
+
+
+####################################
+########## Main  ###################
+####################################
+
 
 
 # Read in all values of r
@@ -47,100 +75,58 @@ print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with 
 L <- nrow(dfALL)
 
 
-# Standardize r values and divide by GWAS variance
-dfALL$r <- dfALL$r / sd(dfALL$r)
-print(paste0("The variance of r is ", var(dfALL$r)))
-print(paste0("The mean of r is ", mean(dfALL$r)))
+# Read in Fmat
+dfMat <- as.matrix(fread(FGr_file))
+M <- nrow(dfMat)
 
-# Set up data frame to collect SNP numbers
-numBlocks <- length(unique(dfALL$block))
-dfSNPs <- as.data.frame(matrix(NA, ncol = 2, nrow = numBlocks))
-colnames(dfSNPs) <- c("Block", "nSNP")
-print(paste0("The total number of blocks is ", numBlocks))
-dfFGr_mat <- matrix(NA, nrow = M, ncol = numBlocks)
+### Calculate H Real
+fhat <- apply(fMat, 1, sum)
+sigma2F <- calc_sigma2_f(dfMat, M)
+sigma2r <- calc_sigma2_r(dfALL$r, L)
+H <- sigma2F * sigma2r
+print(paste0("H is ", H))
 
-# Subset SNP IDs
-dfSNP_tmp <- dfALL %>% select("ID")
-snp_name <- paste0(out_prefix, ".snp")
-fwrite(dfSNP_tmp, snp_name, quote = F, row.names = F, sep = "\t")
+# Read in block info
+dfSNPs <- fread(snpnum_file)
+num_blocks <- ncol(dfMat)
 
-
-# Get freq file
-plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 ",
-                      " --freq --out ", out_prefix)
-system(plink_cmd)
-
-# Set up plink command
-freq_file <- paste0(out_prefix, ".afreq")
-tmp_r_name <- paste0(out_prefix, ".rvec")
-plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 --read-freq ", freq_file,
-                      " --score ", tmp_r_name, " header-read variance-standardize cols=dosagesum,scoresums --out ", out_prefix)
-
-# Individually score each of the 581 blocks
+#### Calculate SE via block jackknife
+allHs <- rep(NA, numBlocks)
 for (i in 1:numBlocks) {
 
   # Block num
-  blockNum <- unique(dfALL$block)[i]
-  print(blockNum)
+  blockNum <- dfSNPs[i,1]
 
-  # Subset Rs and save
-  dfR_tmp <- dfALL %>% filter(block == blockNum) %>% select("ID", "ALT", "r")
-  fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
+  # SNP num
+  mi <- dfSNPs[i,2]
+  print(paste0("The SNP number is ", mi))
 
-  # Save number of SNPs
-  nsnp_in_block <- nrow(dfR_tmp)
-  dfSNPs[i,1] <- blockNum
-  dfSNPs[i,2] <- nrow(dfR_tmp)
-
-  # Run plink
-  system(plink_cmd)
-
-  # Read in plink output
-  df <- fread(paste0(out_prefix, ".sscore"))
-  rawFGr <- as.matrix(df[,3])
-  dfFGr_mat[,i] <- rawFGr
-
-}
-
-# Remove tmp files
-rm_cmd <- paste0("rm ", out_prefix, ".*")
-system(rm_cmd)
-
-# Calculate FGr
-FGr_raw <- apply(dfFGr_mat, 1, sum)
-print(paste0("The raw var is ", var(FGr_raw)))
-
-# Scale by 1/sqrt(L-1)
-FGr <- FGr_raw * (1/(sqrt(L-1)))
-print(paste0("The scaled var is ", var(FGr)))
-
-# Calculate H
-H <- (1/(M * (L-1))) * (t(FGr) %*% FGr)
-print(paste0("H is ", H))
-print(paste0("1/L is ", 1/L))
-
-# Compute SE for H
-allHs <- rep(NA, numBlocks)
-allHi <- rep(NA, numBlocks)
-for (i in 1:numBlocks) {
-
-  print(paste0("This is rep number ",i))
-  mi <- as.numeric(dfSNPs[i,2])
-  FGri <- (FGr_raw - dfFGr_mat[,i]) * (1/sqrt(L-mi-1))
-  Hi <- sum(FGri^2) * (1/M) * (1/(L-mi-1))
+  # Calc H
+  fhat_i <- fhat - dfFGr_mat[,i]
+  sigma2F_i <- calc_sigma2_f(fhat_i, M)
+  dfR_i <- dfALL %>% filter(block == blockNum)
+  print(paste0("The number of rows in dfR_i is ", nrow(dfR_i)))
+  sigma2r_i <- calc_sigma2_r(dfR_i$r,mi)
+  Hi <- sigma2F_i * sigma2r_i
   allHs[i] <- ((L - mi)/mi) * (H - Hi)^2
-  allHi[i] <- Hi
+
 
 }
-varH <- mean(allHs)
-meanH <- mean(allHi)
 
-# P-value from sims
+# Calculate SE
+varH <- mean(allHs)
+
+# P-value from jacknife
 pvalNorm <- pnorm(H, mean = 1/L, sd=sqrt(varH), lower.tail = FALSE)
 
+# Get N
+dfTvec <- fread(tvec_file)
+N <- nrow(dfTvec)
+
 # Construct output
-dfOut <- data.frame(H = H, L = L, meanH = meanH, varH = varH, pvalNorm = pvalNorm)
+dfOut <- data.frame(H = H, L = L, varH = varH, pvalNorm = pvalNorm, sigma2r=sigma2r, sigma2F=sigma2F, N=N)
 fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
+
 
 
 

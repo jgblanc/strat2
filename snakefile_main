@@ -22,7 +22,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("output/calculate_FGr/{dataset}/{gwas}/fhat_{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("output/calculate_H/{dataset}/{gwas}/H_{contrasts}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -154,8 +154,9 @@ rule calc_H_Jacknife:
     input:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         FGr = "output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt",
-        SNPs = "output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt",
+        snp_num = "output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt",
         Tvec = "data/{dataset}/TestVecs/{contrasts}.txt"
+        pc_snps = "data/ukbb/ukbb_pc_snps_block.txt"
     output:
         H = "output/calculate_H/{dataset}/{gwas}/H_{contrasts}.txt"
     params:
@@ -166,7 +167,7 @@ rule calc_H_Jacknife:
         time="02:00:00"
     shell:
         """
-        Rscript code/calculate_H/calc_H.R {params.r_prefix} {input.FGr} {input.snps} {input.Tvec} {output.H}
+        Rscript code/calculate_H/calc_H.R {params.r_prefix} {input.FGr} {input.snp_num} {input.Tvec} {output.H} {input.pc_snps}
 	      """
 
 # Summarize H results
