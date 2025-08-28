@@ -10,7 +10,7 @@ suppressWarnings(suppressMessages({
 }))
 
 r_prefix = args[1]
-FGr_prefix = args[2]
+FGr_file = args[2]
 snpnum_file = args[3]
 tvec_file = args[4]
 out_file = args[5]
@@ -23,15 +23,17 @@ snp_file = args[6]
 calc_sigma2_f <- function(fhat, M) {
 
   numerator <- t(fhat) %*% fhat
+  print(numerator)
   out <- numerator / (M-1)
 
   return(out)
 }
 
 
-calc_sigma2_r <-function(rmat, L) {
+calc_sigma2_r <-function(r, L) {
 
   rTr <- t(as.matrix(r)) %*% as.matrix(r)
+  print(rTr)
   out <- rTr / (L - 1)
 
   return(out)
@@ -66,23 +68,25 @@ print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 
 # Read in SNP file
 dfSNP <- fread(snp_file) %>% select("ID", "block")
-dfSNP <- inner_join(dfPvar, dfSNP) %>% select("ID", "block")
 print(paste0("Number of PC SNPs ", nrow(dfSNP)))
 
 # Combine SNP and R files
 dfALL <- inner_join(df, dfSNP) %>% drop_na()
 print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
-
+print(L)
 
 # Read in Fmat
 dfMat <- as.matrix(fread(FGr_file))
 M <- nrow(dfMat)
+print(M)
 
 ### Calculate H Real
-fhat <- apply(fMat, 1, sum)
-sigma2F <- calc_sigma2_f(dfMat, M)
-sigma2r <- calc_sigma2_r(dfALL$r, L)
+fhat <- apply(dfMat, 1, sum)
+sigma2F <- as.numeric(calc_sigma2_f(fhat, M))
+print(paste0("Sigma2F is ", sigma2F))
+sigma2r <- as.numeric(calc_sigma2_r(dfALL$r, L))
+print(paste0("Sigma2r is ", sigma2r))
 H <- sigma2F * sigma2r
 print(paste0("H is ", H))
 

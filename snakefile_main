@@ -155,7 +155,7 @@ rule calc_H_Jacknife:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         FGr = "output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt",
         snp_num = "output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt",
-        Tvec = "data/{dataset}/TestVecs/{contrasts}.txt"
+        Tvec = "data/{dataset}/TestVecs/{contrasts}.txt",
         pc_snps = "data/ukbb/ukbb_pc_snps_block.txt"
     output:
         H = "output/calculate_H/{dataset}/{gwas}/H_{contrasts}.txt"

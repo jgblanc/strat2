@@ -42,7 +42,6 @@ print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 
 # Read in SNP file
 dfSNP <- fread(snp_file) %>% select("ID", "block")
-dfSNP <- inner_join(dfPvar, dfSNP) %>% select("ID", "block")
 print(paste0("Number of PC SNPs ", nrow(dfSNP)))
 
 # Combine SNP and R files
