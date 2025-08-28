@@ -12,8 +12,8 @@ suppressWarnings(suppressMessages({
 
 ## Load in IDs
 dfIDs <- fread(args[11])
-dfIDs <- dfIDs %>% select(FID, IID, pop)
-
+dfIDs <- dfIDs %>% select("#FID", IID, POP)
+colnames(dfIDs) <- c("FID", "IID", "pop")
 
 # Go through all pairwise comparisons
 

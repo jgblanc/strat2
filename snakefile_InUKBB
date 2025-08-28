@@ -62,13 +62,13 @@ rule make_test_vectors:
         p1="data/InUKBB/TestVecs/England-NorthernIreland.txt",
         p2="data/InUKBB/TestVecs/England-RepublicOfIrelend.txt",
         p3="data/InUKBB/TestVecs/England-Scotland.txt",
-        p4="data/InUKBB/TestVecs//England-Wales.txt",
+        p4="data/InUKBB/TestVecs/England-Wales.txt",
         p5="data/InUKBB/TestVecs/NorthernIreland-RepublicOfIrelend.txt",
-        p6="data/InUKBB/TestVecs//NorthernIreland-Scotland.txt",
-        p7="data/InUKBB/TestVecs//NorthernIreland-Wales.txt",
+        p6="data/InUKBB/TestVecs/NorthernIreland-Scotland.txt",
+        p7="data/InUKBB/TestVecs/NorthernIreland-Wales.txt",
         p8="data/InUKBB/TestVecs/RepublicOfIrelend-Scotland.txt",
         p9="data/InUKBB/TestVecs/RepublicOfIrelend-Wales.txt",
-        p10"data/InUKBB/TestVecs/Scotland-Wales.txt",
+        p10="data/InUKBB/TestVecs/Scotland-Wales.txt",
     shell:
         """
         Rscript code/InUKBB/get_Tvec.R {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10} {input}
