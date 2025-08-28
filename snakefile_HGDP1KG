@@ -19,7 +19,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("data/HGDP1KG/r/{gwas}/eurasia-lat_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
+        expand("data/HGDP1KG/r/{gwas}/eur-lat_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps,combine_clumps_betas
 
 
@@ -245,6 +245,7 @@ rule rename_overlap_snps_sdi:
         cp {input} {output}
         """
 
+###############################################################################
 
 ## Lat Long Eurasia ##
 
@@ -286,6 +287,9 @@ rule rename_overlap_snps_eurasia:
         cp {input} {output.p2}
         """
 
+###############################################################################
+
+
 ## Lat Long Europe ##
 
 rule get_TestVector_Eur:
@@ -296,39 +300,24 @@ rule get_TestVector_Eur:
         Long="data/HGDP1KG/TestVecs/eur-long.txt"
     shell:
         """
-        Rscript code/HGDP1KG/get_LatLong_Tvec.R {input.testids} {output.Lat} {output.Long}
+        Rscript code/HGDP1KG/get_Tvec_cord.R {input.testids} {output.Lat} {output.Long}
         """
-
-rule get_TestVector_Var_Eur:
-    input:
-        Lat="data/HGDP1KG/TestVecs/eur-lat.txt",
-        Long="data/HGDP1KG/TestVecs/eur-long.txt"
-    output:
-        Lat="data/HGDP1KG/TestVecs/{gwas}/eur-lat_Var.txt",
-        Long="data/HGDP1KG/TestVecs/{gwas}/eur-long_Var.txt"
-    shell:
-        """
-        Rscript code/HGDP1KG/get_Tvec_var.R {input.Lat} {output.Lat} {input.Long} {output.Long}
-        """
-
 
 rule compute_r_eur:
     input:
-        TvecLat="data/HGDP1KG/TestVecs/eur-lat.txt",
-        TvecLong="data/HGDP1KG/TestVecs/eur-long.txt",
-        tp_genos="data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}.psam",
-        snps="data/HGDP1KG/variants/{gwas}/nfe_no_ceu/overlappingSNPs_chr{chr}.txt"
+        p1="data/HGDP1KG/TestVecs/eur-lat.txt",
+        p2="data/HGDP1KG/TestVecs/eur-long.txt",
+        SNPs="data/HGDP1KG/variants/{gwas}/nfe_no_ceu/overlappingSNPs_chr{chr}.txt"
     output:
-        Lat="data/HGDP1KG/r/{gwas}/eur-lat_chr{chr}.rvec",
-        Long="data/HGDP1KG/r/{gwas}/eur-long_chr{chr}.rvec"
+        p1="data/HGDP1KG/r/{gwas}/eur-lat_chr{chr}.rvec",
+        p2="data/HGDP1KG/r/{gwas}/eur-long_chr{chr}.rvec"
     params:
         prefix_tp = "data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}",
-        prefix_out = "data/HGDP1KG/r/{gwas}/{chr}"
     shell:
         """
-        Rscript code/HGDP1KG/compute_cord_r.R {params.prefix_tp} {input.TvecLat} {input.TvecLong} {params.prefix_out} {input.snps} {output.Lat} {output.Long}
-        rm {params.prefix_out}xt_temp.*
+        Rscript code/HGDP1KG/get_contrasts_cord.R {input.SNPs} {params.prefix_tp} {input.p1} {output.p1} {input.p2} {output.p2}
         """
+
 
 rule rename_overlap_snps_eur:
     input:
@@ -342,7 +331,7 @@ rule rename_overlap_snps_eur:
         cp {input} {output.p2}
         """
 
-#########
+##############################################################################
 
 # Make PGS SDI
 
