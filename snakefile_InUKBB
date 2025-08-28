@@ -12,7 +12,7 @@ THRESHOLD = ["loose", "strict"]
 
 rule all:
     input:
-        expand("data/InUKBB/TestVecs/England-NorthernIreland.txt", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
+        expand("data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps, combine_clumps_betas
 
 
@@ -68,21 +68,25 @@ rule make_test_vectors:
         p7="data/InUKBB/TestVecs/NorthernIreland-Wales.txt",
         p8="data/InUKBB/TestVecs/RepublicOfIrelend-Scotland.txt",
         p9="data/InUKBB/TestVecs/RepublicOfIrelend-Wales.txt",
-        p10="data/InUKBB/TestVecs/Scotland-Wales.txt",
+        p10="data/InUKBB/TestVecs/Scotland-Wales.txt"
     shell:
         """
         Rscript code/InUKBB/get_Tvec.R {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10} {input}
         """
 
-
-
-rule compute_r_all:
+rule compute_r:
     input:
-        E="data/InUKBB/popAF/{gwas}/popAF_{chr}.England.afreq",
-        NI="data/InUKBB/popAF/{gwas}/popAF_{chr}.NorthernIreland.afreq",
-        RoI="data/InUKBB/popAF/{gwas}/popAF_{chr}.RepublicOfIrelend.afreq",
-        S="data/InUKBB/popAF/{gwas}/popAF_{chr}.Scotland.afreq",
-        W="data/InUKBB/popAF/{gwas}/popAF_{chr}.Wales.afreq"
+        p1="data/InUKBB/TestVecs/England-NorthernIreland.txt",
+        p2="data/InUKBB/TestVecs/England-RepublicOfIrelend.txt",
+        p3="data/InUKBB/TestVecs/England-Scotland.txt",
+        p4="data/InUKBB/TestVecs/England-Wales.txt",
+        p5="data/InUKBB/TestVecs/NorthernIreland-RepublicOfIrelend.txt",
+        p6="data/InUKBB/TestVecs/NorthernIreland-Scotland.txt",
+        p7="data/InUKBB/TestVecs/NorthernIreland-Wales.txt",
+        p8="data/InUKBB/TestVecs/RepublicOfIrelend-Scotland.txt",
+        p9="data/InUKBB/TestVecs/RepublicOfIrelend-Wales.txt",
+        p10="data/InUKBB/TestVecs/Scotland-Wales.txt"
+        SNPs="data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt"
     output:
         p1 = "data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec",
         p2 = "data/InUKBB/r/{gwas}/England-RepublicOfIrelend_chr{chr}.rvec",
@@ -94,9 +98,11 @@ rule compute_r_all:
         p8 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Scotland_chr{chr}.rvec",
         p9 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Wales_chr{chr}.rvec",
         p10 = "data/InUKBB/r/{gwas}/Scotland-Wales_chr{chr}.rvec"
+    params:
+        prefix_in="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3"
     shell:
         """
-        Rscript code/InUKBB/compute_pairwase_contrasts.R {input.E} {input.NI} {input.RoI} {input.S} {input.W} {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10}
+        Rscript code/InUKBB/get_contrasts.R {input.SNPs} {params.prefix_in} {input.p1} {input.p2} {input.p3} {input.p4} {input.p5} {input.p6} {input.p7} {input.p8} {input.p9} {input.p10} {output.p1} {output.p2} {output.p3} {output.p4} {output.p5} {output.p6} {output.p7} {output.p8} {output.p9} {output.p10}
         """
 
 rule rename_overlap_snps_all:
