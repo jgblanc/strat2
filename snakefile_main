@@ -60,7 +60,7 @@ rule calc_FGr:
         r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
     shell:
         """
-        Rscript code/calculate_FGr/calc_fhat_sd.R {input.FGr_block} {output.FGr} {params.r_prefix} {input.IDs}
+        Rscript code/calculate_FGr/calc_fhat.R {input.FGr_block} {output.FGr} {params.r_prefix} {input.IDs}
 	      """
 
 

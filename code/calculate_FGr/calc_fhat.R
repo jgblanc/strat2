@@ -11,8 +11,8 @@ suppressWarnings(suppressMessages({
 
 FGr_file = args[1]
 out_Fhat = args[2]
-r_prefix = args[4]
-id_file = args[5]
+r_prefix = args[3]
+id_file = args[4]
 
 # Read in Fmat
 dfMat <- as.matrix(fread(FGr_file))
@@ -41,14 +41,15 @@ print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 
 
 ## calculate r^\top t
-rTr <- t(df$r) %*% r
+r <- df$r
+rTr <- t(as.matrix(r)) %*% as.matrix(r)
 print(rTr)
 
 ## calculate \hat{f}
-fhat<- fhat_raw / rTr
+fhat<- fhat_raw / c(rTr)
 
 ## format output
-dfOut <- fread(id_file) %>% selec("#FID", "IID")
+dfOut <- fread(id_file) %>% select("#FID", "IID")
 dfOut$fhat <- fhat
 
 # FGR output
