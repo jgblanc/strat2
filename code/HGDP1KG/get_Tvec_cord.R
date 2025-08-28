@@ -19,7 +19,16 @@ df <- fread(md_file)
 
 # Set up outfiles
 dfLat <- df %>% select("FID","IID", "lat")
+colnames(dfLat)[3] <- "tvec"
+dfLat$tvec <- scale(dfLat$tvec)
+print(paste0("The mean of Tvec is ", mean(dfLat$tvec)))
+print(paste0("The variance of Tvec is ", var(dfLat$tvec)))
+
 dfLong <- df %>% select("FID","IID", "long")
+colnames(dfLong)[3] <- "tvec"
+dfLong$tvec <- scale(dfLong$tvec)
+print(paste0("The mean of Tvec is ", mean(dfLong$tvec)))
+print(paste0("The variance of Tvec is ", var(dfLong$tvec)))
 
 # Save output
 fwrite(dfLat,outfile_lat, row.names = F, col.names = T, quote = F, sep = "\t")
