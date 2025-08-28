@@ -2,26 +2,19 @@
 
 args=commandArgs(TRUE)
 
-if(length(args)<6){stop("Rscript calc_H.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
+if(length(args)<5){stop("Rscript calc_H.R <prefix to plink files> <r prefix> <var prefix> <out prefix> <snp> <ids> <outfile>")}
 
 suppressWarnings(suppressMessages({
   library(data.table)
   library(tidyverse)
 }))
 
-plink_prefix = args[1]
-r_prefix = args[2]
-out_prefix = args[3]
-snp_file = args[4]
-id_file = args[5]
-out_file = args[6]
+r_prefix = args[1]
+FGr_prefix = args[2]
+snp_file = args[3]
+tvec_file = args[4]
+out_file = args[5]
 
-
-# Read in IDs
-dfIDs <- fread(id_file)
-
-# Set data collectors
-M <- nrow(dfIDs)
 
 # Read in all values of r
 
@@ -43,9 +36,6 @@ for (i in 2:22) {
 }
 print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 
-# Read in Pvar file
-dfPvar <- fread(paste0(plink_prefix, ".pvar"))
-
 # Read in SNP file
 dfSNP <- fread(snp_file) %>% select("ID", "block")
 dfSNP <- inner_join(dfPvar, dfSNP) %>% select("ID", "block")
@@ -55,7 +45,7 @@ print(paste0("Number of PC SNPs ", nrow(dfSNP)))
 dfALL <- inner_join(df, dfSNP) %>% drop_na()
 print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 L <- nrow(dfALL)
-print(L)
+
 
 # Standardize r values and divide by GWAS variance
 dfALL$r <- dfALL$r / sd(dfALL$r)

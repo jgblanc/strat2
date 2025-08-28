@@ -53,14 +53,15 @@ rule calc_FGr:
     input:
         FGr_block = "output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt",
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
-        IDs="data/ids/gwas_ids/{gwas}.txt"
+        IDs="data/ids/gwas_ids/{gwas}.txt",
+        snps="data/ukbb/ukbb_pc_snps_block.txt"
     output:
         FGr = "output/calculate_FGr/{dataset}/{gwas}/fhat_{contrasts}.txt"
     params:
         r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
     shell:
         """
-        Rscript code/calculate_FGr/calc_fhat.R {input.FGr_block} {output.FGr} {params.r_prefix} {input.IDs}
+        Rscript code/calculate_FGr/calc_fhat.R {input.FGr_block} {output.FGr} {params.r_prefix} {input.IDs} {input.snps}
 	      """
 
 
@@ -97,42 +98,6 @@ rule calcPrime_FGr:
         """
         Rscript code/calculate_FGr/calc_fhat_sd.R {input.FGr_block} {input.SNPs} {output.FGr} {output.sd}
               """
-
-
-rule concatPrime_sdFhat:
-    input:
-        expand("output/calculate_HPrime/{{dataset}}/{gwas}/sdFhat_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS)
-    output:
-        "plots/overlap_stats_prime/sdFhat_{dataset}.txt"
-    shell:
-        """
-        Rscript code/summarize/concat_sdFhat.R {output} {input}
-	      """
-
-
-rule calc_var_r:
-    input:
-        r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
-        snps="data/ukbb/ukbb_pc_snps_block.txt"
-    output:
-        "output/calculate_H/{dataset}/{gwas}/rVar_{contrasts}.txt"
-    params:
-        r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
-    shell:
-        """
-        Rscript code/calculate_H/calc_rVar.R {params.r_prefix} {input.snps} {output}
-	      """
-
-
-rule concatPrime_varR:
-    input:
-        expand("output/calculate_H/{{dataset}}/{gwas}/rVar_{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS)
-    output:
-        "plots/overlap_stats_prime/varR_{dataset}.txt"
-    shell:
-        """
-        Rscript code/summarize/concat_varR.R {output} {input}
-	      """
 
 
 ##### Calculate H #####
@@ -188,13 +153,12 @@ rule concat_chr:
 rule calc_H_Jacknife:
     input:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
-        IDs="data/ids/gwas_ids/{gwas}.txt",
-        snps="data/ukbb/ukbb_pc_snps_block.txt"
+        FGr = "output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt",
+        SNPs = "output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt",
+        Tvec = "data/{dataset}/TestVecs/{contrasts}.txt"
     output:
-        H = "output/calculate_H/{dataset}/{gwas}/H_BJ_{contrasts}.txt"
+        H = "output/calculate_H/{dataset}/{gwas}/H_{contrasts}.txt"
     params:
-        plink_prefix="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_pcSNPs_ALL_v3",
-        out_prefix="output/calculate_H/{dataset}/{gwas}/BJ_{contrasts}",
         r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
     threads: 8
     resources:
@@ -202,7 +166,7 @@ rule calc_H_Jacknife:
         time="02:00:00"
     shell:
         """
-        Rscript code/calculate_H/calc_H.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {input.snps} {input.IDs} {output.H}
+        Rscript code/calculate_H/calc_H.R {params.r_prefix} {input.FGr} {input.snps} {input.Tvec} {output.H}
 	      """
 
 # Summarize H results

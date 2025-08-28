@@ -13,6 +13,7 @@ FGr_file = args[1]
 out_Fhat = args[2]
 r_prefix = args[3]
 id_file = args[4]
+snp_file =args[5]
 
 # Read in Fmat
 dfMat <- as.matrix(fread(FGr_file))
@@ -39,9 +40,17 @@ for (i in 2:22) {
 }
 print(paste0("There are ", nrow(df), " SNPs in all the R files"))
 
+# Read in SNP file
+dfSNP <- fread(snp_file) %>% select("ID", "block")
+dfSNP <- inner_join(dfPvar, dfSNP) %>% select("ID", "block")
+print(paste0("Number of PC SNPs ", nrow(dfSNP)))
+
+# Combine SNP and R files
+dfALL <- inner_join(df, dfSNP) %>% drop_na()
+print(paste0("There are ", nrow(dfALL), " SNPs in all the R files combined with the pruned SNPs"))
 
 ## calculate r^\top t
-r <- df$r
+r <- dfALL$r
 rTr <- t(as.matrix(r)) %*% as.matrix(r)
 print(rTr)
 
