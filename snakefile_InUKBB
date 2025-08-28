@@ -85,7 +85,7 @@ rule compute_r:
         p7="data/InUKBB/TestVecs/NorthernIreland-Wales.txt",
         p8="data/InUKBB/TestVecs/RepublicOfIrelend-Scotland.txt",
         p9="data/InUKBB/TestVecs/RepublicOfIrelend-Wales.txt",
-        p10="data/InUKBB/TestVecs/Scotland-Wales.txt"
+        p10="data/InUKBB/TestVecs/Scotland-Wales.txt",
         SNPs="data/InUKBB/variants/{gwas}/overlappingSNPs_chr{chr}.txt"
     output:
         p1 = "data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec",
@@ -98,6 +98,9 @@ rule compute_r:
         p8 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Scotland_chr{chr}.rvec",
         p9 = "data/InUKBB/r/{gwas}/RepublicOfIrelend-Wales_chr{chr}.rvec",
         p10 = "data/InUKBB/r/{gwas}/Scotland-Wales_chr{chr}.rvec"
+    resources:
+        mem_mb=38000,
+        time="02:00:00"	
     params:
         prefix_in="/scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr{chr}_v3"
     shell:
