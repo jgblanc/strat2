@@ -19,7 +19,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("data/HGDP1KG/r/{gwas}/eurasia-lat_chr{chr}.rvec, chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
+        expand("data/HGDP1KG/r/{gwas}/eurasia-lat_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, phenotype=PHENOTYPE, covars=COVARS, gtype=GTYPE, threshold=THRESHOLD,subdataset=SUBDATASET)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps,combine_clumps_betas
 
 
@@ -265,7 +265,7 @@ rule compute_r_eurasia:
         p2="data/HGDP1KG/TestVecs/eurasia-long.txt",
         SNPs="data/HGDP1KG/variants/{gwas}/eurasia/overlappingSNPs_chr{chr}.txt"
     output:
-        p1"data/HGDP1KG/r/{gwas}/eurasia-lat_chr{chr}.rvec",
+        p1="data/HGDP1KG/r/{gwas}/eurasia-lat_chr{chr}.rvec",
         p2="data/HGDP1KG/r/{gwas}/eurasia-long_chr{chr}.rvec"
     params:
         prefix_tp = "data/HGDP1KG/plink2-files/gnomad.genomes.v3.1.2.hgdp_tgp.chr{chr}",
