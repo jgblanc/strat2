@@ -22,9 +22,9 @@ snp_file = args[6]
 
 
 calc_fhat <- function(dfMat, r ) {
-
+  
   fhat_raw <- apply(dfMat, 1, sum)
-  rTr <- t(as.matrix(r)) %*% as.matrix(r)
+  rTr <- as.numeric(t(as.matrix(r)) %*% as.matrix(r))
   fhat <- fhat_raw / c(rTr)
 
   return(fhat)
@@ -34,7 +34,7 @@ calc_fhat <- function(dfMat, r ) {
 calc_sigma2_f <- function(fhat, M) {
 
 
-  numerator <- t(fhat) %*% fhat
+  numerator <- as.numeric(t(fhat) %*% fhat)
   out <- numerator / (M-1)
 
   return(out)
@@ -43,7 +43,7 @@ calc_sigma2_f <- function(fhat, M) {
 
 calc_sigma2_r <-function(r, L) {
 
-  rTr <- t(as.matrix(r)) %*% as.matrix(r)
+  rTr <- as.numeric(t(as.matrix(r)) %*% as.matrix(r))
   out <- rTr / (L - 1)
 
   return(out)
@@ -97,37 +97,36 @@ sigma2F <- as.numeric(calc_sigma2_f(fhat, M))
 print(paste0("Sigma2F is ", sigma2F))
 sigma2r <- as.numeric(calc_sigma2_r(dfALL$r, L))
 print(paste0("Sigma2r is ", sigma2r))
-H <- sigma2F * sigma2r
+H <- as.numeric(sigma2F * sigma2r)
 print(paste0("H is ", H))
 
 # Read in block info
 dfSNPs <- fread(snpnum_file)
-numBlocks <- ncol(dfMat)
+numBlocks <- as.numeric(ncol(dfMat))
 
 #### Calculate SE via block jackknife
 allHs <- rep(NA, numBlocks)
 for (i in 1:numBlocks) {
 
-  # Block num
-  blockNum <- dfSNPs[i,1]
+  print(i)
 
-  # SNP num
-  mi <- dfSNPs[i,2]
-  print(paste0("The SNP number is ", mi))
+  # Block num
+  blockNum <- as.numeric(dfSNPs[i,1])
+  print(blockNum)
 
   # Calc H
   dfR_i <- dfALL %>% filter(block == blockNum)
-  fhat_i <- calc_fhat(dfFGr_mat[,i], dfR_i)
-  fhat_i <- fhat - dfFGr_mat[,i]
-  sigma2F_i <- calc_sigma2_f(fhat_i, M)
-  dfR_i <- dfALL %>% filter(block == blockNum)
-  print(paste0("The number of rows in dfR_i is ", nrow(dfR_i)))
-  sigma2r_i <- calc_sigma2_r(dfR_i$r,mi)
-  Hi <- sigma2F_i * sigma2r_i
-  allHs[i] <- ((L - mi)/mi) * (H - Hi)^2
-
+  mi <- nrow(dfR_i)
+  dfR_not_i <- dfALL %>% filter(block != blockNum)
+  fhat_i <- calc_fhat(dfMat[,-i],dfR_not_i$r) 
+  sigma2F_i <- as.numeric(calc_sigma2_f(fhat_i, M))
+  sigma2r_i <- as.numeric(calc_sigma2_r(dfR_not_i$r,L-mi))
+  Hi <- as.numeric(sigma2F_i * sigma2r_i)
+  allHs[i] <- as.numeric(((L - mi)/mi) * (H - Hi)^2)
 
 }
+
+print(allHs)
 
 # Calculate SE
 varH <- mean(allHs)
