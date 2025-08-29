@@ -6,7 +6,8 @@ CONTRASTS = ["sdi-eur", "eurasia-lat", "eurasia-long", "eur-lat", "eur-long", "e
 #CONTRASTS = ["England-NorthernIreland", "England-RepublicOfIrelend", "England-Scotland", "England-Wales", "NorthernIreland-RepublicOfIrelend", "NorthernIreland-Scotland", "NorthernIreland-Wales", "RepublicOfIrelend-Scotland", "RepublicOfIrelend-Wales", "Scotland-Wales"]
 DATASET = ["HGDP1KG"]
 #GWAS = ["WBS-R", "ALL-R", "e5", "e10", "e50", "e200"]
-GWAS = ["WBS", "ALL","e5", "e10", "e50", "e200"]
+#GWAS = ["WBS", "ALL","e5", "e10", "e50", "e200"]
+GWAS = ["e5"]
 COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 GTYPE = ["LR", "LMM"]
@@ -156,7 +157,7 @@ rule residulize_GR:
         evenPCs="output/calculate_PCA/{gwas}/even_PCA.eigenvec",
         oddPCs_rare="output/calculate_PCA/{gwas}/rare_odd_PCA.eigenvec",
         evenPCs_rare="output/calculate_PCA/{gwas}/rare_even_PCA.eigenvec",
-        snp_num = "output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt
+        snp_num = "output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt"
     output:
         GRPrime="output/calculate_FGr/{dataset}/{gwas}/FGrMatPrime_{contrasts}.txt"
     resources:
@@ -166,8 +167,7 @@ rule residulize_GR:
         pca_prefix="output/calculate_PCA/{gwas}/"
     shell:
         """
-        Rscript code/calculate_FGr_prime/calc_GR_prime.R {input.FGr} {params.pca_prefix} {output.GRPrime} {input.snp_num}
-	rm {input.SNPs}
+        Rscript code/calculate_FGr/calc_GR_prime.R {input.FGr} {params.pca_prefix} {output.GRPrime} {input.snp_num}
         """
 
 
