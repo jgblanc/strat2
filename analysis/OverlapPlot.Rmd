@@ -169,7 +169,7 @@ row_d <- arrangeGrob(plInUKBB, top = label_d)
 
 # Final arrangement
 pl <- grid.arrange(top_row, row_b, row_c, row_d, ncol = 1, heights = c(1.3, 1, 1, 1))
-ggsave("~/Desktop/Fig1.png", pl, height = 10, width = 12)
+ggsave("~/Desktop/H.png", pl, height = 10, width = 12)
 ```
 
 ## H' 
@@ -177,8 +177,8 @@ ggsave("~/Desktop/Fig1.png", pl, height = 10, width = 12)
 Read in data and bonferoni correct CI 
 ```{r}
 # Combine all data
-tmp1 <- fread("../plots/overlap_stats_prime/H_HGDP1KG.txt")
-tmp2 <- fread("../plots/overlap_stats_prime/H_InUKBB.txt")
+tmp1 <- fread("../plots/overlap_stats/HPrime_HGDP1KG.txt")
+tmp2 <- fread("../plots/overlap_stats/HPrime_InUKBB.txt")
 
 # Format Data
 dfHPrime <- rbind(tmp1, tmp2)
@@ -198,6 +198,7 @@ dfHPrime$pAjust <- p.adjust(dfHPrime$pvalNorm, method = "bonferroni")
 ci <- qnorm(1 -(0.025/nrow(dfHPrime)))
 dfHPrime$lc <- dfHPrime$H - (ci * sqrt(dfHPrime$varH)) 
 dfHPrime$uc <- dfHPrime$H + (ci * sqrt(dfHPrime$varH)) 
+
 
 dfAllOverlap2 <- dfAllOverlap 
 ```
@@ -266,68 +267,11 @@ ggsave("~/Desktop/HPrime.png", pl, height = 8, width = 11)
 ## Plot H Bias 
 
 ```{r}
-# Combine all VarT data
-tmp1 <- fread("../plots/overlap_stats/varT_HGDP1KG.txt")
-tmp2 <- fread("../plots/overlap_stats/varT_InUKBB.txt")
-
-# Format Data
-df <- rbind(tmp1, tmp2)
-tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
-tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
-tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
-tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
-dfVarT <- rbind(tmp1, tmp2, tmp3)
-dfVarT$gwas <- factor(dfVarT$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
-
-# Shorten Names
-rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
-dfVarT$contrasts <- str_replace_all(dfVarT$contrasts, rep_str)
-
-# Combine all sdF data
-tmp1 <- fread("../plots/overlap_stats/sdFhat_HGDP1KG.txt")
-tmp2 <- fread("../plots/overlap_stats/sdFhat_InUKBB.txt")
-
-# Format Data
-df <- rbind(tmp1, tmp2)
-tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
-tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
-tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
-tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
-dfsdF <- rbind(tmp1, tmp2, tmp3)
-dfsdF$gwas <- factor(dfsdF$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
-
-# Shorten Names
-rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
-dfsdF$contrasts <- str_replace_all(dfsdF$contrasts, rep_str)
-
-
-# Combine all VarT data
-tmp1 <- fread("../plots/overlap_stats/varR_HGDP1KG.txt")
-tmp2 <- fread("../plots/overlap_stats/varR_InUKBB.txt")
-
-# Format Data
-df <- rbind(tmp1, tmp2)
-tmp1 <- df %>% filter(gwas %in% c("e5", "e10", "e50", "e200")) %>% separate(gwas, into = c("tmp", "gwas"), sep = "e") %>% select(-tmp)
-tmp1$gwas <- factor(tmp1$gwas, levels = c( "5", "10", "50", "200")) 
-tmp2 <- df %>% filter(gwas %in% c("WBS-R", "ALL-R")) %>% separate(gwas, into = c("gwas", "tmp"), sep = "-") %>% select(-tmp)
-tmp3 <-  df %>% filter(gwas %in% c("WBS", "ALL"))
-dfVarR <- rbind(tmp1, tmp2, tmp3)
-dfVarR$gwas <- factor(dfVarR$gwas, levels = c("WBS", "5", "10", "50", "200", "ALL"))
-
-# Shorten Names
-rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIreland" = "NI","RepublicOfIrelend" = "RoI" )
-dfVarR$contrasts <- str_replace_all(dfVarR$contrasts, rep_str)
-
-
-### Join all DF's
-dfBias <- inner_join(dfAllOverlap, dfVarT)
-dfBias <- inner_join(dfBias, dfsdF)
-dfBias <- inner_join(dfBias, dfVarR)
-
+dfBias <- dfHPrime
 # Compute Bias 
 #dfBias <- dfBias %>% mutate(biasH = ((sigmaF2 *varTvec) / N) + (1 / L)) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
 #dfBias <- dfBias %>% mutate(biasH = ((1 / L))) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
-dfBias <- dfBias %>% mutate(biasH = ((sigmaF2 *varTvec) / (N * varR) )) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
+dfBias <- dfBias %>% mutate(biasH = (sigma2F  / N )) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH)
 
 
 ggplot(data = dfBias, aes(x = H, y = Hcorrected)) + geom_point() + geom_abline(color = "red") 
