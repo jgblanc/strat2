@@ -1,0 +1,16 @@
+PLINK v2.0.0-a.6.9LM 64-bit Intel (29 Jan 2025)
+Options in effect:
+  --extract data/InUKBB/variants/e50/overlappingSNPs_chr2.txt
+  --glm omit-ref allow-no-covars
+  --no-input-missing-phenotype  
+  --pfile /scratch/jgblanc/ukbb/plink2-files/ALL/ukb_imp_chr2_v3
+
+Hostname: cri22cn222
+Working directory: /gpfs/data/berg-lab/jgblanc/strat2
+Start time: Fri Aug 29 21:13:07 2025
+
+Error: You provided 1 argument to --no-input-missing-phenotype, which has no
+parameters.
+For more info, try "plink2 --help <flag name>" or "plink2 --help | more".
+
+End time: Fri Aug 29 21:13:07 2025

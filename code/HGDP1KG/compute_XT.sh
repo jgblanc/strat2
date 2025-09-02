@@ -8,6 +8,7 @@ plink2 \
   --pfile $pfile_path \
   --extract $overlap_snps \
   --glm omit-ref allow-no-covars \
+  --no-input-missing-phenotype \
   --pheno $pheno_path \
   --pheno-name tvec \
   --out $outfile

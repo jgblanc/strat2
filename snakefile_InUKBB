@@ -12,7 +12,7 @@ THRESHOLD = ["loose", "strict"]
 
 rule all:
     input:
-        expand("data/InUKBB/r/{gwas}/England-NorthernIreland_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
+        expand("data/InUKBB/r/{gwas}/England-RepublicOfIrelend_chr{chr}.rvec", chr=CHR, gwas=GWAS, contrasts=CONTRASTS, covars=COVARS, phenotype=PHENOTYPE,gtype=GTYPE, threshold=THRESHOLD)
 localrules: format_regenie_results_loose, format_regenie_results_strict, combine_clumps, combine_clumps_betas
 
 
