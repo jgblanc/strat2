@@ -27,8 +27,23 @@ compute_b <- function(tvec_file, outfile) {
   cmd_XT <- paste("sh code/HGDP1KG/compute_XT.sh", plink_prefix, tvec_file, outfile_XT, overlap_snps, sep = " ")
   system(cmd_XT)
 
+  # Adjust Betas to account for variance in x
+
   # Read in betas and genotype counts
-  beta_plink <- fread(paste0(outpath, "_xt_temp.tvec.glm.linear"))
+  beta_plink <- fread(paste0(outpath, "xt_temp.tvec.glm.linear"))
+  count_plink <- fread(paste0(outpath, "xt_temp.gcount"))
+
+  # Calculate length of mean centered genotypes from counts
+  nOBS <- (count_plink$HOM_REF_CT + count_plink$HET_REF_ALT_CTS + count_plink$TWO_ALT_GENO_CTS)
+  counts <- (count_plink$HOM_REF_CT * 0) + (count_plink$HET_REF_ALT_CTS * 1) + (count_plink$TWO_ALT_GENO_CTS * 2)
+  mean_gc <- counts / nOBS
+  length_mc_genos <- (count_plink$HOM_REF_CT * (-1 * mean_gc)^2) + (count_plink$HET_REF_ALT_CTS * (1 - mean_gc)^2) +  (count_plink$TWO_ALT_GENO_CTS * (2 - mean_gc)^2)
+
+  # Fix betas
+  betas_plink_norm <- beta_plink$BETA * sqrt(length_mc_genos/nOBS)
+
+  #  Re-write .linear file with correct betas
+  beta_plink$BETA <- betas_plink_norm
   beta_reformat <- beta_plink %>% dplyr::select("#CHROM","ID", "REF", "ALT",  "BETA")
   beta_reformat[is.na(beta_reformat)] <- 0
 

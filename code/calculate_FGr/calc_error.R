@@ -74,13 +74,6 @@ M <- nrow(dfMat)
 dfSNP_Num <- fread(snp_num_file)
 numBlocks <- as.numeric(ncol(dfMat))
 
-# quick diagnostics
-cat("dfMat dim:", paste(dim(dfMat), collapse = " x "), "\n")
-cat("M:", M, " numBlocks:", numBlocks, "\n")
-cat("length(dfALL$r):", length(dfALL$r), " unique blocks in dfALL:", length(unique(dfALL$block)), "\n")
-print(summary(dfALL$r))
-if(any(is.na(dfALL$r))) cat("WARNING: NAs in dfALL$r\n")
-
 
 # Compute "real" fhat
 fhat <- calc_fhat(dfMat, dfALL$r)
@@ -97,19 +90,6 @@ for (i in 1:numBlocks) {
   fhat_i <- calc_fhat(dfMat[,-i],dfR_not_i$r)
   locoFGr[,i] <- fhat_i
 }
-
-
-# after filling locoFGr:
-cat("locoFGr dim:", dim(locoFGr), "\n")
-na_by_col <- colSums(is.na(locoFGr))
-print(na_by_col)
-na_by_row_first10 <- rowSums(is.na(locoFGr))[1:10]
-print(na_by_row_first10)
-cat("total NaN count in locoFGr:", sum(is.nan(locoFGr)), "\n")
-
-tmp_preview <- try(rowSums((locoFGr - rowMeans(locoFGr))^2) * ((numBlocks-1)/numBlocks), silent = TRUE)
-if(inherits(tmp_preview, "try-error")) cat("Error computing tmp_preview\n") else print(summary(tmp_preview))
-
 
 
 

@@ -11,4 +11,5 @@ plink2 \
   --no-input-missing-phenotype \
   --pheno $pheno_path \
   --pheno-name tvec \
+  --geno-counts \
   --out $outfile

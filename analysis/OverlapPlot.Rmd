@@ -94,7 +94,7 @@ pAll <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_poin
 Read in data and bonferoni correct CI 
 ```{r}
 # Combine all data
-tmp1 <- fread("../plots/overlap_stats/H_HGDP1KG.txt")
+tmp1 <- fread("../plots/overlap_stats/H_InUKBB.txt")
 tmp2 <- fread("../plots/overlap_stats/H_InUKBB.txt")
 
 # Format Data

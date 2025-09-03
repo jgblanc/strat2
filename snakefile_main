@@ -113,7 +113,7 @@ rule concat_chr:
 
 # Calculate H
 
-rule calc_H_Jacknife:
+rule calc_H:
     input:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         FGr = "output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt",

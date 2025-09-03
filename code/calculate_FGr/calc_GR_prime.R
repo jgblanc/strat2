@@ -28,7 +28,7 @@ colnames(dfMat) <- chrs
 #----------------------------
 # Residualize all GRs
 #---------------------------
-dfMat_resids <- dfMat
+dfMat_resids <- matrix(NA, ncol = ncol(dfMat), nrow = nrow(dfMat))
 
 for (i in seq_along(dfMat)) {
 
