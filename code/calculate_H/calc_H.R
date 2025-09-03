@@ -22,8 +22,7 @@ snp_file = args[6]
 
 
 calc_fhat <- function(dfMat, r ) {
-  
-  fhat_raw <- apply(dfMat, 1, sum)
+
   rTr <- as.numeric(t(as.matrix(r)) %*% as.matrix(r))
   fhat <- fhat_raw / c(rTr)
 
@@ -33,7 +32,7 @@ calc_fhat <- function(dfMat, r ) {
 
 calc_sigma2_f <- function(fhat, M) {
 
-
+  fhat <- fhat - mean(fhat)
   numerator <- as.numeric(t(fhat) %*% fhat)
   out <- numerator / (M-1)
 
@@ -43,6 +42,7 @@ calc_sigma2_f <- function(fhat, M) {
 
 calc_sigma2_r <-function(r, L) {
 
+  r <- r - mean(r)
   rTr <- as.numeric(t(as.matrix(r)) %*% as.matrix(r))
   out <- rTr / (L - 1)
 
@@ -118,7 +118,7 @@ for (i in 1:numBlocks) {
   dfR_i <- dfALL %>% filter(block == blockNum)
   mi <- nrow(dfR_i)
   dfR_not_i <- dfALL %>% filter(block != blockNum)
-  fhat_i <- calc_fhat(dfMat[,-i],dfR_not_i$r) 
+  fhat_i <- calc_fhat(dfMat[,-i],dfR_not_i$r)
   sigma2F_i <- as.numeric(calc_sigma2_f(fhat_i, M))
   sigma2r_i <- as.numeric(calc_sigma2_r(dfR_not_i$r,L-mi))
   Hi <- as.numeric(sigma2F_i * sigma2r_i)

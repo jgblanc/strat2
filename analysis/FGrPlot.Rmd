@@ -47,9 +47,9 @@ df$contrasts <- str_replace_all(df$contrasts, rep_str)
 ```
 
 ```{r}
-pl <- df %>% ggplot(aes(x = H, y = error, color = gwas)) + geom_point(size = 2) + scale_x_log10() + scale_y_log10() + xlab(TeX("proportion of variance in the GWAS panel explained by the target axis ($\\hat{H}$)")) + ylab(TeX("fraction of variance in direct estimator due to error ($1 - \\hat{gamma}_{f}$)")) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL")))  + theme(panel.grid.minor = element_line(linetype = "dashed")) +  guides(color = guide_legend(title = "GWAS", label = scales::label_parse()))
+pl <- df %>% ggplot(aes(x = H, y = error, color = gwas)) + geom_point(size = 2) + scale_x_log10() + scale_y_log10() + xlab(TeX("proportion of variance in the GWAS panel explained by the target axis ($\\hat{H}$)")) + ylab(TeX("fraction of variance in direct estimator due to error ($\\hat{R}^2_f$)")) + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1","purple1", "darkorange", "skyblue2", "seagreen", "seagreen1"), labels = c(expression("WBS"),expression(5 * epsilon), expression(10 * epsilon),expression(50 * epsilon),expression(200 * epsilon), expression("ALL")))  + theme(panel.grid.minor = element_line(linetype = "dashed")) +  guides(color = guide_legend(title = "GWAS", label = scales::label_parse()))
 pl
-#ggsave("~/Desktop/Error.png", pl, height = 4, width = 6)
+ggsave("~/Desktop/Error.png", pl, height = 4, width = 6)
 ```
 
 ## Solve for Rho 
