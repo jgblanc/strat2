@@ -23,6 +23,7 @@ snp_file = args[6]
 
 calc_fhat <- function(dfMat, r ) {
 
+  fhat_raw <- apply(dfMat, 1, sum)
   rTr <- as.numeric(t(as.matrix(r)) %*% as.matrix(r))
   fhat <- fhat_raw / c(rTr)
 
