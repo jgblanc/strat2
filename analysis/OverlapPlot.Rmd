@@ -112,7 +112,7 @@ dfAllOverlap$contrasts <- str_replace_all(dfAllOverlap$contrasts, rep_str)
 
 # Bonferonni correction 
 dfAllOverlap$pAjust <- p.adjust(dfAllOverlap$pvalNorm, method = "bonferroni")
-ci <- qnorm(1 -(0.025/nrow(dfAllOverlap)))
+ci <- qnorm(1 -(0.05/nrow(dfAllOverlap)))
 dfAllOverlap$lc <- dfAllOverlap$H - (ci * sqrt(dfAllOverlap$varH)) 
 dfAllOverlap$uc <- dfAllOverlap$H + (ci * sqrt(dfAllOverlap$varH)) 
 ```
@@ -171,6 +171,7 @@ row_d <- arrangeGrob(plInUKBB, top = label_d)
 pl <- grid.arrange(top_row, row_b, row_c, row_d, ncol = 1, heights = c(1.3, 1, 1, 1))
 ggsave("~/Desktop/H.png", pl, height = 10, width = 12)
 ```
+
 
 ## H' 
 
