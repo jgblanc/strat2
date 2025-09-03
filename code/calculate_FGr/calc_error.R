@@ -71,8 +71,16 @@ dfMat <- as.matrix(fread(Gr_mat_file))
 M <- nrow(dfMat)
 
 # Read in block info
-dfSNPs <- fread(snp_num_file)
+dfSNP_Num <- fread(snp_num_file)
 numBlocks <- as.numeric(ncol(dfMat))
+
+# quick diagnostics
+cat("dfMat dim:", paste(dim(dfMat), collapse = " x "), "\n")
+cat("M:", M, " numBlocks:", numBlocks, "\n")
+cat("length(dfALL$r):", length(dfALL$r), " unique blocks in dfALL:", length(unique(dfALL$block)), "\n")
+print(summary(dfALL$r))
+if(any(is.na(dfALL$r))) cat("WARNING: NAs in dfALL$r\n")
+
 
 # Compute "real" fhat
 fhat <- calc_fhat(dfMat, dfALL$r)
@@ -82,13 +90,28 @@ locoFGr <- matrix(NA, nrow = M, ncol = numBlocks)
 for (i in 1:numBlocks) {
 
   # Block num
-  blockNum <- as.numeric(dfSNP[i,1])
+  blockNum <- as.numeric(dfSNP_Num[i,1])
 
   print(paste0("This is rep number ",i))
   dfR_not_i <- dfALL %>% filter(block != blockNum)
   fhat_i <- calc_fhat(dfMat[,-i],dfR_not_i$r)
   locoFGr[,i] <- fhat_i
 }
+
+
+# after filling locoFGr:
+cat("locoFGr dim:", dim(locoFGr), "\n")
+na_by_col <- colSums(is.na(locoFGr))
+print(na_by_col)
+na_by_row_first10 <- rowSums(is.na(locoFGr))[1:10]
+print(na_by_row_first10)
+cat("total NaN count in locoFGr:", sum(is.nan(locoFGr)), "\n")
+
+tmp_preview <- try(rowSums((locoFGr - rowMeans(locoFGr))^2) * ((numBlocks-1)/numBlocks), silent = TRUE)
+if(inherits(tmp_preview, "try-error")) cat("Error computing tmp_preview\n") else print(summary(tmp_preview))
+
+
+
 
 # Compute numerator
 mean_loco <- rowMeans(locoFGr)
@@ -106,6 +129,7 @@ print(paste0("The numerator is ",numerator))
 
 # Compute Denominator
 varFGr <- var(fhat)
+print(paste0("The denominator is ",varFGr))
 
 # Find Error
 error <- numerator / varFGr

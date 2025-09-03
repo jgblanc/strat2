@@ -13,11 +13,10 @@ suppressWarnings(suppressMessages({
 
 outfile = args[1]
 
-dfOut <- matrix(NA, nrow = 1, ncol = 8)
+dfOut <- matrix(NA, nrow = 1, ncol = 5)
 
 for (i in 2:length(args)) {
 
-  print(i)
 
   # Get results file name
   filename = args[i]
