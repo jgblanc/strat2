@@ -23,6 +23,7 @@ snp_file = args[6]
 
 calc_fhat <- function(dfMat, r ) {
 
+  r <- r - mean(r)
   fhat_raw <- apply(dfMat, 1, sum)
   rTr <- as.numeric(t(as.matrix(r)) %*% as.matrix(r))
   fhat <- fhat_raw / c(rTr)
@@ -126,8 +127,6 @@ for (i in 1:numBlocks) {
   allHs[i] <- as.numeric(((L - mi)/mi) * (H - Hi)^2)
 
 }
-
-print(allHs)
 
 # Calculate SE
 varH <- mean(allHs)
