@@ -30,8 +30,8 @@ compute_b <- function(tvec_file, outfile) {
   # Adjust Betas to account for variance in x
 
   # Read in betas and genotype counts
-  beta_plink <- fread(paste0(outpath, "xt_temp.tvec.glm.linear"))
-  count_plink <- fread(paste0(outpath, "xt_temp.gcount"))
+  beta_plink <- fread(paste0(outpath, "_xt_temp.tvec.glm.linear"))
+  count_plink <- fread(paste0(outpath, "_xt_temp.gcount"))
 
   # Calculate length of mean centered genotypes from counts
   nOBS <- (count_plink$HOM_REF_CT + count_plink$HET_REF_ALT_CTS + count_plink$TWO_ALT_GENO_CTS)
