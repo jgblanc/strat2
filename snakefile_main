@@ -8,7 +8,7 @@ CONTRASTS = ["NorthernIreland-Scotland", "England-NorthernIreland"]
 DATASET = ["InUKBB"]
 #GWAS = ["WBS-R", "ALL-R", "e5", "e10", "e50", "e200"]
 #GWAS = ["WBS", "ALL","e5", "e10", "e50", "e200"]
-GWAS = ["e5"]
+GWAS = ["e200"]
 COVARS = ["pcs", "nopcs"]
 PHENOTYPE = ["Alkaline_Phosphate", "Aspartate_Aminotransferase", "Basophill_Percentage", "Body_Weight", "Cholesterol", "Eosinophill_Percentage", "Glucose", "HbA1c", "HDL", "LDL", "MCHC","MCV", "Platelet_Count", "SBP", "Standing_Height", "Total_Protein", "Triglycerides"]
 GTYPE = ["LR", "LMM"]
@@ -33,7 +33,7 @@ rule calc_fhat_test:
     input:
         r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
         IDs="data/ids/gwas_ids/{gwas}.txt",
-        snps="data/ukbb/ukbb_pc_snps_block.txt"
+        snps="data/ukbb/ukbb_pc_snps_block.txt",
         oddPCs="output/calculate_PCA/{gwas}/odd_PCA.eigenvec",
         evenPCs="output/calculate_PCA/{gwas}/even_PCA.eigenvec",
         oddPCs_rare="output/calculate_PCA/{gwas}/rare_odd_PCA.eigenvec",
@@ -51,7 +51,7 @@ rule calc_fhat_test:
         time="02:00:00"
     shell:
         """
-        Rscript code/calculate_FGr/fhat_test.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {params.pca_prefix} {input.snps} {input.IDs} {output} {output.SNPs}
+        Rscript code/calculate_FGr/fhat_test.R {params.plink_prefix} {params.r_prefix} {params.out_prefix} {params.pca_prefix} {input.snps} {input.IDs} {output}
 	      """
 
 

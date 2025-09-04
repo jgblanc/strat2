@@ -12,7 +12,7 @@ suppressWarnings(suppressMessages({
 plink_prefix = args[1]
 r_prefix = args[2]
 out_prefix = args[3]
-pca_prefix = args[4]
+pc_prefix = args[4]
 snp_file = args[5]
 id_file = args[6]
 out_file = args[7]
@@ -72,7 +72,7 @@ system(plink_cmd)
 
 # Read in GR
 df <- fread(paste0(out_prefix, ".sscore"))
-fhat_raw <- as.matrix(df$SCORE1_SUM)
+fhat_raw <- as.matrix(df[,3])
 
 # calculate r^\top t
 r_center <- dfALL$r - mean(dfALL$r)
@@ -86,7 +86,13 @@ fhat_center <- fhat - mean(fhat)
 numerator <- as.numeric(t(fhat_center) %*% fhat_center)
 sigma2f <- numerator / (M-1)
 print(paste0("Sigma2f is ", sigma2f))
-print(paste0("the var is  is ", var(fhat_center)))
+
+
+# Calculate H
+sigma2r <- rTr / (L - 1)
+print(paste0("Sigma2r is ", sigma2r))
+H <- sigma2f * sigma2r
+print(paste0("H is ", H))
 
 
 # Regress out PCs from fhat
@@ -112,23 +118,28 @@ sigma2f_prime <- numerator / (M-1)
 print(paste0("Sigma2f is ", sigma2f_prime))
 print(paste0("the var is  is ", var(fhat_resid_center)))
 
+#Calc H'
+H_prime <- sigma2f_prime * sigma2r	
+print(paste0("H is ", H_prime))
+
+
 # Residualize GR and then mulitple by rTr
-y <- as.numeric(fhat_raw)
-gr_resid <- resid(lm(y ~ ., data = covars_df))
-fhat_resid<- gr_resid / c(rTr)
+#y <- as.numeric(fhat_raw)
+#gr_resid <- resid(lm(y ~ ., data = covars_df))
+#fhat_resid<- gr_resid / c(rTr)
 
 # calculate sigma2f prime
-fhat_resid_center <- fhat_resid - mean(fhat_resid)
-numerator <- as.numeric(t(fhat_resid_center) %*% fhat_resid_center)
-sigma2f_prime_post <- numerator / (M-1)
-print(paste0("Sigma2f is ", sigma2f_prime_post))
-print(paste0("the var is  is ", var(fhat_resid_center)))
+#fhat_resid_center <- fhat_resid - mean(fhat_resid)
+#numerator <- as.numeric(t(fhat_resid_center) %*% fhat_resid_center)
+#sigma2f_prime_post <- numerator / (M-1)
+#print(paste0("Sigma2f is ", sigma2f_prime_post))
+#print(paste0("the var is  is ", var(fhat_resid_center)))
 
 
 
 
 # Save SNP file
-dfOut <- data.frame(sigma2f, sigma2f_prime, sigma2f_prime_post)
+dfOut <- data.frame(sigma2f, sigma2f_prime)
 fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
 
