@@ -107,39 +107,38 @@ dfSNPs <- fread(snpnum_file)
 numBlocks <- as.numeric(ncol(dfMat))
 
 #### Calculate SE via block jackknife
-#allHs <- rep(NA, numBlocks)
-#for (i in 1:numBlocks) {
+allHs <- rep(NA, numBlocks)
+for (i in 1:numBlocks) {
 
-#  print(i)
+  print(i)
 
   # Block num
-#  blockNum <- as.numeric(dfSNPs[i,1])
-#  print(blockNum)
+  blockNum <- as.numeric(dfSNPs[i,1])
 
   # Calc H
-#  dfR_i <- dfALL %>% filter(block == blockNum)
-#  mi <- nrow(dfR_i)
-#  dfR_not_i <- dfALL %>% filter(block != blockNum)
-#  fhat_i <- calc_fhat(dfMat[,-i],dfR_not_i$r)
-#  sigma2F_i <- as.numeric(calc_sigma2_f(fhat_i, M))
-#  sigma2r_i <- as.numeric(calc_sigma2_r(dfR_not_i$r,L-mi))
-#  Hi <- as.numeric(sigma2F_i * sigma2r_i)
-#  allHs[i] <- as.numeric(((L - mi)/mi) * (H - Hi)^2)
+  dfR_i <- dfALL %>% filter(block == blockNum)
+  mi <- nrow(dfR_i)
+  dfR_not_i <- dfALL %>% filter(block != blockNum)
+  fhat_i <- calc_fhat(dfMat[,-i],dfR_not_i$r)
+  sigma2F_i <- as.numeric(calc_sigma2_f(fhat_i, M))
+  sigma2r_i <- as.numeric(calc_sigma2_r(dfR_not_i$r,L-mi))
+  Hi <- as.numeric(sigma2F_i * sigma2r_i)
+  allHs[i] <- as.numeric(((L - mi)/mi) * (H - Hi)^2)
 
-#}
+}
 
 # Calculate SE
-#varH <- mean(allHs)
+varH <- mean(allHs)
 
 # P-value from jacknife
-#pvalNorm <- pnorm(H, mean = 1/L, sd=sqrt(varH), lower.tail = FALSE)
+pvalNorm <- pnorm(H, mean = 1/L, sd=sqrt(varH), lower.tail = FALSE)
 
 # Get N
 dfTvec <- fread(tvec_file)
 N <- nrow(dfTvec)
 
 # Construct output
-dfOut <- data.frame(H = H, L = L, varH = NA, pvalNorm = NA, sigma2r=sigma2r, sigma2F=sigma2F, N=N)
+dfOut <- data.frame(H = H, L = L, varH = varH, pvalNorm = pvalNorm, sigma2r=sigma2r, sigma2F=sigma2F, N=N)
 fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
 
