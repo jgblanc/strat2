@@ -210,8 +210,8 @@ fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
 
 # Save SNP file
-dfOut <- data.frame(sigma2f, sigma2f_prime)
-fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
+#dfOut <- data.frame(sigma2f, sigma2f_prime)
+#fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
 
 

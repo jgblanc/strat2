@@ -89,7 +89,7 @@ L <- nrow(dfALL)
 print(L)
 
 # Read in Fmat
-dfMat <- as.matrix(fread(FGr_file))
+dfMat <- as.matrix(fread(FGr_file, drop=1))
 M <- nrow(dfMat)
 print(M)
 
