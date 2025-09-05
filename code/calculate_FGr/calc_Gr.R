@@ -113,6 +113,7 @@ system(rm_cmd)
 
 # Save Raw FGR
 dfFGr <- as.data.frame(dfFGr_mat)
+rownames(dfFGr) <- df[,1]
 fwrite(dfFGr, out_file_FGr, quote = F, row.names = F, sep = "\t")
 
 # Save SNP file
