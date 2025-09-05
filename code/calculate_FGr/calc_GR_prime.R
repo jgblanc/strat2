@@ -19,7 +19,7 @@ snp_file =args[4]
 # Read in GR Matrix
 #-----------------------------
 
-dfMat <- fread(fgr_file)
+dfMat <- fread(fgr_file, drop = 1)
 dfSNP <- fread(snp_file)
 chrs <- as.character(dfSNP$CHR)
 colnames(dfMat) <- chrs
