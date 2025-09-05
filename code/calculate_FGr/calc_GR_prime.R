@@ -64,7 +64,9 @@ for (i in seq_along(dfMat)) {
 #----------------------------
 # Save output
 #---------------------------
+tmp <- fread(fgr_file)
 dfOut <- as.data.frame(dfMat_resids)
+dfOut <- cbind(IID = tmp[[1]], dfOut)
 fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
 
