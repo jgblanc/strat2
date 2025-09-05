@@ -142,7 +142,7 @@ for (i in 1:numBlocks) {
   dfFGr_mat[,i] <- rawFGr
 
 }
-fhat_raw <- apply(dfMat, 1, sum)
+fhat_raw <- apply(dfFGr_mat, 1, sum)
 
 # calculate \hat{f}
 fhat<- fhat_raw / c(rTr)
