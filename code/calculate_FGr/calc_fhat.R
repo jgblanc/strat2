@@ -16,7 +16,7 @@ id_file = args[4]
 snp_file =args[5]
 
 # Read in Fmat
-dfMat <- as.matrix(fread(FGr_file))
+dfMat <- as.matrix(fread(FGr_file, drop = 1))
 fhat_raw <- apply(dfMat, 1, sum)
 print(length(fhat_raw))
 

@@ -95,101 +95,104 @@ H <- sigma2f * sigma2r
 print(paste0("H is ", H))
 
 
+# Save SNP file
+dfOut <- data.frame(H, L, sigma2f, sigma2r)
+fwrite(dfOut, out_file, quote = F, row.names = F, sep = "\t")
 
 ############## Make FGr Mat #################
 
 
-# Set up data frame to collect SNP numbers
-numBlocks <- length(unique(dfALL$block))
-dfSNPs <- as.data.frame(matrix(NA, ncol = 3, nrow = numBlocks))
-colnames(dfSNPs) <- c("Block", "nSNP", "CHR")
-print(paste0("The total number of blocks is ", numBlocks))
-dfFGr_mat <- matrix(NA, nrow = M, ncol = numBlocks)
-
-# Subset SNP IDs
-dfSNP_tmp <- dfALL %>% select("ID")
-snp_name <- paste0(out_prefix, ".snp")
-fwrite(dfSNP_tmp, snp_name, quote = F, row.names = F, sep = "\t")
-
-# Get freq file
-plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 ",
-                    " --freq --out ", out_prefix)
-system(plink_cmd)
-
-# Set up plink command
-freq_file <- paste0(out_prefix, ".afreq")
-tmp_r_name <- paste0(out_prefix, ".rvec")
-plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 --read-freq ", freq_file,
-                    " --score ", tmp_r_name, " header-read variance-standardize cols=dosagesum,scoresums --out ", out_prefix)
-
-# Individually score each of the 581 blocks
-for (i in 1:numBlocks) {
-
-  # Block num
-  blockNum <- unique(dfALL$block)[i]
-
-  # Subset Rs and save
-  dfR_tmp1 <- dfALL %>% filter(block == blockNum)
-  dfR_tmp <- dfR_tmp1 %>% select("ID", "ALT", "r")
-  fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
-
-  # Run plink
-  system(plink_cmd)
-
-  # Read in plink output
-  df <- fread(paste0(out_prefix, ".sscore"))
-  rawFGr <- as.matrix(df[,3])
-  dfFGr_mat[,i] <- rawFGr
-
-}
-fhat_raw <- apply(dfFGr_mat, 1, sum)
-
-# calculate \hat{f}
-fhat<- fhat_raw / c(rTr)
-
-# calculate sigma2f
-fhat_center <- fhat - mean(fhat)
-numerator <- as.numeric(t(fhat_center) %*% fhat_center)
-sigma2f <- numerator / (M-1)
-print(paste0("Sigma2f is ", sigma2f))
-
-
-# Calculate H
-sigma2r <- rTr / (L - 1)
-print(paste0("Sigma2r is ", sigma2r))
-H <- sigma2f * sigma2r
-print(paste0("H is ", H))
-
-
-############### Calculate H Prime ########################
-
-# Regress out PCs from fhat
-pca_file_path_common <- paste0(pc_prefix, "even_PCA.eigenvec")
-pca_file_path_rare   <- paste0(pc_prefix, "rare_even_PCA.eigenvec")
-
-dfPCs_common <- fread(pca_file_path_common)
-setnames(dfPCs_common, 1:2, c("FID","IID"))
-
-dfPCs_rare <- fread(pca_file_path_rare)
-setnames(dfPCs_rare, 1:2, c("FID","IID"))
-
-dfPCs <- inner_join(dfPCs_common, dfPCs_rare, by = c("FID","IID"))
-covars_df <- dfPCs %>% select(starts_with("PC"))
-
-y <- as.numeric(fhat_center)
-fhat_resid <- resid(lm(y ~ ., data = covars_df))
-
-# calculate sigma2f prime
-fhat_resid_center <- fhat_resid - mean(fhat_resid)
-numerator <- as.numeric(t(fhat_resid_center) %*% fhat_resid_center)
-sigma2f_prime <- numerator / (M-1)
-print(paste0("Sigma2f is ", sigma2f_prime))
-print(paste0("the var is  is ", var(fhat_resid_center)))
-
-#Calc H'
-H_prime <- sigma2f_prime * sigma2r
-print(paste0("H is ", H_prime))
-
+# # Set up data frame to collect SNP numbers
+# numBlocks <- length(unique(dfALL$block))
+# dfSNPs <- as.data.frame(matrix(NA, ncol = 3, nrow = numBlocks))
+# colnames(dfSNPs) <- c("Block", "nSNP", "CHR")
+# print(paste0("The total number of blocks is ", numBlocks))
+# dfFGr_mat <- matrix(NA, nrow = M, ncol = numBlocks)
+#
+# # Subset SNP IDs
+# dfSNP_tmp <- dfALL %>% select("ID")
+# snp_name <- paste0(out_prefix, ".snp")
+# fwrite(dfSNP_tmp, snp_name, quote = F, row.names = F, sep = "\t")
+#
+# # Get freq file
+# plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 ",
+#                     " --freq --out ", out_prefix)
+# system(plink_cmd)
+#
+# # Set up plink command
+# freq_file <- paste0(out_prefix, ".afreq")
+# tmp_r_name <- paste0(out_prefix, ".rvec")
+# plink_cmd <- paste0("plink2 --pfile ", plink_prefix, " --keep ", id_file, " --extract ", snp_name ," --threads 8 --read-freq ", freq_file,
+#                     " --score ", tmp_r_name, " header-read variance-standardize cols=dosagesum,scoresums --out ", out_prefix)
+#
+# # Individually score each of the 581 blocks
+# for (i in 1:numBlocks) {
+#
+#   # Block num
+#   blockNum <- unique(dfALL$block)[i]
+#
+#   # Subset Rs and save
+#   dfR_tmp1 <- dfALL %>% filter(block == blockNum)
+#   dfR_tmp <- dfR_tmp1 %>% select("ID", "ALT", "r")
+#   fwrite(dfR_tmp, tmp_r_name, quote = F, row.names = F, sep = "\t")
+#
+#   # Run plink
+#   system(plink_cmd)
+#
+#   # Read in plink output
+#   df <- fread(paste0(out_prefix, ".sscore"))
+#   rawFGr <- as.matrix(df[,3])
+#   dfFGr_mat[,i] <- rawFGr
+#
+# }
+# fhat_raw <- apply(dfFGr_mat, 1, sum)
+#
+# # calculate \hat{f}
+# fhat<- fhat_raw / c(rTr)
+#
+# # calculate sigma2f
+# fhat_center <- fhat - mean(fhat)
+# numerator <- as.numeric(t(fhat_center) %*% fhat_center)
+# sigma2f <- numerator / (M-1)
+# print(paste0("Sigma2f is ", sigma2f))
+#
+#
+# # Calculate H
+# sigma2r <- rTr / (L - 1)
+# print(paste0("Sigma2r is ", sigma2r))
+# H <- sigma2f * sigma2r
+# print(paste0("H is ", H))
+#
+#
+# ############### Calculate H Prime ########################
+#
+# # Regress out PCs from fhat
+# pca_file_path_common <- paste0(pc_prefix, "even_PCA.eigenvec")
+# pca_file_path_rare   <- paste0(pc_prefix, "rare_even_PCA.eigenvec")
+#
+# dfPCs_common <- fread(pca_file_path_common)
+# setnames(dfPCs_common, 1:2, c("FID","IID"))
+#
+# dfPCs_rare <- fread(pca_file_path_rare)
+# setnames(dfPCs_rare, 1:2, c("FID","IID"))
+#
+# dfPCs <- inner_join(dfPCs_common, dfPCs_rare, by = c("FID","IID"))
+# covars_df <- dfPCs %>% select(starts_with("PC"))
+#
+# y <- as.numeric(fhat_center)
+# fhat_resid <- resid(lm(y ~ ., data = covars_df))
+#
+# # calculate sigma2f prime
+# fhat_resid_center <- fhat_resid - mean(fhat_resid)
+# numerator <- as.numeric(t(fhat_resid_center) %*% fhat_resid_center)
+# sigma2f_prime <- numerator / (M-1)
+# print(paste0("Sigma2f is ", sigma2f_prime))
+# print(paste0("the var is  is ", var(fhat_resid_center)))
+#
+# #Calc H'
+# H_prime <- sigma2f_prime * sigma2r
+# print(paste0("H is ", H_prime))
+#
 
 # Residualize GR and then mulitple by rTr
 #y <- as.numeric(fhat_raw)
