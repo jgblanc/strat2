@@ -20,6 +20,7 @@ snp_file =args[4]
 #-----------------------------
 
 dfMat <- fread(fgr_file, drop = 1)
+print(dim(dfMat))
 dfSNP <- fread(snp_file)
 chrs <- as.character(dfSNP$CHR)
 colnames(dfMat) <- chrs
@@ -29,6 +30,7 @@ colnames(dfMat) <- chrs
 # Residualize all GRs
 #---------------------------
 dfMat_resids <- matrix(NA, ncol = ncol(dfMat), nrow = nrow(dfMat))
+print(dim(dfMat_resids))
 
 for (i in seq_along(dfMat)) {
 
@@ -54,7 +56,8 @@ for (i in seq_along(dfMat)) {
   covars_df <- dfPCs %>% select(starts_with("PC"))
 
   y <- as.numeric(dfMat[[i]])
-  dfMat_resids[[i]] <- resid(lm(y ~ ., data = covars_df))
+  resids <- resid(lm(y ~ ., data = covars_df))
+  dfMat_resids[,i] <- resids
 }
 
 
