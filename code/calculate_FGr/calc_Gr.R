@@ -103,6 +103,7 @@ for (i in 1:numBlocks) {
   # Read in plink output
   df <- fread(paste0(out_prefix, ".sscore"))
   rawFGr <- as.matrix(df[,3])
+  print(length(rawFGr))
   dfFGr_mat[,i] <- rawFGr
 
 }
@@ -113,7 +114,7 @@ system(rm_cmd)
 
 # Save Raw FGR
 dfFGr <- as.data.frame(dfFGr_mat)
-rownames(dfFGr) <- df[,1]
+dfFGr <- cbind(IID = df[[1]], dfFGr)
 fwrite(dfFGr, out_file_FGr, quote = F, row.names = F, sep = "\t")
 
 # Save SNP file
