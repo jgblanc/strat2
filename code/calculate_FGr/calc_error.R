@@ -23,6 +23,7 @@ pc_snp_file = args[5]
 
 calc_fhat <- function(dfMat, r ) {
 
+  r <- r - mean(r)
   fhat_raw <- apply(dfMat, 1, sum)
   rTr <- as.numeric(t(as.matrix(r)) %*% as.matrix(r))
   fhat <- fhat_raw / c(rTr)
@@ -67,7 +68,7 @@ L <- nrow(dfALL)
 print(L)
 
 # Read in Fmat
-dfMat <- as.matrix(fread(Gr_mat_file))
+dfMat <- as.matrix(fread(Gr_mat_file, drop=1))
 M <- nrow(dfMat)
 
 # Read in block info
@@ -94,7 +95,9 @@ for (i in 1:numBlocks) {
 }
 
 # Compute numerator
+print(jckFGr)
 tmp <- apply(jckFGr, 1, mean)
+print(jckFGr)
 numerator <- mean(tmp)
 print(paste0("The numerator is ",numerator))
 
