@@ -94,7 +94,7 @@ pAll <- ggplot(data = dfPlot, aes(x = PC1, y = PC2, color = Sample)) + geom_poin
 Read in data and bonferoni correct CI 
 ```{r}
 # Combine all data
-tmp1 <- fread("../plots/overlap_stats/H_InUKBB.txt")
+tmp1 <- fread("../plots/overlap_stats/H_HGDP1KG.txt")
 tmp2 <- fread("../plots/overlap_stats/H_InUKBB.txt")
 
 # Format Data
@@ -196,7 +196,7 @@ dfHPrime$contrasts <- str_replace_all(dfHPrime$contrasts, rep_str)
 
 # Bonferonni correction 
 dfHPrime$pAjust <- p.adjust(dfHPrime$pvalNorm, method = "bonferroni")
-ci <- qnorm(1 -(0.025/nrow(dfHPrime)))
+ci <- qnorm(1 -(0.05/nrow(dfHPrime)))
 dfHPrime$lc <- dfHPrime$H - (ci * sqrt(dfHPrime$varH)) 
 dfHPrime$uc <- dfHPrime$H + (ci * sqrt(dfHPrime$varH)) 
 

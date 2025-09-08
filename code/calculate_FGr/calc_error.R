@@ -79,30 +79,22 @@ numBlocks <- as.numeric(ncol(dfMat))
 fhat <- calc_fhat(dfMat, dfALL$r)
 
 # Leave one out f;s
-locoFGr <- matrix(NA, nrow = M, ncol = numBlocks)
+jckFGr <- matrix(NA, nrow = M, ncol = numBlocks)
 for (i in 1:numBlocks) {
 
   # Block num
   blockNum <- as.numeric(dfSNP_Num[i,1])
-
   print(paste0("This is rep number ",i))
   dfR_not_i <- dfALL %>% filter(block != blockNum)
+  dfR_i <- dfALL %>% filter(block == blockNum)
+  mi <- nrow(dfR_i)
   fhat_i <- calc_fhat(dfMat[,-i],dfR_not_i$r)
-  locoFGr[,i] <- fhat_i
+  jckFGr[,i] <- ((L - mi)/mi) * (fhat - fhat_i)^2
+
 }
-
-
 
 # Compute numerator
-mean_loco <- rowMeans(locoFGr)
-jckFGr <- matrix(NA, nrow = M, ncol = numBlocks)
-for (i in 1:numBlocks) {
-
-  print(paste0("This is rep number ",i))
-  jckFGr[,i] <- (locoFGr[,i] - mean_loco)^2
-
-}
-tmp <- rowSums(jckFGr) * ((numBlocks - 1)/numBlocks)
+tmp <- apply(jckFGr, 1, mean)
 numerator <- mean(tmp)
 print(paste0("The numerator is ",numerator))
 
