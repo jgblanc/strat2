@@ -63,6 +63,7 @@ calc_sigma2_r <-function(r, L) {
 # Read inputs
 PCs <- fread(pca_file)
 PC_nums <- scale(as.matrix(PCs[, 3:ncol(PCs)]))
+print(apply(PC_nums, 1, var))
 dfSNP <- fread(snp_file)
 
 # Get even chr
