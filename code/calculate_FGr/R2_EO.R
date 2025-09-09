@@ -116,6 +116,35 @@ print(paste0("Sigma2r is ", sigma2r))
 H <- as.numeric(sigma2F * sigma2r)
 print(paste0("H is ", H))
 
+#### Calculate SE via block jackknife
+allHs <- rep(NA, numBlocks)
+for (i in 1:numBlocks) {
+
+
+  # Block num
+  blockNum <- as.numeric(dfSNP_filter[i,1])
+  print(paste0("This is rep number ",i))
+  print(paste0("This is block number ",blockNum))
+
+  # Calc H
+  dfR_i <- dfALL %>% filter(block == blockNum)
+  mi <- nrow(dfR_i)
+  dfR_not_i <- dfALL %>% filter(block != blockNum)
+  fhat_i <- calc_fhat(dfMat[,-i],dfR_not_i$r)
+  sigma2F_i <- as.numeric(calc_sigma2_f(fhat_i, M))
+  sigma2r_i <- as.numeric(calc_sigma2_r(dfR_not_i$r,L-mi))
+  Hi <- as.numeric(sigma2F_i * sigma2r_i)
+  allHs[i] <- as.numeric(((L - mi)/mi) * (H - Hi)^2)
+
+}
+
+# Calculate SE
+varH <- mean(allHs)
+
+# P-value from jacknife
+pvalNorm <- pnorm(H, mean = 1/L, sd=sqrt(varH), lower.tail = FALSE)
+
+
 ### Calculate signal
 
 # Leave one out f;s
@@ -151,8 +180,8 @@ error <- numerator / varFGr
 signal <- 1 - error
 
 # Construct output
-dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 6)
-colnames(dfOut) <- c("PC","H","signal", "omega","R2", "Ratio")
+dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 8)
+colnames(dfOut) <- c("PC","H", "varH", "pvalNorm", "signal", "omega","R2", "Ratio")
 
 # Loop through PCs
 for (i in seq_len(ncol(PC_nums))) {
@@ -168,7 +197,7 @@ for (i in seq_len(ncol(PC_nums))) {
   # Get Ratio
   Ratio <- R2 / signal
 
-  dfOut[i,] <- c(i, H, signal, w, R2, Ratio)
+  dfOut[i,] <- c(i, H, varH, pvalNorm, signal, w, R2, Ratio)
   cat("Finished PC", i, "\n")
 }
 
