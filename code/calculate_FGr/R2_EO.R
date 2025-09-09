@@ -18,6 +18,7 @@ fgr_file = args[2]
 snp_file = args[3]
 out_file = args[4]
 r_prefix = args[5]
+pc_snp_file = args[6]
 
 ####################################
 ########## Functions ###############
@@ -102,7 +103,7 @@ L <- nrow(dfALL)
 print(L)
 
 # Read in and compute FGr
-dfMat <- as.matrix(fread(fgr_file))[, blockIndex]
+dfMat <- as.matrix(fread(fgr_file, drop=1))[, blockIndex]
 fhat <- calc_fhat(dfMat, dfALL$r)
 M <- length(fhat)
 
@@ -133,9 +134,7 @@ for (i in 1:numBlocks) {
 }
 
 # Compute numerator
-print(jckFGr)
 tmp <- apply(jckFGr, 1, mean)
-print(jckFGr)
 numerator <- mean(tmp)
 print(paste0("The numerator is ",numerator))
 
@@ -151,8 +150,8 @@ error <- numerator / varFGr
 signal <- 1 - error
 
 # Construct output
-dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 5)
-colnames(dfOut) <- c("PC","H","signal", "omega", "Ratio")
+dfOut <- matrix(NA, nrow = ncol(PC_nums), ncol = 6)
+colnames(dfOut) <- c("PC","H","signal", "omega","R2", "Ratio")
 
 # Loop through PCs
 for (i in seq_len(ncol(PC_nums))) {
