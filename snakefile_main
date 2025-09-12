@@ -22,7 +22,7 @@ def get_chr_range(x):
 
 rule all:
     input:
-        expand("plots/error/rare_R2EO_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
+        expand("plots/error/common_rare_R2EO_{dataset}.txt", gwas =GWAS, dataset=DATASET,contrasts=CONTRASTS, covars=COVARS, chr=CHR, gtype=GTYPE,threshold=THRESHOLD, phenotype=PHENOTYPE)
 
 localrules: concat_pga_test
 
@@ -427,27 +427,33 @@ rule concat_R2_EO_rare:
 
 ###### Compute R2 for even/odd chromosomes - Common + Rare Variants ########
 
+
 rule calc_R2_even_common_rare:
     input:
         cPCs="output/calculate_PCA/{gwas}/odd_PCA.eigenvec",
         rPCs="output/calculate_PCA/{gwas}/rare_odd_PCA.eigenvec",
         FGr="output/calculate_FGr/{dataset}/{gwas}/FGrMat_{contrasts}.txt",
-        SNPs="output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt"
+        SNPs="output/calculate_FGr/{dataset}/{gwas}/SNPNum_{contrasts}.txt",
+        r=expand("data/{{dataset}}/r/{{gwas}}/{{contrasts}}_chr{chr}.rvec", chr=CHR),
+        pc_snps = "data/ukbb/ukbb_pc_snps_block.txt"
     output:
         R2="output/calculate_FGr/{dataset}/{gwas}/common_rare_R2_EO/{contrasts}.txt",
     resources:
         mem_mb=38000,
-        time="24:00:00"
+        time="04:00:00"
+    params:
+        r_prefix="data/{dataset}/r/{gwas}/{contrasts}_chr"
     shell:
         """
-        Rscript code/calculate_FGr/R2_EO_both.R {input.cPCs} {input.rPCs} {input.FGr} {input.SNPs} {output.R2}
+        Rscript code/calculate_FGr/R2_EO_both.R {input.cPCs} {input.rPCs} {input.FGr} {input.SNPs} {output.R2} {params.r_prefix} {input.pc_snps}
 	      """
+
 
 rule concat_R2_EO_common_rare:
     input:
         expand("output/calculate_FGr/{{dataset}}/{gwas}/common_rare_R2_EO/{contrasts}.txt", gwas=GWAS, contrasts=CONTRASTS, chr=CHR)
     output:
-        "plots/error/500_common_rare_R2EO_{dataset}.txt"
+        "plots/error/common_rare_R2EO_{dataset}.txt"
     shell:
         """
         Rscript code/summarize/concat_R2EO.R {output} {input}

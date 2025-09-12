@@ -35,7 +35,7 @@ rep_str = c("England" = "ENG","Wales" = "WAL", "Scotland" = "SCT","NorthernIrela
 df$contrasts <- str_replace_all(df$contrasts, rep_str)
 
 # Find significant PCs
-df <- df %>% mutate(adjuB = p.adjust(pvalB)) %>% mutate(sigB = case_when(adjuB < 0.05  ~ TRUE, adjuB >= 0.05 ~ F))
+#df <- df %>% mutate(adjuB = p.adjust(pvalB)) %>% mutate(sigB = case_when(adjuB < 0.05  ~ TRUE, adjuB >= 0.05 ~ F))
 
 # Denotes type of PCs
 df <- df %>% mutate(pc_type = "40 common")
@@ -244,6 +244,7 @@ dfPlot$contrasts <- factor(dfPlot$contrasts, levels = c("eas-nfe","eas-sas","eas
 plCont <- dfPlot %>% ggplot(aes(x = PC, y = Ratio, color = gwas)) + geom_point() + geom_line() + facet_wrap(~contrasts, nrow = 1) + geom_hline(yintercept = 1, color = "red", linetype = "dashed") + theme_bw(base_size = 10) + scale_color_manual(values = c("orchid1", "purple1", "darkorange", "skyblue2", "seagreen","seagreen1"), name= TeX("Sampling distance ($\\epsilon$)")) + theme( legend.position = "none", strip.background=element_rect(colour="black",fill="white"), axis.text.x = element_text(size = 10)) + xlab("PC") + ylab(TeX("$V_{K}$"))  + 
   scale_x_continuous(breaks = c(0,20,40,60,80), labels = c("0", "20", "40", "20", "40")) +
   geom_vline(xintercept = 40, color = "red", linetype = "solid")
+plCont
 ```
 
 HGDP - lat/long 

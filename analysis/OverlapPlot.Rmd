@@ -260,6 +260,54 @@ pl <- grid.arrange( row_a, row_b, row_c, ncol = 1, heights = c( 1, 1, 1))
 ggsave("~/Desktop/HPrime.png", pl, height = 8, width = 11)
 ```
 
+## Make Isocline plot 
+
+```{r}
+# Make some values of H
+H <- seq(1e-6, 1e-2, length.out = 500)  # you can change range if needed
+
+# Constants c you want to try
+c_values <- c(0.01,0.1,1, 10)
+
+# Build dataframe
+df <- expand.grid(H = H, c = c_values) %>%
+  mutate(
+    sqrtH = sqrt(H),
+    x = sqrtH,
+    y = c * sqrtH  # bias
+  )
+
+# Plot
+ggplot(df, aes(x = x, y = y, color = factor(c))) +
+  # shaded region
+  annotate("rect",
+           xmin = sqrt(1e-6), xmax = sqrt(1.552177e-05),
+           ymin = -Inf, ymax = Inf,
+           fill = "grey80", alpha = 0.5) +
+  # lines
+  geom_line(size = 1) +
+  labs(
+    x = expression(sqrt(H)),
+    y = "Bias",
+    color = "c"
+  ) +
+  theme_minimal(base_size = 14) + scale_x_log10() + geom_vline(xintercept = sqrt(1.552177e-05), 
+           linetype = "dashed", color = "black")
+```
+
+
+```{r}
+tmp1 <- dfAllOverlap %>% mutate(HOriginal = H) %>% mutate(biasH = ((sigma2F) / N) + (1/L)) %>% mutate(Hcorrected = H - biasH)  %>% mutate(HOriginal_corrected = Hcorrected) %>% select(dataset, gwas, contrasts, HOriginal_corrected, HOriginal)
+dfBoth <- inner_join(tmp1, dfHPrime)  %>% mutate(biasH = ((sigma2F) / N) + (1/L)) %>% mutate(Hcorrected = H - biasH)  %>% mutate(lc = lc - biasH, uc = uc - biasH) 
+
+  
+ggplot(dfBoth, aes(x = HOriginal_corrected, y = Hcorrected)) + geom_point() 
+```
+
+
+
+
+
 
 ## Plot H Bias 
 
